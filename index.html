@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide 2 Study</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#ffffff; --ink:#1f2424; --ink-soft:#5b6260; --line:#e3e0d8;
+    --accent:#3d5a4f; --accent-soft:#e7eee9; --warn:#9a5b3a;
+    --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex; min-height:100vh;}
+  a{color:var(--accent);}
+  code{font-family:var(--mono); font-size:11.6px; background:#f1efe9; padding:1px 5px; border-radius:4px; color:#2b3b35;}
+
+  #sidebar{ width:240px; flex:0 0 240px; border-right:1px solid var(--line); background:var(--panel);
+    position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 14px; }
+  #sidebar h1{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{ display:block; padding:7px 8px; border-radius:6px; font-size:13.5px; color:var(--ink); text-decoration:none; font-weight:600; margin-top:6px; }
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{ display:block; padding:4px 8px 4px 18px; border-radius:6px; font-size:12.5px; color:var(--ink-soft); text-decoration:none; }
+  #sidebar nav a.sublink:hover{background:var(--accent-soft); color:var(--ink);}
+  #sidebar input{ width:100%; padding:7px 9px; margin-bottom:14px; border:1px solid var(--line); border-radius:6px; font-size:12.5px; font-family:var(--sans); background:#fff; }
+
+  #main{flex:1; min-width:0; padding:38px 44px 80px; max-width:1200px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px; margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft); font-size:14px; margin:0; max-width:680px; line-height:1.5;}
+
+  section.group{margin-bottom:56px;}
+  section.group > h2{font-size:21px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px;}
+  section.group > .lede{color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; max-width:780px; line-height:1.5;}
+
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{font-size:15px; margin:0 0 4px; color:var(--accent); letter-spacing:.01em;}
+  .subsection .note{color:var(--ink-soft); font-size:12.5px; margin:0 0 12px;}
+
+  .twrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.6px; min-width:760px;}
+  thead th{ text-align:left; background:#f1efe9; color:var(--ink-soft); font-size:11px; text-transform:uppercase;
+    letter-spacing:.04em; padding:9px 12px; border-bottom:1px solid var(--line); position:sticky; top:0; }
+  tbody td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700; white-space:nowrap;}
+  td .codeline{display:block; font-family:var(--mono); font-size:11.5px; color:var(--warn); margin-top:3px;}
+  td ul{margin:0; padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:10px; background:var(--accent-soft); color:var(--accent); margin-right:4px; white-space:nowrap;}
+
+  .callout{ background:var(--accent-soft); border-left:3px solid var(--accent); padding:12px 16px; font-size:13px;
+    border-radius:0 6px 6px 0; margin:18px 0 8px; line-height:1.55; }
+  .callout b{color:var(--accent);}
+
+  .diagram{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:18px; margin:18px 0 28px; text-align:center; }
+  .diagram .cap{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:left;}
+  .diagram svg{max-width:100%; height:auto;}
+
+  mark.row-hidden{display:none;}
+
+  @media (max-width: 880px){
+    #sidebar{display:none;}
+    #main{padding:24px 16px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <h1>Python Reference</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. decorator)">
+  <nav id="navTree"></nav>
+</aside>
+
+<main id="main">
+  <div class="pagehead">
+    <h1>Python: Complete Reference</h1>
+
+    <div style="text-align: right; margin: 20px;">
+
+        <button onclick="window.location.href='index.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer;">
+            Python
+        </button>
+
+        <button onclick="window.location.href='ml-stats-math-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            ML | Stats
+        </button>
+
+        <button onclick="window.location.href='ai-engineering-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            Agentic AI
+        </button>
+
+    </div>
+
+
+
+
+  <div id="content"></div>
+</main>
+
+<script>
+/* =========================================================
+   ROW HELPERS
+   ========================================================= */
+function T(c,i,ex,u,g){ return {c,i,ex,u,g}; }          // concept: name, idea, example, use-case, gotcha
+function Md(m,sig,desc,ex){ return {m,sig,desc,ex}; }   // method/function: name, signature, description, example
+function Exc(name,when,ex){ return {name,when,ex}; }     // exception: name, raised-when, example
+function O(op,list,dict,set,note){ return {op,list,dict,set,note}; } // big-O row
+function G(scenario,pick){ return {scenario,pick}; }      // decision guide row
+function Sy(s,cause){ return {s,cause}; }                 // symptom row
+
+/* =========================================================
+   DATA — GROUP 1: FUNDAMENTALS & SYNTAX
+   ========================================================= */
+const F_TYPES = [
+T("int","Whole numbers, arbitrary precision.","x = 5","Counting, indexing, arithmetic","`/` always returns a float — use `//` for integer division"),
+T("float","Decimal numbers, IEEE-754 double precision.","x = 5.0","Measurements, calculations needing decimals","0.1 + 0.2 != 0.3 exactly — binary floats can't represent most decimals precisely"),
+T("str","Immutable sequence of Unicode characters.","x = 'hi'","Text data","Every 'modification' creates a brand new string object"),
+T("bool","True / False — actually a subclass of int (True == 1).","x = True","Conditions, flags","bool([]) is False but bool([0]) is True — container truthiness depends on length, not content"),
+T("complex","Numbers with a real and imaginary part.","x = 2 + 3j","Scientific/engineering computation","Rarely seen outside specialized numeric code"),
+T("NoneType","Represents the absence of a value.","x = None","Default/sentinel values, 'no result'","Always compare with `is None`, never `== None`"),
+T("Type conversion","Explicit casting between types.","int('5'), str(5), float('3.2')","Parsing input, converting between representations","int('5.5') raises ValueError — convert to float first, then int() if you need to truncate"),
+];
+const F_OPS = [
+T("Arithmetic","+ − * / // % **","7 // 2 = 3, 7 % 2 = 1, 2**3 = 8","Standard math operations","`**` is exponentiation, not XOR (that's `^`, a bitwise op)"),
+T("Comparison","== != > < >= <=","3 == 3.0 → True","Comparing values","Chained comparisons work: 1 < x < 10 (unlike most C-family languages)"),
+T("Logical","and or not","True and False → False","Boolean logic, conditions","`and`/`or` short-circuit and return one of the actual operands, not just True/False"),
+T("Bitwise","& | ^ ~ << >>","5 & 3 = 1, 5 << 1 = 10","Low-level flag manipulation, bit masks","`~x` equals `-x-1`, which surprises people expecting a simple bit-flip on the printed value"),
+T("Identity","is, is not","a is b","Checking whether two names point to the same object","Small ints/strings may be cached — `is` can misleadingly look correct for value comparison"),
+T("Membership","in, not in","'a' in 'cat' → True","Checking containment in a sequence/collection","On a list, `in` is O(n); use a set or dict for O(1) membership checks"),
+T("Walrus operator",":=","if (n := len(data)) > 10: ...","Assign and use a value in the same expression (3.8+)","Easy to overuse — hurts readability when nested too deeply"),
+];
+const F_CONTROL = [
+T("if / elif / else","Branch based on conditions.","if x>0: pos() elif x==0: zero() else: neg()","All conditional logic","Indentation defines the block — mixing tabs and spaces raises TabError"),
+T("for loop","Iterate over any iterable (not a C-style counter loop).","for i in range(5): ...","Looping over sequences, ranges, dict items, files, generators","`for ... else` runs the else only if the loop completed without a `break`"),
+T("while loop","Repeat while a condition stays true.","while x < 10: x += 1","Looping until a condition changes, polling, retries","Forgetting to update the condition variable causes an infinite loop"),
+T("break / continue","Exit the loop early / skip straight to the next iteration.","if x == 5: break","Early exit, skipping invalid items","`break` only exits the innermost loop — no labeled breaks in Python"),
+T("match-case (3.10+)","Structural pattern matching.","match cmd: case 'go': start() case _: ignore()","Replacing long if/elif chains, destructuring data","Requires Python ≥3.10; `case _` is the wildcard/default branch"),
+T("Ternary expression","Inline conditional expression.","y = 'even' if x % 2 == 0 else 'odd'","Short conditional assignment","Nesting ternaries inside each other kills readability fast"),
+];
+const F_STRINGFMT = [
+T("f-strings (3.6+)","Embed expressions directly inside a string literal.","f\"{name} is {age}\"","The default choice for almost all string formatting","f-string expressions couldn't contain backslashes before 3.12"),
+T(".format()","Format using {} placeholders.","\"{} is {}\".format(name, age)","Older formatting style, still common in existing code","More verbose than f-strings for simple cases"),
+T("% formatting","Legacy C-style string formatting.","\"%s is %d\" % (name, age)","Maintaining old code that already uses it","Considered outdated — avoid it in new code"),
+T("Format specs","Control width, precision, alignment, thousands separators.","f\"{pi:.2f}\", f\"{x:>10}\", f\"{n:,}\"","Display formatting of numbers/text","`:.2f` only changes the *display* — the underlying value is unrounded"),
+];
+const F_IO = [
+T("print()","Write to standard output.","print(a, b, sep=', ', end='\\n')","Debugging, displaying results to the user","Output may be buffered when piped to a file/another process, not shown immediately"),
+T("input()","Read one line of text from standard input.","name = input('Name: ')","Simple interactive command-line programs","Always returns a str — cast manually for numbers, e.g. int(input())"),
+];
+const F_STYLE = [
+T("# comment","A single-line comment.","# explains the next line","Inline notes for future readers","Comments restating *what* the code does add noise — explain *why* instead"),
+T("\"\"\"docstring\"\"\"","A documentation string for a module, class, or function.","def f():\\n    \"\"\"Does X.\"\"\"","API documentation, surfaced by help() and IDEs","Stored in the object's __doc__ attribute — readable at runtime"),
+T("PEP 8","Python's official style guide.","4-space indents, snake_case names, max ~79-99 col lines","Consistent, readable code across a team/project","Not enforced by the interpreter — only by linters like flake8/black/ruff"),
+];
+
+/* =========================================================
+   DATA — GROUP 2: DATA STRUCTURES
+   ========================================================= */
+const D_LIST = [
+Md("append","list.append(x)","Add a single item to the end","[1,2].append(3) → [1,2,3]"),
+Md("extend","list.extend(iterable)","Add every item from an iterable","[1].extend([2,3]) → [1,2,3]"),
+Md("insert","list.insert(i, x)","Insert an item at a specific index","[1,3].insert(1,2) → [1,2,3]"),
+Md("remove","list.remove(x)","Remove the first matching value (raises ValueError if absent)","[1,2,1].remove(1) → [2,1]"),
+Md("pop","list.pop(i=-1)","Remove and return the item at index (default: last)","[1,2,3].pop() → 3"),
+Md("sort","list.sort(key=None, reverse=False)","Sort the list in place","[3,1,2].sort() → [1,2,3]"),
+Md("sorted()","sorted(iterable, key=None, reverse=False)","Return a NEW sorted list, leaving the original untouched","sorted([3,1,2]) → [1,2,3]"),
+Md("reverse","list.reverse()","Reverse the list in place","[1,2,3].reverse() → [3,2,1]"),
+Md("index","list.index(x)","Find the first index of a value (raises ValueError if absent)","[1,2,3].index(2) → 1"),
+Md("count","list.count(x)","Count occurrences of a value","[1,1,2].count(1) → 2"),
+Md("Slicing","seq[start:stop:step]","Extract a sub-sequence (works on lists, tuples, strings)","[0,1,2,3,4][1:4:2] → [1,3]"),
+Md("List comprehension","[expr for x in it if cond]","Build a list concisely in one line","[x*x for x in range(5) if x%2==0] → [0,4,16]"),
+];
+const D_TUPLE = [
+T("Tuple","Immutable, ordered sequence.","t = (1,2,3)","Fixed collections, dict keys, function returns that shouldn't change","A 1-element tuple needs a trailing comma: (1,) — (1) is just the int 1"),
+T("Packing / Unpacking","Assign or extract multiple values at once.","a, b = 1, 2  |  a, *rest = [1,2,3]","Swapping variables, multiple return values, variadic unpacking","Mismatched unpacking lengths raise ValueError"),
+T("namedtuple","A tuple subclass with named fields.","Point = namedtuple('Point', ['x','y'])","Lightweight, immutable, self-documenting records","Still positional under the hood — field order matters at construction"),
+];
+const D_DICT = [
+Md("get","dict.get(key, default=None)","Safe lookup that never raises KeyError","{'a':1}.get('b', 0) → 0"),
+Md("setdefault","dict.setdefault(key, default)","Get a value, inserting the default first if the key is missing","d.setdefault('a', []).append(1)"),
+Md("update","dict.update(other)","Merge another dict (or key-value pairs) into this one","d.update({'b':2})"),
+Md("pop","dict.pop(key, default)","Remove and return the value for a key","d.pop('a', None)"),
+Md("items / keys / values","dict.items(), .keys(), .values()","Iterable, live views over the dict's contents","for k, v in d.items(): ..."),
+Md("Dict comprehension","{k: v for k, v in it}","Build a dict concisely in one line","{x: x*x for x in range(5)}"),
+Md("Merge operator (3.9+)","d1 | d2","Merge two dicts into a brand-new dict","{'a':1} | {'b':2} → {'a':1,'b':2}"),
+];
+const D_SET = [
+Md("add / remove / discard","set.add(x), .remove(x), .discard(x)","Add or remove items (discard never raises if missing)","{1,2}.add(3) → {1,2,3}"),
+Md("union / intersection","a | b, a & b","Combine sets, or find elements common to both","{1,2}|{2,3} → {1,2,3}"),
+Md("difference / symmetric_difference","a - b, a ^ b","Elements only in one set / not shared by both","{1,2}-{2} → {1}"),
+Md("Set comprehension","{expr for x in it}","Build a set concisely — automatically deduplicates","{x%3 for x in range(10)} → {0,1,2}"),
+Md("frozenset","frozenset(iterable)","An immutable, hashable set","Usable as a dict key or as an element inside another set"),
+];
+const D_STR = [
+Md("split / rsplit","str.split(sep=None, maxsplit=-1)","Break a string into a list of substrings","'a,b,c'.split(',') → ['a','b','c']"),
+Md("join","sep.join(iterable)","Combine strings with a separator between them","','.join(['a','b']) → 'a,b'"),
+Md("strip / lstrip / rstrip","str.strip(chars=None)","Remove leading/trailing whitespace (or given characters)","'  hi  '.strip() → 'hi'"),
+Md("replace","str.replace(old, new, count=-1)","Replace occurrences of a substring","'aaa'.replace('a','b',2) → 'bba'"),
+Md("find / index","str.find(sub) / str.index(sub)","Locate a substring (find → -1 if absent, index → ValueError)","'hello'.find('l') → 2"),
+Md("upper / lower / title / capitalize","str.upper() etc.","Case conversion","'hi'.upper() → 'HI'"),
+Md("startswith / endswith","str.startswith(prefix)","Check a prefix or suffix","'file.py'.endswith('.py') → True"),
+Md("encode / decode","str.encode(enc), bytes.decode(enc)","Convert between text (str) and bytes","'hi'.encode('utf-8') → b'hi'"),
+];
+const D_COMPREHENSIONS = [
+T("List comprehension","[expr for x in it]","Eager — builds the entire list in memory immediately","Need the full collection right away","Can use a lot of memory if `it` is very large"),
+T("Set comprehension","{expr for x in it}","Eager, automatically deduplicating","Need unique values from a sequence","Resulting order is not guaranteed/meaningful"),
+T("Dict comprehension","{k: v for x in it}","Eager, produces key-value pairs","Building lookup tables from a sequence","Duplicate keys silently overwrite earlier ones — last one wins"),
+T("Generator expression","(expr for x in it)","Lazy — produces one item at a time, on demand","Large/streaming data, one-time use, piping into sum()/any()/etc.","Can only be iterated once; doesn't support len() or indexing"),
+];
+const D_MUTABILITY = [
+T("Mutable types","list, dict, set, and most custom objects.","Contents can change after creation without creating a new object","When you need to modify in place efficiently","Sharing a mutable object across two variables means changes via either are visible through both"),
+T("Immutable types","int, float, str, tuple, frozenset, bool.","Cannot change after creation — any 'modification' produces a new object","Hashable dict keys/set elements, safe sharing across threads","`s += 'x'` on a string silently rebuilds the entire string each time"),
+T("Shallow copy","copy.copy(x), or x[:], or list(x)","Copies only the outer container — nested objects are still shared","Copying a flat (non-nested) structure","Mutating a nested list inside a shallow copy still affects the original"),
+T("Deep copy","copy.deepcopy(x)","Recursively copies every nested object too","Need a fully independent copy of a nested structure","Slower, and can fail on objects holding live resources (open files, sockets)"),
+T("Mutable default argument","A classic Python pitfall.","def f(x=[]): x.append(1); return f","Never — this demonstrates what NOT to do","The default list is created once at def-time and shared across every call — use `x=None` and create fresh inside"),
+];
+
+/* =========================================================
+   DATA — GROUP 3: FUNCTIONS & FUNCTIONAL PROGRAMMING
+   ========================================================= */
+const FN_BASICS = [
+T("Positional args","Matched to parameters by order.","def f(a,b): ...","The simple, common case","Easy to mix up argument order with many parameters"),
+T("Keyword args","Matched to parameters by name.","f(b=2, a=1)","Clarity when a function has many parameters","Positional args must come before keyword args at the call site"),
+T("Default args","A fallback value used when the caller omits the argument.","def f(a, b=10): ...","Optional parameters with sensible defaults","Defaults are evaluated once, at def-time — see the mutable default gotcha"),
+T("*args","Collects extra positional arguments into a tuple.","def f(*args): ...","Variable-length positional input (e.g. a custom print())","args is a tuple, not a list — convert it if you need in-place sorting etc."),
+T("**kwargs","Collects extra keyword arguments into a dict.","def f(**kwargs): ...","Variable-length named input, flexible/extensible APIs","Keys must be valid Python identifiers"),
+T("Positional-only / Keyword-only","`/` and `*` markers inside the signature.","def f(a, b, /, c, *, d): ...","Strict, explicit, future-proof public APIs (3.8+)","Easy to forget how `/` and `*` change what's allowed at the call site"),
+T("Type annotations","Optional type hints on parameters and return value.","def f(x: int) -> str: ...","Documentation and static analysis (mypy, IDEs)","NOT enforced at runtime by default — purely advisory unless you add your own checks"),
+];
+const FN_LAMBDA = [
+T("lambda","An anonymous, single-expression function.","square = lambda x: x*x","Short, throwaway functions — especially as a sort/filter key","Can't contain statements: no assignment, no multi-line logic, no `if` blocks (only ternary expressions)"),
+T("Higher-order function","A function that takes and/or returns other functions.","sorted(data, key=lambda x: x[1])","Customizing the behavior of built-ins (sorted, map, filter)","Overusing lambdas where a named function would be clearer hurts debuggability"),
+];
+const FN_SCOPE = [
+T("LEGB rule","Name lookup order: Local → Enclosing → Global → Built-in.","A name found locally short-circuits the search outward","Understanding why a variable resolves the way it does","Shadowing a built-in name (e.g. `list = [1,2]`) hides the real builtin for the rest of that scope"),
+T("global","Modify a module-level variable from inside a function.","def f(): global x; x = 1","Rare — intentionally mutating global/module state","Overusing `global` makes code hard to test and reason about"),
+T("nonlocal","Modify a variable in an enclosing (non-global) function scope.","def outer(): x=1; def inner(): nonlocal x; x=2","Closures that need to mutate the enclosing function's state","Without `nonlocal`, assignment just creates a brand-new local variable instead"),
+T("Closure","An inner function that 'remembers' variables from its enclosing scope.","def make_adder(n): return lambda x: x+n","Factories, decorators, maintaining state between calls","Late-binding: closures created in a loop all capture the *variable*, not its value at creation time"),
+];
+const FN_DECORATORS = [
+T("Basic decorator","A function that wraps another function to extend its behavior.","def deco(f): def wrap(*a,**k): return f(*a,**k); return wrap","Logging, timing, access control, validation, caching","Forgetting functools.wraps loses the original function's __name__ and docstring"),
+T("@syntax","Syntactic sugar for `f = deco(f)`.","@deco\\ndef f(): ...","Applying decorators cleanly and readably","Decorators execute at *def* time, not at call time"),
+T("functools.wraps","Preserves the wrapped function's metadata on the wrapper.","@functools.wraps(f)\\ndef wrap(*a,**k): ...","Always, whenever you write a decorator","Skipping it breaks help(), introspection tools, and stacking with other decorators"),
+T("Decorator with arguments","A 'decorator factory' — a function that returns a decorator.","def repeat(n): def deco(f): ...; return deco","Parameterized behavior, e.g. @repeat(3) or @retry(times=5)","Three nested function levels can be confusing — name each level clearly"),
+T("Class decorators","Decorators applied to a class instead of a function.","@dataclass\\nclass Point: ...","Adding behavior or boilerplate to a class declaratively","Multiple stacked decorators apply bottom-up, closest to the class first"),
+T("Stacking decorators","Applying more than one decorator to a single function.","@deco1\\n@deco2\\ndef f(): ...","Composing independent pieces of behavior","Applied bottom-up: deco2 wraps f first, then deco1 wraps the result of that"),
+];
+const FN_MAPFILTER = [
+Md("map","map(func, iterable)","Apply a function to every item — returns a lazy iterator","list(map(str, [1,2,3])) → ['1','2','3']"),
+Md("filter","filter(func, iterable)","Keep only items where func returns a truthy value","list(filter(lambda x: x>0, [-1,0,1])) → [1]"),
+Md("functools.reduce","reduce(func, iterable, initial)","Cumulatively combine all items into a single value","reduce(lambda a,b: a+b, [1,2,3]) → 6"),
+Md("sorted with key","sorted(it, key=func, reverse=False)","Custom sort order based on a derived value","sorted(words, key=len)"),
+Md("min/max with key","min(it, key=func)","Find the extreme item by a custom criterion","min(people, key=lambda p: p.age)"),
+];
+const FN_ITERTOOLS = [
+Md("chain","itertools.chain(*iterables)","Flatten several iterables into one continuous stream","chain([1,2],[3,4]) → 1,2,3,4"),
+Md("islice","itertools.islice(it, stop) or (it, start, stop, step)","Slice a lazy iterator without materializing the whole thing","islice(count(), 5) → 0,1,2,3,4"),
+Md("groupby","itertools.groupby(it, key=None)","Group consecutive items that share a key","Input must already be sorted by that key to group correctly"),
+Md("product","itertools.product(*iterables, repeat=1)","Cartesian product — like nested for-loops, flattened","product([1,2],['a','b']) → (1,'a'),(1,'b'),(2,'a'),(2,'b')"),
+Md("permutations / combinations","itertools.permutations(it,r) / combinations(it,r)","All orderings / all r-sized selections","combinations([1,2,3],2) → (1,2),(1,3),(2,3)"),
+Md("cycle","itertools.cycle(it)","Repeat an iterable forever","Useful for round-robin assignment — must break out manually"),
+Md("accumulate","itertools.accumulate(it, func=add)","Running totals (or a custom running combination)","accumulate([1,2,3]) → 1,3,6"),
+Md("tee","itertools.tee(it, n=2)","Split one iterator into n independent iterators","Consuming from one doesn't advance the others"),
+Md("zip_longest","itertools.zip_longest(*its, fillvalue=None)","Zip iterables of unequal length, padding the shorter ones","zip_longest([1,2],[1]) → (1,1),(2,None)"),
+];
+const FN_FUNCTOOLS = [
+Md("lru_cache","@functools.lru_cache(maxsize=128)","Memoize a function's results automatically","Speeds up repeated/recursive calls dramatically"),
+Md("cache (3.9+)","@functools.cache","Unbounded memoization, simpler than lru_cache","Same idea, no maxsize tuning needed"),
+Md("partial","functools.partial(func, *args, **kwargs)","Pre-fill some arguments, get back a new callable","partial(pow, exp=2) behaves like a 'square' function"),
+Md("wraps","@functools.wraps(func)","Preserve a wrapped function's metadata in a decorator","See the decorators section"),
+Md("singledispatch","@functools.singledispatch","Function overloading based on the type of the first argument","Register type-specific versions with @func.register"),
+Md("cached_property","@functools.cached_property","Compute a property once, then cache it on the instance","Good for expensive derived attributes that don't change"),
+Md("total_ordering","@functools.total_ordering","Fill in all comparison methods from __eq__ + one other","Define __eq__ and __lt__; get __le__/__gt__/__ge__ for free"),
+];
+const FN_RECURSION = [
+T("Recursion","A function calling itself to break a problem into smaller subproblems.","def fact(n): return 1 if n<=1 else n*fact(n-1)","Tree/graph traversal, divide-and-conquer algorithms","Python has no tail-call optimization — deep recursion can hit RecursionError"),
+T("Memoization","Caching results of expensive recursive calls.","@lru_cache\\ndef fib(n): ...","Avoiding repeated work in overlapping subproblems","Without it, naive recursive Fibonacci is exponential time"),
+T("Recursion limit","Python's default max call-stack depth (~1000).","sys.setrecursionlimit(3000)","Rarely needs raising — usually a sign to switch to iteration","Raising it too high risks a real interpreter crash from stack overflow"),
+];
+
+/* =========================================================
+   DATA — GROUP 4: OBJECT-ORIENTED PROGRAMMING
+   ========================================================= */
+const OOP_BASICS = [
+T("class","A blueprint for creating objects.","class Dog: pass","Modeling entities that combine state and behavior","The class body runs at *definition* time — careful with mutable class-level attributes"),
+T("__init__","The initializer, called automatically right after object creation.","def __init__(self, name): self.name = name","Setting up an instance's initial state","__init__ doesn't *create* the object — that's __new__'s job; __init__ just sets it up"),
+T("self","A reference to the current instance, passed automatically.","def bark(self): ...","Accessing/modifying the instance's own attributes","Forgetting `self` as the first parameter is a very common beginner mistake"),
+T("Instance vs class attributes","Class attributes are shared across all instances; instance attributes are per-object.","class C: shared = []  (vs)  self.x = 1 in __init__","Shared constants/counters vs. per-object data","Mutating a shared mutable class attribute affects every instance at once"),
+];
+const OOP_INHERIT = [
+T("Inheritance","A class reuses and extends behavior from a parent class.","class Puppy(Dog): ...","Code reuse, modeling 'is-a' relationships","Deep inheritance chains get hard to follow — prefer composition when it fits"),
+T("super()","Call the parent class's version of a method.","def __init__(self): super().__init__()","Extending (not replacing) the parent's behavior","super() follows the MRO, not necessarily the literal immediate parent, under multiple inheritance"),
+T("Multiple inheritance","A class inherits from more than one parent class.","class C(A, B): ...","Mixins, combining independent pieces of behavior","The Method Resolution Order (MRO) decides which parent wins on a method-name conflict"),
+T("MRO / C3 linearization","The algorithm Python uses to order base classes for attribute lookup.","ClassName.__mro__ or ClassName.mro()","Diagnosing the 'diamond problem' in multiple inheritance","Always check .mro() before assuming which parent's method actually runs"),
+];
+const OOP_DUNDER = [
+Md("__init__ / __new__","__init__(self,...) / __new__(cls,...)","Initialize / actually allocate the instance","__new__ matters mainly for immutable types and singleton patterns"),
+Md("__str__ / __repr__","__str__(self) / __repr__(self)","Human-readable string / unambiguous developer-facing string","print(obj) uses __str__; the console/repr() uses __repr__"),
+Md("__eq__ / __hash__","__eq__(self,other) / __hash__(self)","Define equality / make the object hashable for sets and dict keys","Defining __eq__ without __hash__ makes instances unhashable"),
+Md("__lt__ / __le__ / __gt__ / __ge__","__lt__(self,other)","Define ordering for sorting and comparisons","Combine with @functools.total_ordering to avoid writing all of them"),
+Md("__len__","__len__(self)","Support len(obj)","Must return a non-negative integer"),
+Md("__getitem__ / __setitem__","__getitem__(self,key)","Support obj[key] for reading/assignment","Implementing this alone also enables basic iteration via a legacy fallback protocol"),
+Md("__iter__ / __next__","__iter__(self) / __next__(self)","Make the object iterable","__iter__ usually returns self; __next__ raises StopIteration when exhausted"),
+Md("__enter__ / __exit__","__enter__(self) / __exit__(self, exc_type, exc_val, exc_tb)","Support the `with` statement","Returning True from __exit__ suppresses any exception that occurred (use carefully)"),
+Md("__call__","__call__(self, *args)","Make instances callable like a function","Useful for stateful function-like objects and class-based decorators"),
+Md("__add__ / __radd__ / etc.","__add__(self,other)","Operator overloading (+, -, *, ...)","__radd__ is the fallback used when the left operand doesn't support +"),
+Md("__format__","__format__(self, spec)","Customize behavior inside f-strings/format()","f'{obj:spec}' calls __format__, not __str__"),
+];
+const OOP_ENCAP = [
+T("Public / _protected / __private","A naming convention, not real enforced access control.","self.x, self._x, self.__x","Signaling intended visibility to other developers","__x triggers name mangling (becomes _ClassName__x) — it's obscured, not truly private"),
+T("@property","Turns a method into a read-only, attribute-like accessor.","@property\\ndef area(self): return self.w*self.h","Computed attributes, validation triggered on access","Forgetting the matching @x.setter means any assignment raises AttributeError"),
+T("@x.setter","Defines the setter half of a property.","@area.setter\\ndef area(self, v): ...","Validating or transforming a value as it's assigned","The setter's function name must exactly match the property's name"),
+T("Name mangling","Double-underscore attribute names get class-name-prefixed internally.","self.__secret → stored as self._ClassName__secret","Avoiding accidental attribute clashes in subclasses","Confusing for beginners debugging an attribute that seems to 'disappear'"),
+];
+const OOP_METHODS = [
+T("Instance method","Operates on a specific instance via self.","def bark(self): ...","The most common kind — behavior tied to instance state","Calling it via the class directly requires passing an instance explicitly as the first argument"),
+T("@classmethod","Operates on the class itself (cls), not a specific instance.","@classmethod\\ndef from_string(cls, s): ...","Alternative constructors, factory methods","cls refers to the actual subclass when called via a subclass — important for inheritance"),
+T("@staticmethod","A plain function namespaced inside a class — no self or cls.","@staticmethod\\ndef is_valid(s): ...","Utility functions that are logically grouped with a class","Gets none of self/cls's benefits — often could simply be a module-level function instead"),
+];
+const OOP_ABSTRACT = [
+T("abc.ABC","Base class for defining abstract base classes.","class Shape(ABC): ...","Enforcing a common interface across a family of subclasses","You can't instantiate an ABC directly while it still has unimplemented abstract methods"),
+T("@abstractmethod","Marks a method that every subclass MUST override.","@abstractmethod\\ndef area(self): ...","Guaranteeing subclasses implement key behavior","Forgetting to inherit from ABC silently turns @abstractmethod into a no-op"),
+T("typing.Protocol","Structural typing — 'if it has these methods, it qualifies', checked statically.","class Sized(Protocol): def __len__(self)->int: ...","Flexible, duck-typed interfaces without forcing inheritance","Only enforced by static type checkers like mypy — not at runtime"),
+];
+const OOP_DATACLASS = [
+T("@dataclass","Auto-generates __init__, __repr__, and __eq__ from declared fields.","@dataclass\\nclass Point: x: int; y: int","Simple data-holding classes, cutting boilerplate","Mutable defaults need field(default_factory=list), not `= []` directly"),
+T("frozen=True","Makes a dataclass immutable after construction.","@dataclass(frozen=True)\\nclass Point: ...","Hashable, immutable value objects","Assigning to a field afterward raises FrozenInstanceError"),
+T("field()","Fine-tunes an individual dataclass field's behavior.","field(default_factory=list, repr=False)","Mutable defaults, excluding a field from repr/eq","default_factory must be a zero-argument callable"),
+];
+const OOP_ADVANCED = [
+T("__slots__","Restricts instances to a fixed, declared set of attributes — no per-instance __dict__.","class P: __slots__ = ('x','y')","Memory savings and faster attribute access at scale","Breaks easily with multiple inheritance among slotted classes unless carefully designed"),
+T("Descriptors","Objects implementing __get__/__set__/__delete__ that customize attribute access.","class Desc: def __get__(self,obj,owner): ...","Validation logic reused across many attributes (a property is really a built-in descriptor)","Easy to mix up where the value is actually stored — instance dict vs. the descriptor itself"),
+T("Metaclasses","'Classes of classes' — they control how a class itself gets created.","class Meta(type): def __new__(mcls,...): ...","Frameworks/ORMs needing to customize class creation (e.g. Django models)","Rarely needed in application code — if you're unsure whether you need one, you probably don't"),
+T("Mixins","Small classes providing reusable behavior via multiple inheritance.","class JSONMixin: def to_json(self): ...","Composing optional behavior without a deep inheritance tree","Avoid defining __init__ in a mixin that needs specific args — keep mixins stateless where possible"),
+];
+
+/* =========================================================
+   DATA — GROUP 5: ITERATORS, GENERATORS & CONTEXT MANAGERS
+   ========================================================= */
+const IT_PROTOCOL = [
+T("Iterable","An object that can produce an iterator via __iter__.","lists, strings, dicts, files, sets...","Anything you can put after `in` in a for-loop","Being iterable doesn't mean it IS an iterator — a list is iterable but not an iterator itself"),
+T("Iterator","An object with __next__ that yields values one at a time, raising StopIteration when done.","it = iter([1,2,3]); next(it)","Manual, step-by-step consumption","Iterators are single-use — once exhausted, they stay exhausted"),
+T("iter() / next()","Built-ins implementing the protocol manually.","next(it, default)","Custom iteration logic, peeking with a fallback","next() with no default raises StopIteration when exhausted, which can crash an unguarded loop"),
+];
+const IT_GENERATORS = [
+T("Generator function","A function using `yield` instead of `return` — pauses and resumes its state.","def gen(): yield 1; yield 2","Lazy sequences, large/infinite streams, data pipelines","Calling a generator function doesn't run its body — it just creates a generator object"),
+T("yield","Pauses execution, returns a value, and resumes from that exact point on the next next() call.","yield value","Producing values one at a time without building the whole sequence","A function with even one `yield` anywhere becomes a generator function — a `return` inside it just ends iteration"),
+T("yield from","Delegates iteration to a sub-generator or any iterable.","yield from inner_gen()","Composing generators, flattening nested generator pipelines","Also forwards values pushed in via .send() down to the sub-generator"),
+T("Generator expression","(expr for x in it) — the lazy version of a list comprehension.","sum(x*x for x in range(10**6))","Memory-efficient, one-pass computation over large data","Can only be iterated once — convert to a list if you need to reuse it"),
+T(".send() / .throw() / .close()","Advanced generator control: push a value in, raise an exception inside, or stop it early.","gen.send(value)","Coroutine-style generators, cooperative cancellation",".send() resumes the generator and its return value becomes the result of the paused `yield` expression"),
+];
+const IT_CONTEXT = [
+T("with statement","Guarantees setup/cleanup code runs, even when an exception occurs.","with open('f') as f: data = f.read()","File handles, locks, DB connections, transactions","Cleanup still runs on an exception, but the exception itself still propagates unless explicitly suppressed"),
+T("__enter__ / __exit__","The two methods that make a class usable inside a `with` block.","See the dunder methods table","Writing your own custom resource-management classes","__exit__'s return value controls whether an exception is suppressed (True = swallow it — use sparingly)"),
+T("contextlib.contextmanager","Turns a generator function into a context manager.","@contextmanager\\ndef ctx(): yield resource","Quick context managers without writing a full class","Code before `yield` is __enter__; code after is __exit__ — must yield exactly once"),
+T("Multiple context managers","Combine several managers in one `with` statement.","with open('a') as a, open('b') as b: ...","Managing several resources together cleanly","Equivalent to nesting — entered left-to-right, exited right-to-left"),
+];
+
+/* =========================================================
+   DATA — GROUP 6: ERROR HANDLING
+   ========================================================= */
+const ERR_TRY = [
+T("try / except","Catch and handle an exception.","try: ... except ValueError as e: ...","Handling expected, recoverable failure cases","A bare `except:` catches everything — even KeyboardInterrupt/SystemExit — almost always avoid it"),
+T("else (on try)","Runs only if the try block completed with no exception.","try: ... except: ... else: success()","Code that should run only on the success path","Easy to forget this exists — many people just put that code after the whole try/except instead"),
+T("finally","Always runs — exception or not, even across return/break.","try: ... finally: cleanup()","Guaranteed cleanup: closing files, releasing locks/connections","A `return` inside `finally` silently overrides any `return` from the try or except blocks"),
+T("Multiple except clauses","Handle different exception types with different logic.","except (TypeError, ValueError): ...","Different recovery strategies per error type","Checked top-to-bottom — the first matching clause wins, so order from specific to general"),
+];
+const ERR_RAISE = [
+T("raise","Trigger an exception manually.","raise ValueError('bad input')","Signaling invalid state or input explicitly","A bare `raise` inside an except block re-raises the caught exception, preserving its original traceback"),
+T("raise ... from ...","Explicitly chain a new exception to an original cause.","raise RuntimeError('failed') from original_err","Wrapping low-level errors into more meaningful, higher-level ones","Without `from`, Python still shows the original as the implicit '__context__' during exception handling"),
+T("Custom exceptions","Subclassing Exception for domain-specific error types.","class InsufficientFundsError(Exception): ...","Clear, catchable, self-documenting errors in your own APIs","Inherit from Exception, not BaseException, unless you have a very specific reason not to"),
+];
+const ERR_BUILTINS = [
+Exc("TypeError","An operation/function is applied to an object of an inappropriate type.","'2' + 2 → TypeError"),
+Exc("ValueError","A function gets an argument of the right type but an inappropriate value.","int('abc') → ValueError"),
+Exc("KeyError","A dictionary lookup key doesn't exist.","{}['x'] → KeyError"),
+Exc("IndexError","A sequence index is out of range.","[1,2][5] → IndexError"),
+Exc("AttributeError","An attribute or method reference fails on an object.","None.upper() → AttributeError"),
+Exc("ZeroDivisionError","Dividing (or modulo-ing) by zero.","1/0 → ZeroDivisionError"),
+Exc("FileNotFoundError","Trying to open a file that doesn't exist.","open('missing.txt') → FileNotFoundError"),
+Exc("ImportError / ModuleNotFoundError","An import fails / the module itself can't be located.","import nope → ModuleNotFoundError"),
+Exc("StopIteration","An iterator has no more items left (next() called with no default).","Normally handled automatically by for-loops behind the scenes"),
+Exc("RecursionError","The call stack exceeds Python's recursion limit.","Deep or accidentally unbounded recursion"),
+Exc("NameError / UnboundLocalError","Using a name that doesn't exist / a local var referenced before assignment.","print(undefined_var) → NameError"),
+Exc("AssertionError","An `assert` statement's condition evaluates to False.","assert x > 0, 'x must be positive'"),
+];
+const ERR_ASSERT = [
+T("assert","A debug-time sanity check — stripped out entirely when Python runs with -O.","assert x > 0, 'x must be positive'","Catching programmer errors/invariant violations during development","Never use it to validate untrusted user input in production — it can be silently disabled"),
+T("warnings module","Issue a non-fatal warning instead of raising an exception.","warnings.warn('deprecated', DeprecationWarning)","Signaling deprecated APIs or recoverable issues","Warnings are easy to silently ignore — configure filters explicitly if they must be seen"),
+];
+
+/* =========================================================
+   DATA — GROUP 7: CONCURRENCY & ASYNC
+   ========================================================= */
+const CC_GIL = [
+T("GIL (Global Interpreter Lock)","Only one thread can execute Python bytecode at a time, even on a multi-core machine.","A CPython implementation detail, not a language requirement","Understanding why pure threading doesn't speed up CPU-bound Python code","I/O-bound work still benefits from threads — the GIL is released while a thread waits on I/O"),
+];
+const CC_THREAD = [
+Md("threading.Thread","Thread(target=func, args=(...))","Run a function concurrently on a separate thread","t = Thread(target=worker); t.start(); t.join()"),
+Md("Lock","threading.Lock()","Mutual exclusion — prevents race conditions on shared state","with lock: shared_counter += 1"),
+Md("ThreadPoolExecutor","concurrent.futures.ThreadPoolExecutor(max_workers)","Manage a reusable pool of worker threads","with ThreadPoolExecutor() as ex: ex.map(f, items)"),
+];
+const CC_PROCESS = [
+Md("multiprocessing.Process","Process(target=func, args=(...))","Run a function in a separate OS process (own GIL, own memory)","p = Process(target=worker); p.start(); p.join()"),
+Md("Pool","multiprocessing.Pool(n)","Distribute work across several worker processes","with Pool(4) as p: p.map(f, items)"),
+Md("ProcessPoolExecutor","concurrent.futures.ProcessPoolExecutor(max_workers)","High-level multiprocessing with the same API as ThreadPoolExecutor","Same .submit()/.map() interface as ThreadPoolExecutor"),
+];
+const CC_ASYNC = [
+T("Coroutine","A function defined with `async def` — can pause and resume at `await` points.","async def fetch(): ...","Concurrent I/O-bound operations on a single thread","Calling a coroutine function just creates a coroutine object — nothing runs until it's awaited/scheduled"),
+T("await","Pause until an awaitable completes, yielding control to the event loop meanwhile.","data = await fetch()","Waiting on async I/O without blocking the whole program","Can only be used inside an `async def` function body"),
+T("Event loop","The scheduler that runs coroutines, switching between them at await points.","asyncio.run(main())","The runtime driving every piece of async code","Don't call asyncio.run() inside an already-running loop (e.g. inside Jupyter) — await directly instead"),
+T("asyncio.gather","Run several coroutines concurrently and collect all their results.","await asyncio.gather(fetch(1), fetch(2))","Parallelizing many independent async calls at once","By default, the first exception cancels the rest unless return_exceptions=True"),
+T("Task","A coroutine that's been scheduled to run on the event loop.","task = asyncio.create_task(fetch())","Firing off work now, awaiting its result later","An unreferenced task can be garbage-collected mid-execution — keep a reference to it"),
+];
+const CC_GUIDE = [
+G("CPU-bound, want real parallelism","multiprocessing / ProcessPoolExecutor"),
+G("I/O-bound (network, disk), many concurrent waits","asyncio (best for very many connections) or threading"),
+G("Simple 'run this in the background' need, no async rewrite","concurrent.futures (ThreadPoolExecutor / ProcessPoolExecutor)"),
+G("Need to share mutable state across workers","threading + Lock (shared memory) — multiprocessing needs explicit shared memory/queues"),
+G("Already using async libraries (aiohttp, asyncpg, etc.)","asyncio, to stay inside the same concurrency model"),
+];
+
+/* =========================================================
+   DATA — GROUP 8: MEMORY, PERFORMANCE & CPYTHON INTERNALS
+   ========================================================= */
+const MEM_REF = [
+T("Variables are references","A name is a label pointing to an object in memory, not a box containing it.","a = [1,2]; b = a","Understanding why mutating b also changes a","`b = a` doesn't copy anything — both names point to the exact same list object"),
+T("id()","Returns a unique integer identifying an object's identity (its memory address in CPython).","id(x)","Debugging identity issues, understanding `is`","Two equal-but-distinct objects have different ids: [1]==[1] is True, but [1] is [1] is False"),
+T("is vs ==","`is` checks identity (same object); `==` checks equality (same value, via __eq__).","a is b   vs.   a == b","Use `is` only for None/True/False and explicit singleton checks","Using `is` on numbers/strings can coincidentally work due to caching, then break unexpectedly elsewhere"),
+T("Small int / string interning","CPython caches small ints (-5 to 256) and some string literals as singletons.","a = 256; b = 256; a is b → True","Explains surprising `is` results in toy examples","Don't rely on this — it's a CPython implementation detail, not a language guarantee"),
+];
+const MEM_GC = [
+T("Reference counting","Every object tracks how many references point to it; it's freed the instant that count hits zero.","sys.getrefcount(x)","The primary memory-management mechanism in CPython","Doesn't by itself handle reference cycles (a → b → a)"),
+T("Cyclic garbage collector","Periodically finds and frees groups of objects that reference each other but are otherwise unreachable.","gc.collect()","Cleaning up reference cycles that plain refcounting can't catch","Objects with custom __del__ in a cycle used to be especially tricky (much improved in modern Python)"),
+T("weakref","A reference to an object that does NOT increase its refcount or keep it alive.","weakref.ref(obj)","Caches, observer patterns that shouldn't keep their targets alive","Calling the weakref returns None once the original object has actually been collected"),
+T("copy / deepcopy","See the data-structures mutability section.","copy.copy(x) / copy.deepcopy(x)","Independent copies of mutable structures","Deepcopy can be surprisingly slow and can fail on objects holding open resources"),
+];
+const MEM_BIGO = [
+O("Index access: x[i] / x[key]","O(1)","O(1) avg","—","Lists are contiguous arrays under the hood — index math is direct"),
+O("Membership test: x in container","O(n)","O(1) avg","O(1) avg","Switch from a list to a set/dict for frequent membership checks"),
+O("Append / Add","O(1) amortized","O(1) avg","O(1) avg","Lists occasionally resize their backing array — amortizes to O(1)"),
+O("Insert at front / pop(0)","O(n)","—","—","Use collections.deque for O(1) operations at both ends"),
+O("Delete by key/value","O(n)","O(1) avg","O(1) avg","Removing from the middle of a list shifts every following element"),
+O("Sort","O(n log n)","—","—","Python's sort (Timsort) is stable and adapts well to partially-sorted input"),
+];
+const MEM_PROFILE = [
+Md("timeit","timeit.timeit(stmt, number=...)","Accurately measure the execution time of a small snippet","python -m timeit \"'-'.join(str(n) for n in range(100))\""),
+Md("cProfile","python -m cProfile script.py","Profile where an entire program actually spends its time","Find the real bottleneck before optimizing anything"),
+Md("sys.getsizeof","sys.getsizeof(obj)","Approximate (shallow) memory footprint of an object","Doesn't include the size of objects it merely references"),
+Md("dis.dis","dis.dis(func)","Disassemble a function into CPython bytecode","See exactly what the interpreter executes under the hood"),
+];
+const MEM_INTERNALS = [
+T("Everything is an object","Functions, classes, and modules are all objects with their own attributes.","type(5), type(int), type(type)","Enables powerful introspection and metaprogramming","Even True and None have a type and an identity, just like any other object"),
+T("Bytecode & the interpreter loop","Source is compiled to bytecode and executed by a stack-based virtual machine.","compile(), the dis module","Understanding performance characteristics at a deeper level","Bytecode is CPython-specific — other implementations (PyPy etc.) work differently internally"),
+T("CPython vs other implementations","CPython is the reference implementation; PyPy, Jython, IronPython, MicroPython also exist.","—","Choosing a runtime for special needs (raw speed, embedding, microcontrollers)","Most third-party C-extension packages assume CPython specifically"),
+];
+
+/* =========================================================
+   DATA — GROUP 9: TYPING, REGEX & STANDARD LIBRARY
+   ========================================================= */
+const TY_HINTS = [
+T("Basic types","int, str, float, bool, bytes, None","def f(x: int) -> str: ...","Documenting expected types for readers and tools","Hints are NOT enforced at runtime — only by separate tools like mypy/pyright"),
+T("Optional[X] / X | None","The value may be X, or it may be None.","def f(x: Optional[int] = None): ...","Parameters/returns that may legitimately be absent","Python 3.10+ lets you write `int | None` directly, no typing import needed"),
+T("Union[X, Y] / X | Y","The value may be one of several listed types.","def f(x: int | str): ...","Functions genuinely accepting more than one type","Overusing Union is often a sign the function should be split into two clearer ones"),
+T("list[X] / List[X]","A list whose elements are all of a specific type.","def f(xs: list[int]) -> None: ...","Typed containers, clearer function signatures","Pre-3.9 needs `from typing import List`; 3.9+ can use the built-in `list[int]` directly"),
+T("dict[K, V] / Dict[K, V]","A dict with specific key and value types.","def f(d: dict[str, int]): ...","Typed mappings","Same old-vs-new syntax note as list above"),
+T("Callable[[Args], Ret]","A type describing a function's signature.","f: Callable[[int, int], int]","Typing higher-order functions and callbacks","Hard to express *args/**kwargs precisely — often loosely typed as Callable[..., Ret]"),
+T("TypeVar / Generics","A placeholder type for writing generic functions/classes.","T = TypeVar('T'); def first(xs: list[T]) -> T: ...","Reusable generic containers and functions","Generic syntax got much simpler in 3.12: def first[T](xs: list[T]) -> T"),
+T("@overload","Declare multiple distinct type signatures for one function.","@overload\\ndef f(x: int) -> int: ...","Precisely documenting different valid call patterns","Only the final, undecorated implementation actually runs at call time"),
+];
+const TY_REGEX_FUNCS = [
+Md("re.match","re.match(pattern, string)","Match only at the very start of the string","re.match(r'\\d+', '123abc') → match"),
+Md("re.search","re.search(pattern, string)","Find the first match anywhere in the string","re.search(r'\\d+', 'abc123') → match"),
+Md("re.findall","re.findall(pattern, string)","Return all non-overlapping matches as a list","re.findall(r'\\d+', 'a1b22') → ['1','22']"),
+Md("re.finditer","re.finditer(pattern, string)","Like findall, but returns an iterator of match objects","Useful when you need each match's position via .start()/.end()"),
+Md("re.sub","re.sub(pattern, repl, string)","Replace matches with a string (or the result of a function)","re.sub(r'\\s+', ' ', text)"),
+Md("re.split","re.split(pattern, string)","Split a string using a regex pattern as the delimiter","re.split(r'[,;]', 'a,b;c') → ['a','b','c']"),
+Md("re.compile","re.compile(pattern)","Pre-compile a pattern once for repeated reuse/performance","pat = re.compile(r'\\d+'); pat.findall(s)"),
+];
+const TY_REGEX_SYNTAX = [
+T("Quantifiers & classes","The building blocks of regex patterns.","\\d \\w \\s . * + ? {m,n} ^ $ [] () |","Composing patterns to match real-world text","Quantifiers are greedy by default — `.*` over-matches; use `.*?` for lazy/minimal matching"),
+T("Groups","Capture parts of a match for extraction or backreference.","(\\d{4})-(\\d{2})-(\\d{2})","Extracting structured pieces from text (dates, IDs, log lines)","Use (?:...) for a non-capturing group when you don't actually need the captured value"),
+T("Raw strings","A r'...' prefix stops Python from interpreting backslashes before regex even sees them.","r'\\d+'  not  '\\\\d+'","Always, whenever you write a regex pattern literal","Forgetting the r-prefix is the single most common source of confusing regex bugs"),
+];
+const STD_COLLECTIONS = [
+Md("Counter","collections.Counter(iterable)","Count occurrences of each item","Counter('aabbc') → {'a':2,'b':2,'c':1}"),
+Md("defaultdict","collections.defaultdict(default_factory)","A dict that auto-creates missing keys with a default value","defaultdict(list); d['x'].append(1) — never raises KeyError"),
+Md("namedtuple","collections.namedtuple('Name', ['f1','f2'])","Lightweight immutable class with named fields","See the tuples section"),
+Md("deque","collections.deque(iterable, maxlen=None)","Double-ended queue — O(1) append/pop on both ends","Great for queues, sliding windows, undo stacks"),
+Md("OrderedDict","collections.OrderedDict()","A dict that explicitly remembers insertion order","Regular dicts preserve order since 3.7 too, but OrderedDict adds move_to_end() and order-sensitive equality"),
+Md("ChainMap","collections.ChainMap(d1, d2, ...)","View several dicts as one, searched in order","Layered configs (defaults + overrides) without merging or copying anything"),
+];
+const STD_DATETIME = [
+Md("datetime.now()","datetime.datetime.now()","Current local date and time","Use datetime.now(timezone.utc) for timezone-aware UTC"),
+Md("timedelta","datetime.timedelta(days=1, hours=2)","Represents a duration, usable for date arithmetic","tomorrow = now + timedelta(days=1)"),
+Md("strftime","dt.strftime('%Y-%m-%d')","Format a datetime object as a string","Common codes: %Y %m %d %H %M %S %A %B"),
+Md("strptime","datetime.strptime(s, '%Y-%m-%d')","Parse a string into a datetime object","The format string must exactly match the input string's layout"),
+];
+const STD_OSPATH = [
+Md("pathlib.Path","Path('dir') / 'file.txt'","Modern, cross-platform, object-oriented path handling","Preferred over manual os.path string-joining in new code"),
+Md("Path.exists / is_file / is_dir","p.exists(), p.is_file()","Check filesystem entries without separate os.path calls","p.glob('*.py') for pattern-matching files in a directory"),
+Md("os.environ","os.environ.get('VAR')","Read environment variables safely","Use os.environ['VAR'] directly only if you're certain it's set (else KeyError)"),
+Md("sys.argv","sys.argv","Command-line arguments passed to the running script","sys.argv[0] is the script name itself, not the first real argument"),
+Md("os.getcwd / os.listdir","os.getcwd(), os.listdir(path)","Current working directory / directory contents","pathlib equivalents: Path.cwd(), Path(p).iterdir()"),
+];
+const STD_SERIALIZE = [
+Md("json.dumps / loads","json.dumps(obj), json.loads(s)","Serialize Python objects to/from JSON text","Only handles JSON-native types — sets/datetimes etc. need custom encoders"),
+Md("json.dump / load","json.dump(obj, file), json.load(file)","Read/write JSON directly to/from an open file object","Open the file first: open(path, 'w') / open(path, 'r')"),
+Md("csv.reader / writer","csv.reader(file), csv.writer(file)","Read/write CSV rows as plain lists","Use csv.DictReader/DictWriter to work by column name instead of position"),
+Md("pickle.dumps / loads","pickle.dumps(obj), pickle.loads(b)","Serialize arbitrary Python objects to bytes","Never unpickle data from an untrusted source — it can execute arbitrary code on load"),
+];
+const STD_MATH = [
+Md("math module","math.sqrt, math.floor, math.ceil, math.pi, math.log","Standard mathematical functions and constants","math.isclose(a, b) for safe floating-point comparison"),
+Md("random module","random.random(), random.randint(a,b), random.choice(seq)","Pseudo-random number generation","Not cryptographically secure — use the `secrets` module for security-sensitive randomness"),
+Md("statistics module","statistics.mean, median, stdev, variance","Basic descriptive statistics on plain Python lists","For heavy numeric work, NumPy/Pandas are vastly faster on large datasets"),
+];
+
+/* =========================================================
+   DATA — GROUP 10: TESTING, DEBUGGING, PACKAGING & PRACTICE
+   ========================================================= */
+const TEST_FRAMEWORKS = [
+T("assert (in tests)","Plain assertions used inside test functions.","assert result == expected","Quick checks inside pytest-style tests","No useful message by default in vanilla assert — pytest specifically rewrites asserts to show helpful diffs"),
+T("unittest","Python's built-in, class-based test framework.","class T(unittest.TestCase): def test_x(self): self.assertEqual(f(2), 4)","Standard-library-only projects, legacy codebases","More boilerplate than pytest — many assertX() method names to remember"),
+T("pytest","The most popular third-party framework — function-based, plain asserts.","def test_x(): assert f(2) == 4","The default choice for most modern Python projects","Not in the standard library — requires `pip install pytest`"),
+T("Fixtures","Reusable setup/teardown logic shared across tests.","@pytest.fixture\\ndef client(): ...","DRY test setup (DB connections, temp files, mock objects)","Fixture scope (function/module/session) controls how often it's recreated"),
+T("Mocking","Replacing real objects/calls with fake ones during a test.","unittest.mock.patch('module.func')","Isolating the unit under test from external systems (APIs, DBs)","Over-mocking can let tests pass while the real integration is actually broken"),
+];
+const DEBUG_TOOLS = [
+Md("breakpoint()","breakpoint()","Drop into the debugger at this exact line (3.7+)","Cleaner than the old `import pdb; pdb.set_trace()`"),
+Md("pdb commands","n (next), s (step), c (continue), p x (print x), l (list)","Core commands once you're inside the debugger","q to quit the debugger session entirely"),
+];
+const LOG_BASICS = [
+T("logging module","Structured, leveled output — the production-grade replacement for print() debugging.","logging.basicConfig(level=logging.INFO); logging.info('msg')","Any real application that needs real diagnostics","Leftover print() debugging in a pull request is a classic code-review red flag"),
+T("Log levels","DEBUG < INFO < WARNING < ERROR < CRITICAL.","logger.warning('disk space low')","Filtering verbosity differently per environment (dev vs prod)","Logging at the wrong level either floods the logs or hides real problems"),
+];
+const PKG_TOOLS = [
+Md("venv","python -m venv .venv","Create an isolated environment for project dependencies","source .venv/bin/activate (Unix) or .venv\\Scripts\\activate (Windows)"),
+Md("pip","pip install package, pip freeze > requirements.txt","Install and track third-party packages","pip install -r requirements.txt to reproduce an environment exactly"),
+Md("pyproject.toml","[project] name, version, dependencies = [...]","The modern standard for project metadata and build config","Replacing setup.py/setup.cfg in current tooling (PEP 517/518)"),
+Md("__init__.py","An (often empty) file marking a directory as a Python package","Defines package-level exports if non-empty","Implicit namespace packages exist since 3.3, but explicit __init__.py is still very common"),
+];
+const PRACTICE_IDIOMS = [
+T("enumerate()","Get (index, value) pairs while looping — no manual counters.","for i, x in enumerate(items): ...","Any loop that needs both the index and the value","enumerate(items, start=1) to begin counting from 1 instead of 0"),
+T("zip()","Iterate over multiple sequences in parallel.","for a, b in zip(list1, list2): ...","Pairing up related sequences element by element","zip stops at the shortest input — use itertools.zip_longest if lengths may differ"),
+T("Unpacking in loops","Destructure tuples directly inside a for-loop.","for key, value in d.items(): ...","Cleaner iteration over pairs and structured records","A mismatched unpacking count raises ValueError"),
+T("EAFP vs LBYL","'Easier to Ask Forgiveness than Permission' vs 'Look Before You Leap'.","try/except (EAFP) vs. if-check-then-act (LBYL)","Pythonic style generally favors EAFP for clarity and avoiding race conditions","LBYL can race between the check and the use, especially in concurrent code"),
+T("with open(...) as f","Always use a context manager for files instead of manual open()/close().","with open('f') as f: data = f.read()","Literally every file operation","Forgetting to close a file leaks file descriptors — `with` makes that mistake impossible"),
+];
+const PRACTICE_SYMPTOMS = [
+Sy("A function with a mutable default argument behaves 'sticky' across calls","The default is created once at def-time and shared by every call — use `=None` and create the object inside the function instead"),
+Sy("Closures created inside a loop all return the same/last value","Late binding — the closure captures the *variable* itself, not its value at creation time; fix with a default-arg trick: lambda x=i: ..."),
+Sy("`a is b` is True for two equal small numbers/strings, but breaks for larger ones","CPython caches small ints and some string literals — never rely on `is` for value equality, only for identity/None checks"),
+Sy("Modifying a list while iterating over it skips elements or behaves oddly","Mutating a list during iteration shifts the indices out from under the loop — iterate over a copy instead: for x in list(original):"),
+Sy("Two variables seem mysteriously 'linked' — changing one changes the other","Both names reference the exact same mutable object — use copy.copy() or copy.deepcopy() if you need independence"),
+Sy("0.1 + 0.2 prints as 0.30000000000000004 instead of 0.3","Binary floating point can't represent most decimals exactly — use decimal.Decimal for exact arithmetic, or math.isclose() for comparisons"),
+Sy("ImportError caused by a circular import","Two modules import each other at the top level — restructure the imports, or move one import inside a function"),
+Sy("Changing a class attribute on one instance somehow changes it for every instance","You mutated a shared mutable *class* attribute instead of creating a separate *instance* attribute"),
+Sy("RecursionError on deep recursion that 'should' work","Python has no tail-call optimization — convert to an iterative loop, or raise sys.setrecursionlimit cautiously as a last resort"),
+Sy("A decorated function loses its original name/docstring","Forgot @functools.wraps(func) on the decorator's inner wrapper function"),
+];
+const PRACTICE_GUIDE = [
+G("Need an ordered, mutable, duplicate-allowing collection","list"),
+G("Need an immutable, hashable sequence (e.g. a dict key)","tuple"),
+G("Need fast membership testing, no duplicates, order doesn't matter","set"),
+G("Need key → value lookups","dict"),
+G("Need a queue with O(1) operations at both ends","collections.deque"),
+G("Need counts of items","collections.Counter"),
+G("Need a dict with an automatic default for missing keys","collections.defaultdict"),
+G("Building a one-time, memory-efficient sequence","generator expression"),
+G("CPU-bound parallel work","multiprocessing"),
+G("I/O-bound concurrent work, many connections at once","asyncio"),
+G("Quick concurrent tasks without rewriting everything as async","concurrent.futures.ThreadPoolExecutor"),
+G("Need to memoize an expensive pure function","functools.lru_cache / functools.cache"),
+G("Need a lightweight, immutable data record","dataclass(frozen=True) or namedtuple"),
+];
+
+/* =========================================================
+   DATA — GROUP 11: MODULES, IMPORTS & PROJECT STRUCTURE
+   ========================================================= */
+const MOD_BASICS = [
+T("Module","Any .py file — its top-level names become attributes of a module object on import.","import math; math.sqrt(4)","Organizing code into separate, reusable files","A module's top-level code runs exactly once, the first time it's imported, then is cached in sys.modules"),
+T("Package","A directory containing modules, usually marked with __init__.py.","import package.module","Grouping related modules into a namespace/hierarchy","Implicit namespace packages (no __init__.py) work since 3.3, but explicit __init__.py is still the common convention"),
+T("if __name__ == '__main__':","Code in this block runs only when the file is executed directly, not when imported.","if __name__ == '__main__': main()","Letting a file be both an importable module and a runnable script","Forgetting this guard means importing the module also re-runs its 'script' logic as a side effect"),
+T("Absolute import","Refers to a module by its full path from the project root.","from package.sub import module","The default, explicit, recommended style","Requires the project root to be on sys.path — often handled automatically when run as a package"),
+T("Relative import","Refers to a module relative to the current package, using leading dots.","from . import sibling  /  from ..pkg import x","Imports inside a package that might be renamed/relocated","Only works inside a package — fails with 'attempted relative import' if the file is run directly as a script"),
+T("import vs from...import","import brings in the module object; from...import pulls specific names directly into your namespace.","import os  vs  from os import path","Style/namespace preference — `import os` is usually clearer for traceability","from module import *  pollutes your namespace and hides exactly where each name came from — avoid it"),
+];
+const MOD_MECHANICS = [
+T("sys.path","The list of directories Python searches, in order, when resolving an import.","sys.path.append('/my/dir')","Diagnosing 'ModuleNotFoundError' for a module that does exist on disk","Modifying sys.path at runtime is a code smell — fix the project structure or PYTHONPATH instead where possible"),
+T("sys.modules","A cache of every module that's already been imported this run.","sys.modules['os']","Understanding why editing a file doesn't affect an already-imported copy","Each module is imported and executed only ONCE per process — re-importing just returns the cached object"),
+T("importlib","Programmatic access to the import system.","importlib.import_module('os')","Dynamic imports where the module name is only known at runtime","importlib.reload(mod) re-runs a module's top level — useful in REPLs, risky in production code"),
+T("Circular imports","Module A imports module B, which imports module A, creating a loop.","a.py: import b  /  b.py: import a","A common real-world bug in larger codebases","Fix by restructuring (move shared code to a third module) or by importing inside a function body instead of at the top"),
+];
+
+/* =========================================================
+   DATA — GROUP 12: ENUMS, ADVANCED TYPING & DATA VALIDATION
+   ========================================================= */
+const ENUM_BASICS = [
+T("enum.Enum","A class of named, related constant values.","class Color(Enum): RED=1; GREEN=2","Replacing 'magic' string/int constants with self-documenting names","Comparing an Enum member with == to its raw value (Color.RED == 1) is False unless it's an IntEnum"),
+T("IntEnum / StrEnum","Enum variants whose members also behave like an int / str.","class Status(IntEnum): OK=200; NOT_FOUND=404","Interop with code/APIs that expect plain int or str values","StrEnum was added in 3.11 — before that, mixing in str manually was the common workaround"),
+T("auto()","Automatically assigns the next value, so you don't pick numbers by hand.","class Color(Enum): RED=auto(); GREEN=auto()","Enums where the actual numeric value doesn't matter, only distinctness","Renumbering happens if you reorder members — don't persist auto() values across code versions"),
+T("Flag / IntFlag","Enum members that can be combined with bitwise OR.","class Perm(Flag): READ=1; WRITE=2; EXEC=4","Bitmask-style combinable options (permissions, feature flags)","Perm.READ | Perm.WRITE produces a new combined Flag member, not a plain int"),
+];
+const TYPE_ADVANCED = [
+T("TypedDict","A dict type with a fixed, statically-checked set of keys and value types.","class Movie(TypedDict): title: str; year: int","Typing dict-shaped data (e.g. JSON) without making a full class","Purely a static-typing construct — at runtime it's still just a plain dict, no real enforcement"),
+T("NamedTuple (typing)","A typed, class-based alternative to collections.namedtuple.","class Point(NamedTuple): x: int; y: int","Lightweight immutable records with type hints and IDE support","Despite the class syntax, instances are still plain tuples underneath"),
+T("Literal","Restricts a value to one of a specific, fixed set of literal values.","def set_mode(m: Literal['r','w','a']): ...","Tightly-typed string/int 'enum-like' parameters without a real Enum","Only checked by static type checkers (mypy/pyright) — nothing stops a bad value at runtime"),
+T("Final","Marks a name as not meant to be reassigned or a class as not meant to be subclassed.","MAX_SIZE: Final = 100","Signaling intended immutability of a constant/class to readers and tools","Purely advisory — Python itself will still let you reassign a Final-annotated name"),
+T("dataclasses + validation","Combining dataclasses with __post_init__ for custom validation logic.","def __post_init__(self): if self.age<0: raise ValueError(...)","Lightweight validation without a full third-party library","For serious schema validation, most real projects reach for Pydantic instead of hand-rolling this"),
+];
+
+/* =========================================================
+   DATA — GROUP 13: BYTES, UNICODE & NUMERIC PRECISION
+   ========================================================= */
+const BYTES_BASICS = [
+T("bytes","An immutable sequence of raw 8-bit values (0-255).","b'hello'","Binary data: network protocols, file formats, raw I/O","b'hello'[0] returns an int (104), not a one-character bytes object — indexing bytes differs from indexing str"),
+T("bytearray","A mutable version of bytes.","bytearray(b'hello')","Building up binary data incrementally, in place","Supports item assignment (ba[0]=65) the way bytes itself does not"),
+T("memoryview","A view onto another object's buffer, without copying the underlying data.","memoryview(some_bytes)","Slicing/processing large binary buffers without expensive copies","Slicing a memoryview is itself O(1) and doesn't copy — slicing the original bytes object does"),
+T("str.encode() / bytes.decode()","Convert between text (Unicode code points) and raw bytes, using an encoding.","'café'.encode('utf-8')","Every boundary between text and the outside world: files, network, terminals","Decoding bytes with the wrong encoding either throws UnicodeDecodeError or silently produces garbled (mojibake) text"),
+T("UTF-8 vs other encodings","UTF-8 is the dominant, variable-width, ASCII-compatible Unicode encoding.","open(path, encoding='utf-8')","The right default for nearly all new text I/O","Don't rely on the platform's default encoding — always specify encoding= explicitly when opening text files"),
+];
+const NUM_PRECISION = [
+T("Floating point (float)","IEEE-754 double precision — fast, but can't represent most decimals exactly.","0.1 + 0.2 != 0.3","General-purpose numeric work where tiny rounding error is acceptable","Never use float for money — rounding errors compound across many operations"),
+T("decimal.Decimal","Exact, base-10 arbitrary-precision arithmetic.","Decimal('0.1') + Decimal('0.2') == Decimal('0.3')","Financial calculations, anything needing exact decimal representation","Must construct from a string (or another Decimal), not a float, or you import the float's own imprecision first"),
+T("fractions.Fraction","Exact rational number arithmetic (numerator/denominator).","Fraction(1,3) + Fraction(1,6) == Fraction(1,2)","Exact ratio/fraction math without floating-point error","Fraction(0.1) inherits float's imprecision — construct from two ints or a string instead"),
+T("int (arbitrary precision)","Python ints have no fixed bit-width — they grow as large as memory allows.","2**1000  (computes exactly, no overflow)","Big-number math, cryptography-adjacent code, combinatorics","Very large ints can still be slow to compute with — 'no overflow' isn't the same as 'free'"),
+T("math.isclose()","Safely compare two floats for 'close enough' equality.","math.isclose(0.1+0.2, 0.3)","Any float comparison instead of using == directly","Default tolerances may be too loose/tight for your specific use case — review rel_tol/abs_tol"),
+];
+
+/* =========================================================
+   DATA — GROUP 14: MODERN ASYNC ADDITIONS & EXCEPTION GROUPS
+   ========================================================= */
+const ASYNC_MODERN = [
+T("async for","Iterate over an async iterator, awaiting each item as it's produced.","async for item in async_gen(): ...","Consuming streamed data from an async generator or async iterable","Can only appear inside an async def function body, same restriction as plain await"),
+T("Async generator","A generator function defined with `async def` that also uses `yield`.","async def stream(): yield await fetch_chunk()","Lazily producing values that each require an awaited operation to compute","Needs `async for` to consume it — a plain `for` loop won't work on an async generator"),
+T("async with","Use an async context manager — calls __aenter__/__aexit__ instead of the sync versions.","async with session.get(url) as resp: ...","Async resource management: connections, sessions, locks in async code","Forgetting `async` before `with` on an async context manager raises a TypeError, not a silent bug"),
+T("asyncio.TaskGroup (3.11+)","Structured concurrency — a group of tasks that's guaranteed to finish (or all be cancelled) together.","async with asyncio.TaskGroup() as tg: tg.create_task(f())","Replacing manual asyncio.gather() bookkeeping with cleaner cancellation semantics","If any task in the group raises, the rest are cancelled and errors are bundled into an ExceptionGroup"),
+T("except* (3.11+)","Catches and handles exceptions out of an ExceptionGroup, by type.","except* ValueError as eg: ...","Handling the bundled multiple-failures case that TaskGroup/gather can produce","Distinct from plain `except` — designed specifically to unpack and match within an ExceptionGroup"),
+];
+
+/* =========================================================
+   DATA — GROUP 15: CLI TOOLS, OPERATOR PRECEDENCE & VERSION HISTORY
+   ========================================================= */
+const CLI_TOOLS = [
+Md("argparse","argparse.ArgumentParser(description=...)","Build a proper command-line interface with flags, help text, and validation","parser.add_argument('--name', required=True)"),
+Md("subprocess.run","subprocess.run(['ls','-l'], capture_output=True, text=True)","Run an external command and capture its output","The modern, recommended replacement for the older os.system/os.popen"),
+Md("sys.argv","sys.argv","Raw command-line arguments, with no parsing or validation","Fine for a single quick positional arg; reach for argparse once you need flags/help"),
+Md("os.environ","os.environ.get('API_KEY')","Read configuration from environment variables","Common pattern for keeping secrets/config out of source code"),
+];
+const OP_PRECEDENCE = [
+T("Highest: () [] . ","Parentheses, subscription, attribute access.","f(x), a[0], obj.attr","Grouping and direct access — always evaluated first","Use explicit parentheses anywhere precedence isn't immediately obvious to a reader, even if not strictly required"),
+T("** (exponentiation)","Binds tighter than unary minus on its left.","-2**2 == -4, not 4","Power operations","-2**2 surprises people expecting (-2)**2 — exponentiation happens before the unary negation is applied to its result"),
+T("* / // %","Multiplication, division, floor division, modulo.","2 + 3*4 == 14","Standard arithmetic precedence, same as ordinary math","Same left-to-right associativity rules as you'd expect from school arithmetic"),
+T("+ -","Addition and subtraction.","Lower precedence than * / // %","Standard arithmetic","—"),
+T("Comparisons (== < > etc.)","Lower than arithmetic; chainable.","1 < 2 < 3 == True","Conditions, filtering","Chained comparisons are genuinely evaluated as a single combined expression, not two separate ones ANDed after the fact"),
+T("not, and, or","Boolean logic, in that precedence order (not binds tightest, or loosest).","not a and b or c → ((not a) and b) or c","Combining conditions","Mixing many of these without parentheses is a common source of subtle logic bugs — add parens for clarity"),
+];
+const VERSION_HISTORY = [
+T("3.6","f-strings introduced; dicts became ordered as an implementation detail (guaranteed in 3.7).","f'{x}'","Formatting strings cleanly","—"),
+T("3.7","dict insertion order officially guaranteed; dataclasses introduced; postponed evaluation groundwork.","@dataclass","Lightweight data-holding classes","—"),
+T("3.8","Walrus operator (:=); positional-only parameters (/); functools.cached_property.","if (n:=len(x))>5: ...","Inline assignment in expressions","—"),
+T("3.9","Dict merge operators (| and |=); built-in generic types (list[int] without importing typing.List).","d1 | d2","Cleaner typing and dict merging","—"),
+T("3.10","Structural pattern matching (match/case); X | Y union syntax for type hints.","match cmd: case 'go': ...","Replacing long if/elif chains; cleaner Optional typing","—"),
+T("3.11","Exception groups & except*; asyncio.TaskGroup; major interpreter speed improvements (~25% faster).","except* ValueError: ...","Structured concurrency, faster general execution","—"),
+T("3.12","Generic syntax simplified (def f[T](x: T) -> T); f-strings allow more complex expressions inside.","def first[T](xs: list[T]) -> T: ...","Cleaner generic functions/classes, more flexible f-strings","—"),
+T("3.13","Experimental free-threaded build (PEP 703) — an optional GIL-free CPython; improved REPL.","Still experimental — opt-in build, not the default","Future-facing: real multi-core threading without the GIL someday","Don't assume the GIL is gone in standard installs — this is opt-in and still maturing"),
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){ return (s===undefined||s===null) ? "" : String(s); }
+
+function renderConceptTable(rows){
+  let head = "<tr><th>Concept</th><th>What it means</th><th>Example</th><th>When to use</th><th>Gotcha</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.c)}</td>
+      <td>${esc(r.i)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+      <td>${esc(r.u)}</td>
+      <td>${esc(r.g)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderMethodTable(rows){
+  let head = "<tr><th>Name</th><th>Signature</th><th>What it does</th><th>Example</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.m)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.sig)}</span></td>
+      <td>${esc(r.desc)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderExcTable(rows){
+  let head = "<tr><th>Exception</th><th>Raised when</th><th>Example</th></tr>";
+  let body = rows.map(r=>`<tr><td class="concept">${esc(r.name)}</td><td>${esc(r.when)}</td><td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderBigOTable(rows){
+  let head = "<tr><th>Operation</th><th>list</th><th>dict</th><th>set</th><th>Note</th></tr>";
+  let body = rows.map(r=>`<tr><td class="concept">${esc(r.op)}</td><td><span class="tag">${esc(r.list)}</span></td><td><span class="tag">${esc(r.dict)}</span></td><td><span class="tag">${esc(r.set)}</span></td><td>${esc(r.note)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderGuideTable(rows){
+  let head = "<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderSymptomTable(rows){
+  let head = "<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const DIAG = {};
+
+DIAG.legb = `
+<svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <rect x="20" y="20" width="600" height="240" rx="10" fill="none" stroke="#9a5b3a" stroke-width="1.5"/>
+  <text x="40" y="44" fill="#9a5b3a" font-weight="700">Built-in (len, range, print...)</text>
+  <rect x="50" y="56" width="540" height="184" rx="10" fill="none" stroke="#3d5a4f" stroke-width="1.5"/>
+  <text x="70" y="80" fill="#3d5a4f" font-weight="700">Global (module-level names)</text>
+  <rect x="80" y="92" width="480" height="128" rx="10" fill="none" stroke="#5b6260" stroke-width="1.5"/>
+  <text x="100" y="116" fill="#5b6260" font-weight="700">Enclosing (outer function's variables)</text>
+  <rect x="110" y="128" width="420" height="68" rx="10" fill="#e7eee9" stroke="#1f2424" stroke-width="1.5"/>
+  <text x="130" y="152" fill="#1f2424" font-weight="700">Local (this function's variables)</text>
+  <text x="130" y="172" fill="#5b6260" font-size="11">x found here? use it. Otherwise look outward →</text>
+  <line x1="560" y1="160" x2="600" y2="160" stroke="#9a5b3a" stroke-width="2"/>
+  <path d="M594 154 L602 160 L594 166" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+  <text x="565" y="248" fill="#5b6260" font-size="11">lookup order: Local → Enclosing → Global → Built-in</text>
+</svg>`;
+
+DIAG.mro = `
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <rect x="270" y="14" width="100" height="32" rx="6" fill="#e7eee9" stroke="#1f2424"/><text x="320" y="35" text-anchor="middle">object</text>
+  <rect x="150" y="86" width="100" height="32" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="200" y="107" text-anchor="middle">A</text>
+  <rect x="390" y="86" width="100" height="32" rx="6" fill="#e7eee9" stroke="#9a5b3a"/><text x="440" y="107" text-anchor="middle">B</text>
+  <rect x="270" y="158" width="100" height="32" rx="6" fill="#3d5a4f"/><text x="320" y="179" text-anchor="middle" fill="#fff">C(A, B)</text>
+  <line x1="300" y1="46" x2="220" y2="86" stroke="#5b6260"/>
+  <line x1="340" y1="46" x2="430" y2="86" stroke="#5b6260"/>
+  <line x1="230" y1="118" x2="300" y2="158" stroke="#5b6260"/>
+  <line x1="420" y1="118" x2="350" y2="158" stroke="#5b6260"/>
+  <text x="320" y="220" text-anchor="middle" fill="#1f2424" font-weight="700">MRO: C → A → B → object</text>
+  <text x="320" y="240" text-anchor="middle" fill="#5b6260" font-size="11">super() in C follows this exact order, not just "the literal parent"</text>
+</svg>`;
+
+DIAG.generator = `
+<svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <line x1="20" y1="100" x2="640" y2="100" stroke="#5b6260" stroke-width="1.5"/>
+  <circle cx="60" cy="100" r="6" fill="#3d5a4f"/><text x="60" y="80" text-anchor="middle">gen()</text>
+  <rect x="120" y="80" width="100" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="170" y="104" text-anchor="middle">run to yield 1</text>
+  <circle cx="240" cy="100" r="6" fill="#9a5b3a"/><text x="240" y="80" text-anchor="middle">next()</text>
+  <rect x="280" y="130" width="90" height="30" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="325" y="150" text-anchor="middle">paused</text>
+  <rect x="390" y="80" width="100" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="440" y="104" text-anchor="middle">run to yield 2</text>
+  <circle cx="510" cy="100" r="6" fill="#9a5b3a"/><text x="510" y="80" text-anchor="middle">next()</text>
+  <rect x="550" y="80" width="80" height="40" rx="6" fill="#9a5b3a"/><text x="590" y="104" text-anchor="middle" fill="#fff">StopIteration</text>
+  <text x="330" y="190" text-anchor="middle" fill="#5b6260">Each next()/.send() resumes execution exactly where it paused — state (locals) is preserved between calls</text>
+</svg>`;
+
+DIAG.decorator = `
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <rect x="40" y="40" width="520" height="140" rx="12" fill="#f3e7df" stroke="#9a5b3a" stroke-width="1.5"/>
+  <text x="60" y="64" fill="#9a5b3a" font-weight="700">wrapper (added by @decorator)</text>
+  <text x="60" y="84" fill="#5b6260" font-size="11">e.g. logging, timing, auth check, caching...</text>
+  <rect x="100" y="100" width="400" height="60" rx="10" fill="#e7eee9" stroke="#3d5a4f" stroke-width="1.5"/>
+  <text x="300" y="135" text-anchor="middle" fill="#1f2424" font-weight="700">original function f(*args, **kwargs)</text>
+  <line x1="20" y1="110" x2="40" y2="110" stroke="#1f2424"/><path d="M34 105 L42 110 L34 115" fill="none" stroke="#1f2424"/>
+  <text x="20" y="100" fill="#5b6260" font-size="11">call</text>
+  <line x1="560" y1="110" x2="580" y2="110" stroke="#1f2424"/><path d="M572 105 L580 110 L572 115" fill="none" stroke="#1f2424"/>
+  <text x="555" y="100" fill="#5b6260" font-size="11" text-anchor="end">result</text>
+  <text x="300" y="200" text-anchor="middle" fill="#5b6260" font-size="11">@functools.wraps(f) keeps f's __name__/__doc__ on the wrapper after this substitution</text>
+</svg>`;
+
+DIAG.exceptions = `
+<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <rect x="280" y="10" width="140" height="30" rx="6" fill="#1f2424"/><text x="350" y="30" text-anchor="middle" fill="#fff">BaseException</text>
+  <line x1="350" y1="40" x2="170" y2="70" stroke="#5b6260"/><line x1="350" y1="40" x2="350" y2="70" stroke="#5b6260"/><line x1="350" y1="40" x2="530" y2="70" stroke="#5b6260"/>
+  <rect x="100" y="70" width="140" height="28" rx="6" fill="#e7eee9" stroke="#9a5b3a"/><text x="170" y="89" text-anchor="middle">SystemExit</text>
+  <rect x="280" y="70" width="140" height="28" rx="6" fill="#3d5a4f"/><text x="350" y="89" text-anchor="middle" fill="#fff">Exception</text>
+  <rect x="460" y="70" width="140" height="28" rx="6" fill="#e7eee9" stroke="#9a5b3a"/><text x="530" y="89" text-anchor="middle">KeyboardInterrupt</text>
+  <line x1="350" y1="98" x2="170" y2="128" stroke="#5b6260"/><line x1="350" y1="98" x2="280" y2="128" stroke="#5b6260"/>
+  <line x1="350" y1="98" x2="420" y2="128" stroke="#5b6260"/><line x1="350" y1="98" x2="530" y2="128" stroke="#5b6260"/>
+  <rect x="100" y="128" width="140" height="28" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="170" y="147" text-anchor="middle">ValueError</text>
+  <rect x="250" y="128" width="140" height="28" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="320" y="147" text-anchor="middle">TypeError</text>
+  <rect x="400" y="128" width="140" height="28" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="470" y="147" text-anchor="middle">LookupError</text>
+  <rect x="560" y="128" width="120" height="28" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="620" y="147" text-anchor="middle">ArithmeticError</text>
+  <line x1="470" y1="156" x2="420" y2="186" stroke="#5b6260"/><line x1="470" y1="156" x2="520" y2="186" stroke="#5b6260"/>
+  <rect x="350" y="186" width="120" height="26" rx="6" fill="#fff" stroke="#5b6260"/><text x="410" y="204" text-anchor="middle" font-size="10.5">KeyError</text>
+  <rect x="480" y="186" width="120" height="26" rx="6" fill="#fff" stroke="#5b6260"/><text x="540" y="204" text-anchor="middle" font-size="10.5">IndexError</text>
+  <line x1="620" y1="156" x2="620" y2="186" stroke="#5b6260"/>
+  <rect x="560" y="186" width="140" height="26" rx="6" fill="#fff" stroke="#5b6260"/><text x="630" y="204" text-anchor="middle" font-size="10.5">ZeroDivisionError</text>
+  <text x="350" y="248" text-anchor="middle" fill="#5b6260">Almost everything you catch should descend from Exception — SystemExit/KeyboardInterrupt sit outside it on purpose</text>
+</svg>`;
+
+DIAG.concurrency = `
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="10" y="20" width="200" height="190" rx="8" fill="#fff" stroke="#e3e0d8"/>
+  <text x="110" y="42" text-anchor="middle" font-weight="700">Threading</text>
+  <circle cx="60" cy="80" r="14" fill="#3d5a4f"/><circle cx="110" cy="80" r="14" fill="#c9c4b6"/><circle cx="160" cy="80" r="14" fill="#c9c4b6"/>
+  <text x="110" y="110" text-anchor="middle" font-size="10.5">one GIL, one runs Python at a time</text>
+  <text x="110" y="130" text-anchor="middle" font-size="10.5">shared memory</text>
+  <text x="110" y="160" text-anchor="middle" fill="#9a5b3a" font-size="10.5">best: I/O-bound waits</text>
+  <text x="110" y="180" text-anchor="middle" fill="#5b6260" font-size="10.5">(GIL releases during I/O)</text>
+
+  <rect x="240" y="20" width="200" height="190" rx="8" fill="#fff" stroke="#e3e0d8"/>
+  <text x="340" y="42" text-anchor="middle" font-weight="700">Multiprocessing</text>
+  <circle cx="290" cy="80" r="14" fill="#3d5a4f"/><circle cx="340" cy="80" r="14" fill="#3d5a4f"/><circle cx="390" cy="80" r="14" fill="#3d5a4f"/>
+  <text x="340" y="110" text-anchor="middle" font-size="10.5">separate GIL each, separate memory</text>
+  <text x="340" y="160" text-anchor="middle" fill="#9a5b3a" font-size="10.5">best: CPU-bound work</text>
+  <text x="340" y="180" text-anchor="middle" fill="#5b6260" font-size="10.5">true parallel execution</text>
+
+  <rect x="470" y="20" width="200" height="190" rx="8" fill="#fff" stroke="#e3e0d8"/>
+  <text x="570" y="42" text-anchor="middle" font-weight="700">Asyncio</text>
+  <circle cx="570" cy="80" r="16" fill="none" stroke="#3d5a4f" stroke-width="2"/>
+  <circle cx="570" cy="68" r="4" fill="#9a5b3a"/><circle cx="582" cy="80" r="4" fill="#9a5b3a"/><circle cx="558" cy="80" r="4" fill="#9a5b3a"/>
+  <text x="570" y="110" text-anchor="middle" font-size="10.5">one thread, cooperative switching</text>
+  <text x="570" y="130" text-anchor="middle" font-size="10.5">switches only at await</text>
+  <text x="570" y="160" text-anchor="middle" fill="#9a5b3a" font-size="10.5">best: many I/O waits at once</text>
+  <text x="570" y="180" text-anchor="middle" fill="#5b6260" font-size="10.5">(thousands of connections)</text>
+</svg>`;
+
+DIAG.references = `
+<svg viewBox="0 0 660 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <text x="160" y="24" text-anchor="middle" font-weight="700" fill="#3d5a4f">Mutable: b = a shares the object</text>
+  <text x="60" y="60" fill="#1f2424">a →</text><text x="60" y="100" fill="#1f2424">b →</text>
+  <rect x="100" y="50" width="170" height="60" rx="8" fill="#e7eee9" stroke="#3d5a4f" stroke-width="1.5"/>
+  <text x="185" y="85" text-anchor="middle">[1, 2, 3]</text>
+  <line x1="90" y1="60" x2="100" y2="65" stroke="#3d5a4f"/><line x1="90" y1="100" x2="100" y2="90" stroke="#3d5a4f"/>
+  <text x="185" y="135" text-anchor="middle" fill="#5b6260" font-size="11">a.append(4) — b sees [1,2,3,4] too, same object</text>
+
+  <text x="500" y="24" text-anchor="middle" font-weight="700" fill="#9a5b3a">Immutable: b = a, then b += 1 rebinds b</text>
+  <text x="380" y="60" fill="#1f2424">a →</text>
+  <rect x="410" y="50" width="60" height="40" rx="8" fill="#e7eee9" stroke="#3d5a4f" stroke-width="1.5"/><text x="440" y="75" text-anchor="middle">5</text>
+  <text x="380" y="120" fill="#1f2424">b →</text>
+  <rect x="410" y="105" width="60" height="40" rx="8" fill="#f3e7df" stroke="#9a5b3a" stroke-width="1.5"/><text x="440" y="130" text-anchor="middle">6</text>
+  <line x1="370" y1="60" x2="410" y2="68" stroke="#3d5a4f"/><line x1="370" y1="120" x2="410" y2="125" stroke="#9a5b3a"/>
+  <text x="500" y="170" text-anchor="middle" fill="#5b6260" font-size="11">b now points to a brand-new int object — a is unaffected</text>
+</svg>`;
+
+DIAG.circularImport = `
+<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <rect x="60" y="70" width="140" height="50" rx="8" fill="#e7eee9" stroke="#3d5a4f" stroke-width="1.5"/>
+  <text x="130" y="100" text-anchor="middle" font-weight="700">module a.py</text>
+  <rect x="360" y="70" width="140" height="50" rx="8" fill="#f3e7df" stroke="#9a5b3a" stroke-width="1.5"/>
+  <text x="430" y="100" text-anchor="middle" font-weight="700">module b.py</text>
+  <path d="M200 85 C 260 60, 340 60, 360 85" fill="none" stroke="#3d5a4f" stroke-width="1.5"/>
+  <path d="M355 80 L362 85 L355 90" fill="none" stroke="#3d5a4f"/>
+  <text x="280" y="55" text-anchor="middle" font-size="11" fill="#3d5a4f">import b</text>
+  <path d="M360 110 C 300 140, 230 140, 200 112" fill="none" stroke="#9a5b3a" stroke-width="1.5"/>
+  <path d="M205 117 L198 112 L205 107" fill="none" stroke="#9a5b3a"/>
+  <text x="280" y="155" text-anchor="middle" font-size="11" fill="#9a5b3a">import a (still mid-execution!)</text>
+  <text x="280" y="185" text-anchor="middle" fill="#5b6260" font-size="11">Whichever module finishes loading second sees a half-initialized version of the other</text>
+</svg>`;
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS = [
+{
+  id:"fund", title:"1 · Fundamentals & Syntax", lede:"Variables, operators, control flow, formatting, I/O, and style — the building blocks everything else sits on top of.",
+  subs:[
+    {id:"f-types", title:"Variables & Data Types", table:F_TYPES},
+    {id:"f-ops", title:"Operators", table:F_OPS},
+    {id:"f-control", title:"Control Flow", table:F_CONTROL},
+    {id:"f-string", title:"String Formatting", table:F_STRINGFMT},
+    {id:"f-io", title:"Input / Output", table:F_IO},
+    {id:"f-style", title:"Comments, Docstrings & Style", table:F_STYLE},
+  ],
+  callout:"<b>Most common beginner trip-up:</b> <code>/</code> always returns a float in Python 3, even 4/2 → 2.0. Use <code>//</code> for integer (floor) division."
+},
+{
+  id:"ds", title:"2 · Data Structures", lede:"Lists, tuples, dicts, sets, and strings — their methods, comprehensions, and the mutability rules that drive most real bugs.",
+  subs:[
+    {id:"d-list", title:"Lists", table:D_LIST},
+    {id:"d-tuple", title:"Tuples", table:D_TUPLE},
+    {id:"d-dict", title:"Dictionaries", table:D_DICT},
+    {id:"d-set", title:"Sets", table:D_SET},
+    {id:"d-str", title:"Strings", table:D_STR},
+    {id:"d-comp", title:"Comprehensions, compared", table:D_COMPREHENSIONS},
+    {id:"d-mut", title:"Mutability & Copying", table:D_MUTABILITY},
+  ],
+  callout:"<b>The single most common Python bug class:</b> assuming <code>b = a</code> copies a mutable object. It doesn't — both names point to the same object. Use <code>copy.copy()</code> or <code>copy.deepcopy()</code> when you actually need an independent copy."
+},
+{
+  id:"fn", title:"3 · Functions & Functional Programming", lede:"Arguments, lambdas, scope, closures, decorators, and the functional toolkit (map/filter/reduce, itertools, functools).",
+  subs:[
+    {id:"fn-basics", title:"Function Basics & Arguments", table:FN_BASICS},
+    {id:"fn-lambda", title:"Lambda & Higher-Order Functions", table:FN_LAMBDA},
+    {id:"fn-scope", title:"Scope & Closures", note:"The LEGB rule decides which variable a name actually refers to.", diagram:"legb", cap:"Python looks Local → Enclosing → Global → Built-in, stopping at the first scope where the name exists.", table:FN_SCOPE},
+    {id:"fn-deco", title:"Decorators", note:"A decorator swaps your function for a wrapped version of itself.", diagram:"decorator", cap:"Every call to the decorated name actually calls the wrapper first — which decides whether/how/when to call the original.", table:FN_DECORATORS},
+    {id:"fn-mapfilter", title:"map / filter / reduce / sorted", table2:FN_MAPFILTER},
+    {id:"fn-itertools", title:"itertools cheat table", table2:FN_ITERTOOLS},
+    {id:"fn-functools", title:"functools cheat table", table2:FN_FUNCTOOLS},
+    {id:"fn-recursion", title:"Recursion & Memoization", table:FN_RECURSION},
+  ],
+  callout:"<b>Closure late-binding gotcha:</b> <code>[lambda: i for i in range(3)]</code> all return 2, not 0,1,2 — every lambda shares the same <code>i</code> and reads its final value. Fix with a default argument: <code>lambda i=i: i</code>."
+},
+{
+  id:"oop", title:"4 · Object-Oriented Programming", lede:"Classes, inheritance and MRO, magic methods, encapsulation, dataclasses, and the advanced machinery (descriptors, metaclasses, slots).",
+  subs:[
+    {id:"oop-basics", title:"Classes & Objects", table:OOP_BASICS},
+    {id:"oop-inherit", title:"Inheritance & MRO", note:"Multiple inheritance needs a deterministic order to resolve method conflicts.", diagram:"mro", cap:"Python uses C3 linearization to flatten the inheritance graph into one search order — check ClassName.mro() rather than guessing.", table:OOP_INHERIT},
+    {id:"oop-dunder", title:"Dunder / Magic Methods", table2:OOP_DUNDER},
+    {id:"oop-encap", title:"Encapsulation & Properties", table:OOP_ENCAP},
+    {id:"oop-methods", title:"Instance vs. classmethod vs. staticmethod", table:OOP_METHODS},
+    {id:"oop-abstract", title:"Abstract Classes & Protocols", table:OOP_ABSTRACT},
+    {id:"oop-dataclass", title:"Dataclasses", table:OOP_DATACLASS},
+    {id:"oop-advanced", title:"Advanced: slots, descriptors, metaclasses, mixins", table:OOP_ADVANCED},
+  ],
+  callout:"<b>Composition over inheritance:</b> deep inheritance hierarchies look elegant on a whiteboard and become brittle in practice. If you're inheriting just to reuse one method, consider a mixin or simply composing objects instead."
+},
+{
+  id:"iter", title:"5 · Iterators, Generators & Context Managers", lede:"The protocols behind every for-loop and with-statement — and how to write your own lazy, memory-efficient versions.",
+  subs:[
+    {id:"it-protocol", title:"Iterator Protocol", table:IT_PROTOCOL},
+    {id:"it-gen", title:"Generators", note:"A generator function is a regular function that pauses instead of returning.", diagram:"generator", cap:"Local variables and execution position are frozen at each `yield` and resumed exactly there on the next next()/.send() call.", table:IT_GENERATORS},
+    {id:"it-context", title:"Context Managers", table:IT_CONTEXT},
+  ],
+  callout:"<b>Generators vs. lists, in one line:</b> a list comprehension builds everything now and holds it all in memory; a generator expression builds nothing until asked, one item at a time — swap [..] for (..) when you're only going to iterate once over something large."
+},
+{
+  id:"err", title:"6 · Error Handling", lede:"The exception hierarchy, try/except/else/finally mechanics, and the built-in exceptions you'll meet constantly.",
+  subs:[
+    {id:"err-hierarchy", title:"Exception Hierarchy", diagram:"exceptions", cap:"Catch Exception (or a specific subclass), not BaseException — SystemExit and KeyboardInterrupt are deliberately kept outside Exception so a bare except doesn't accidentally swallow Ctrl-C or sys.exit()."},
+    {id:"err-try", title:"try / except / else / finally", table:ERR_TRY},
+    {id:"err-raise", title:"Raising & Custom Exceptions", table:ERR_RAISE},
+    {id:"err-builtins", title:"Common Built-in Exceptions", table3:ERR_BUILTINS},
+    {id:"err-assert", title:"assert & warnings", table:ERR_ASSERT},
+  ],
+  callout:"<b>Never use a bare <code>except:</code>.</b> It catches SystemExit and KeyboardInterrupt along with every real bug, which means Ctrl-C might appear to do nothing. Catch <code>Exception</code> (or the specific type) instead."
+},
+{
+  id:"cc", title:"7 · Concurrency & Async", lede:"Threading, multiprocessing, and asyncio — three different answers to 'how do I do more than one thing at once', each suited to a different bottleneck.",
+  subs:[
+    {id:"cc-gil", title:"The GIL", diagram:"concurrency", cap:"Threading shares memory but only ever runs one thread's Python bytecode at a time. Multiprocessing sidesteps the GIL entirely by using separate processes. Asyncio stays single-threaded and switches cooperatively at await points.", table:CC_GIL},
+    {id:"cc-thread", title:"Threading", table2:CC_THREAD},
+    {id:"cc-process", title:"Multiprocessing", table2:CC_PROCESS},
+    {id:"cc-async", title:"asyncio", table:CC_ASYNC},
+    {id:"cc-guide", title:"Which concurrency model do I use?", table4:CC_GUIDE},
+  ],
+  callout:"<b>The question to ask first:</b> is the bottleneck CPU (computing) or I/O (waiting)? CPU-bound → multiprocessing. I/O-bound with a handful of tasks → threading is fine. I/O-bound with hundreds/thousands of tasks → asyncio scales far better."
+},
+{
+  id:"mem", title:"8 · Memory, Performance & CPython Internals", lede:"References vs. values, garbage collection, Big-O of common operations, and how CPython actually executes your code.",
+  subs:[
+    {id:"mem-ref", title:"References, id() & is vs ==", note:"A variable is a label, not a box.", diagram:"references", cap:"Mutating an object through one name is visible through every other name pointing at the same object — rebinding a name to a new object is not the same operation.", table:MEM_REF},
+    {id:"mem-gc", title:"Garbage Collection & weakref", table:MEM_GC},
+    {id:"mem-bigo", title:"Big-O of common operations", table5:MEM_BIGO},
+    {id:"mem-profile", title:"Profiling & optimization tools", table2:MEM_PROFILE},
+    {id:"mem-internals", title:"CPython internals", table:MEM_INTERNALS},
+  ],
+  callout:"<b>Before optimizing anything, measure it.</b> Intuition about what's 'slow' in Python is frequently wrong — run cProfile first, then optimize the actual bottleneck it reveals, not the part that merely looks suspicious."
+},
+{
+  id:"std", title:"9 · Typing, Regex & Standard Library", lede:"Type hints, regular expressions, and the standard-library modules you'll reach for in nearly every project.",
+  subs:[
+    {id:"ty-hints", title:"Type Hints & typing", table:TY_HINTS},
+    {id:"ty-regex-fn", title:"Regex — re module functions", table2:TY_REGEX_FUNCS},
+    {id:"ty-regex-syntax", title:"Regex — syntax essentials", table:TY_REGEX_SYNTAX},
+    {id:"std-collections", title:"collections module", table2:STD_COLLECTIONS},
+    {id:"std-datetime", title:"datetime module", table2:STD_DATETIME},
+    {id:"std-ospath", title:"os / sys / pathlib", table2:STD_OSPATH},
+    {id:"std-serialize", title:"json / csv / pickle", table2:STD_SERIALIZE},
+    {id:"std-math", title:"math / random / statistics", table2:STD_MATH},
+  ],
+  callout:"<b>Regex's #1 silent bug:</b> forgetting the <code>r</code> prefix on pattern strings. Without it, Python's own string escaping runs first and can quietly mangle backslash sequences before the regex engine ever sees them."
+},
+{
+  id:"prac", title:"10 · Testing, Debugging, Packaging & Practice", lede:"How real projects are tested, debugged, packaged, and the idioms (and gotchas) that mark the difference between code that works and code that's actually Pythonic.",
+  subs:[
+    {id:"test-frameworks", title:"Testing: unittest vs pytest", table:TEST_FRAMEWORKS},
+    {id:"debug-tools", title:"Debugging tools", table2:DEBUG_TOOLS},
+    {id:"log-basics", title:"Logging", table:LOG_BASICS},
+    {id:"pkg-tools", title:"Virtual environments & packaging", table2:PKG_TOOLS},
+    {id:"prac-idioms", title:"Pythonic idioms", table:PRACTICE_IDIOMS},
+    {id:"prac-sym", title:"Symptom → likely cause", table6:PRACTICE_SYMPTOMS},
+    {id:"prac-guide", title:"Quick decision guide", table4:PRACTICE_GUIDE},
+  ],
+  callout:"<b>If you only remember one debugging habit:</b> read the LAST line of the traceback first — it names the exception and the message. Then read upward to find the actual line in YOUR code (not library internals) where it originated."
+},
+{
+  id:"mod", title:"11 · Modules, Imports & Project Structure", lede:"How Python actually resolves an import, the difference between a script and a module, and the circular-import trap that catches most people exactly once.",
+  subs:[
+    {id:"mod-basics", title:"Modules & Packages", table:MOD_BASICS},
+    {id:"mod-mech", title:"Import mechanics", note:"Two modules importing each other at the top level is the classic version of this bug.", diagram:"circularImport", cap:"Python detects the cycle but doesn't refuse to run — it just hands back whatever partial module object exists at that moment, which is often missing the names you need.", table:MOD_MECHANICS},
+  ],
+  callout:"<b>The fix for almost every circular import:</b> either move the shared piece both modules need into a third, lower-level module that neither depends on the other for, or move one of the two imports from the top of the file into the function body where it's actually used."
+},
+{
+  id:"enum", title:"12 · Enums, Advanced Typing & Data Validation", lede:"Beyond basic type hints — enums for named constants, TypedDict/NamedTuple/Literal/Final for tighter static guarantees, and lightweight validation patterns.",
+  subs:[
+    {id:"enum-basics", title:"Enums", table:ENUM_BASICS},
+    {id:"type-advanced", title:"Advanced typing constructs", table:TYPE_ADVANCED},
+  ],
+  callout:"<b>Worth remembering:</b> almost everything in this section (type hints, TypedDict, Literal, Final) is checked by a separate static tool like mypy/pyright — none of it is enforced while your program is actually running, with the partial exception of dataclass __post_init__ validation, which is real runtime code."
+},
+{
+  id:"bytes", title:"13 · Bytes, Unicode & Numeric Precision", lede:"The text/bytes boundary, and the numeric types that exist specifically because float isn't always good enough.",
+  subs:[
+    {id:"bytes-basics", title:"Bytes, bytearray, memoryview & encoding", table:BYTES_BASICS},
+    {id:"num-precision", title:"Decimal, Fraction & exact arithmetic", table:NUM_PRECISION},
+  ],
+  callout:"<b>Money rule of thumb:</b> if a number represents currency, use decimal.Decimal, constructed from a string — never float. The classic 0.1 + 0.2 != 0.3 problem compounds badly across thousands of transactions."
+},
+{
+  id:"asyncmod", title:"14 · Modern Async Additions & Exception Groups", lede:"Features added to asyncio and exception handling in recent versions (3.10–3.11) that make structured concurrency considerably less manual.",
+  subs:[
+    {id:"async-modern", title:"async for / async with / TaskGroup / except*", table:ASYNC_MODERN},
+  ],
+  callout:"<b>Why TaskGroup matters:</b> with plain asyncio.gather(), one failing task's exception can leave siblings running unsupervised unless you're careful. TaskGroup guarantees that if one task fails, the rest are cancelled and ALL the resulting errors come back together in a single ExceptionGroup, catchable with except*."
+},
+{
+  id:"cli", title:"15 · CLI Tools, Operator Precedence & Version History", lede:"Building real command-line interfaces, the precedence rules that resolve ambiguous expressions, and what actually changed across recent Python versions.",
+  subs:[
+    {id:"cli-tools", title:"argparse, subprocess & environment", table2:CLI_TOOLS},
+    {id:"op-prec", title:"Operator precedence (highest to lowest)", table:OP_PRECEDENCE},
+    {id:"ver-history", title:"What's new, by version", table:VERSION_HISTORY},
+  ],
+  callout:"<b>-2**2 == -4, not 4.</b> Exponentiation binds tighter than unary minus, so this parses as -(2**2). It's one of the few precedence surprises that trips up even experienced developers — wrap it in parentheses, (-2)**2, whenever the sign matters."
+},
+];
+
+function buildDiagram(key, cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+function buildSub(sub){
+  let html = `<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html += `<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html += buildDiagram(sub.diagram, sub.cap);
+  if(sub.table) html += renderConceptTable(sub.table);
+  if(sub.table2) html += renderMethodTable(sub.table2);
+  if(sub.table3) html += renderExcTable(sub.table3);
+  if(sub.table4) html += renderGuideTable(sub.table4);
+  if(sub.table5) html += renderBigOTable(sub.table5);
+  if(sub.table6) html += renderSymptomTable(sub.table6);
+  html += `</div>`;
+  return html;
+}
+function buildGroup(g){
+  let html = `<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=> html += buildSub(s));
+  if(g.callout) html += `<div class="callout">${g.callout}</div>`;
+  html += `</section>`;
+  return html;
+}
+document.getElementById("content").innerHTML = SECTIONS.map(buildGroup).join("");
+
+let navHtml = "";
+SECTIONS.forEach(g=>{
+  navHtml += `<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=> navHtml += `<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML = navHtml;
+
+document.getElementById("globalFilter").addEventListener("input", function(e){
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){ tr.classList.remove("row-hidden"); return; }
+    const txt = tr.textContent.toLowerCase();
+    tr.classList.toggle("row-hidden", !txt.includes(q));
+  });
+});
+</script>
+</body>
+</html>

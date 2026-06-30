@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide 2 Study</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#ffffff; --ink:#1f2424; --ink-soft:#5b6260; --line:#e3e0d8;
+    --accent:#3d5a4f; --accent-soft:#e7eee9; --warn:#9a5b3a;
+    --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex; min-height:100vh;}
+  a{color:var(--accent);}
+  code{font-family:var(--mono); font-size:11.6px; background:#f1efe9; padding:1px 5px; border-radius:4px; color:#2b3b35;}
+
+  #sidebar{ width:250px; flex:0 0 250px; border-right:1px solid var(--line); background:var(--panel);
+    position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 14px; }
+  #sidebar h1{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{ display:block; padding:7px 8px; border-radius:6px; font-size:13.2px; color:var(--ink); text-decoration:none; font-weight:600; margin-top:6px; }
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{ display:block; padding:4px 8px 4px 18px; border-radius:6px; font-size:12.2px; color:var(--ink-soft); text-decoration:none; }
+  #sidebar nav a.sublink:hover{background:var(--accent-soft); color:var(--ink);}
+  #sidebar input{ width:100%; padding:7px 9px; margin-bottom:14px; border:1px solid var(--line); border-radius:6px; font-size:12.5px; font-family:var(--sans); background:#fff; }
+
+  #main{flex:1; min-width:0; padding:38px 44px 80px; max-width:1220px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px; margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft); font-size:14px; margin:0; max-width:700px; line-height:1.5;}
+
+  section.group{margin-bottom:56px;}
+  section.group > h2{font-size:21px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px;}
+  section.group > .lede{color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; max-width:800px; line-height:1.5;}
+
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{font-size:15px; margin:0 0 4px; color:var(--accent); letter-spacing:.01em;}
+  .subsection .note{color:var(--ink-soft); font-size:12.5px; margin:0 0 12px;}
+
+  .twrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.6px; min-width:760px;}
+  thead th{ text-align:left; background:#f1efe9; color:var(--ink-soft); font-size:11px; text-transform:uppercase;
+    letter-spacing:.04em; padding:9px 12px; border-bottom:1px solid var(--line); position:sticky; top:0; }
+  tbody td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700; white-space:nowrap;}
+  td .codeline{display:block; font-family:var(--mono); font-size:11.5px; color:var(--warn); margin-top:3px;}
+  td ul{margin:0; padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:10px; background:var(--accent-soft); color:var(--accent); margin-right:4px; white-space:nowrap;}
+
+  .callout{ background:var(--accent-soft); border-left:3px solid var(--accent); padding:12px 16px; font-size:13px;
+    border-radius:0 6px 6px 0; margin:18px 0 8px; line-height:1.55; }
+  .callout b{color:var(--accent);}
+
+  .diagram{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:18px; margin:18px 0 28px; text-align:center; }
+  .diagram .cap{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:left;}
+  .diagram svg{max-width:100%; height:auto;}
+
+  mark.row-hidden{display:none;}
+
+  @media (max-width: 880px){
+    #sidebar{display:none;}
+    #main{padding:24px 16px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <h1>AI Engineering</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. reranking)">
+  <nav id="navTree"></nav>
+</aside>
+
+<main id="main">
+  <div class="pagehead">
+    <h1>AI Engineering: GenAI, RAG, LangChain, LangGraph, Agents</h1>
+
+    <div style="text-align: right; margin: 20px;">
+
+        <button onclick="window.location.href='index.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer;">
+            Python
+        </button>
+
+        <button onclick="window.location.href='ml-stats-math-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            ML | Stats
+        </button>
+
+        <button onclick="window.location.href='ai-engineering-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            Agentic AI
+        </button>
+
+    </div>
+
+
+
+
+  </div>
+  <div id="content"></div>
+</main>
+
+<script>
+function T(c,i,ex,u,g){ return {c,i,ex,u,g}; }
+function Md(m,sig,desc,ex){ return {m,sig,desc,ex}; }
+function G(scenario,pick){ return {scenario,pick}; }
+function Sy(s,cause){ return {s,cause}; }
+
+/* =========================================================
+   GROUP 1 — GENERATIVE AI FOUNDATIONS
+   ========================================================= */
+const GEN_CORE = [
+T("Token","The basic unit an LLM reads/writes — roughly ¾ of a word in English, via subword tokenization (e.g. BPE).","'unbelievable' → ['un','believ','able']","Understanding cost, context limits, and truncation","Token count differs by language — non-English/non-Latin text often costs 2-5x more tokens for the same meaning"),
+T("Context window","The maximum number of tokens (input + output combined) a model can attend to in one call.","128K, 200K, 1M+ tokens depending on the model","Deciding whether to chunk/RAG vs. stuffing everything into the prompt","A huge context window doesn't guarantee the model 'notices' something buried in the middle of it — long-context recall is imperfect"),
+T("Embedding","A dense vector representation of text (or other data) capturing semantic meaning.","'king' - 'man' + 'woman' ≈ 'queen' (geometrically)","Semantic search, RAG retrieval, clustering, classification","Embeddings from different models live in different vector spaces — never mix embeddings from two different embedding models in one index"),
+T("Transformer / Attention","The architecture letting every token attend to every other token to build contextual meaning.","Self-attention computes relevance weights between all token pairs","Foundation of basically every modern LLM","See the Deep Learning reference for the full mechanics — this page treats transformers as the engine, not the focus"),
+T("Autoregressive generation","The model predicts one token at a time, feeding each output back in as input for the next.","P(token_n | token_1...token_n-1)","Understanding why generation is sequential and can't be fully parallelized at inference","Errors compound — an early wrong token shifts everything generated afterward"),
+T("Hallucination","The model generates fluent, confident-sounding text that's factually wrong or unsupported.","Citing a paper that doesn't exist, inventing an API method","The central reason RAG, grounding, and citations matter","Hallucination isn't a 'bug' to patch — it's an inherent consequence of next-token prediction without a built-in fact-checking step"),
+T("Grounding","Constraining the model's output to be based on specific, provided source material.","Answer ONLY using the text in the context below","Reducing hallucination for factual/document-based tasks","Grounding reduces but doesn't eliminate hallucination — the model can still misread or extrapolate from the provided context"),
+];
+const GEN_SAMPLING = [
+T("Temperature","Controls randomness in token selection — 0 is near-deterministic, higher values are more random/creative.","temperature=0 for factual Q&A, 0.7-1.0 for creative writing","Tuning the consistency vs. creativity trade-off","Temperature near 2.0 often produces incoherent text — most providers cap it well below the theoretical max for a reason"),
+T("Top-p (nucleus sampling)","Samples only from the smallest set of tokens whose cumulative probability exceeds p.","top_p=0.9 keeps the most probable 90% of mass, discards the long tail","An alternative/complement to temperature for controlling diversity","Combining a very low top_p with a high temperature can produce contradictory, unpredictable behavior — most use one knob primarily, not both aggressively"),
+T("Top-k","Restricts sampling to only the k most probable next tokens.","top_k=40","Hard-capping the candidate pool regardless of probability shape","Not supported/exposed by every provider's API (notably less common in some hosted chat APIs than top_p)"),
+T("Frequency / presence penalty","Discourages the model from repeating tokens it's already used.","frequency_penalty=0.5","Reducing repetitive loops in longer generations","Set too high, it can force the model into using unnatural synonyms just to avoid repetition"),
+T("max_tokens","A hard cap on how many tokens the model can generate in its response.","max_tokens=1024","Controlling cost and preventing runaway-length outputs","If the real answer needs more than the cap, output is silently truncated mid-thought, not gracefully shortened"),
+T("Stop sequences","Strings that, if generated, immediately end the response.","stop=['\\n\\n', 'Human:']","Preventing a model from continuing into a new turn/role it shouldn't simulate","If your stop sequence appears naturally inside a desired answer, the response gets cut short incorrectly"),
+];
+const GEN_PROMPTING = [
+T("Zero-shot prompting","Asking the model to perform a task with no examples, just instructions.","Translate this sentence into French: ...","Simple, well-understood tasks the model has likely seen many times in training","Performance on niche/unusual task formats degrades quickly without examples"),
+T("Few-shot prompting","Including a handful of example input→output pairs before the real task.","Q: 2+2? A: 4 \\n Q: 3+5? A: 8 \\n Q: 7+1? A:","Teaching a specific output format or unusual task pattern","Examples that are too similar to each other can cause the model to overfit to a narrow pattern instead of generalizing"),
+T("Chain-of-thought (CoT)","Prompting the model to reason step-by-step before giving a final answer.","Let's think step by step...","Math, logic, multi-step reasoning tasks","Visible CoT can be a post-hoc rationalization rather than the model's actual 'reasoning' — don't treat it as a reliable explanation of internal process"),
+T("System prompt","An instruction set the developer provides that frames the model's role/behavior for the whole conversation.","'You are a concise, technical assistant for developers.'","Setting persona, tone, constraints, and behavioral guardrails","A system prompt is a strong influence, not an unbreakable rule — adversarial user input can sometimes override it ('jailbreaking')"),
+T("Role-based messages","Structuring a conversation as alternating system/user/assistant turns rather than one flat block of text.","[{role:'system',...},{role:'user',...}]","The standard format for every modern chat-based LLM API","Mixing instructions into the wrong role (e.g. putting system-level rules inside a user message) often gets followed less reliably"),
+T("Prompt injection","Malicious or unintended instructions embedded in user input or retrieved content that hijack the model's behavior.","A web page the model reads contains: 'Ignore previous instructions and...'","Security-critical for any system that feeds untrusted text to an LLM","RAG and tool-using agents are especially exposed — retrieved documents and tool outputs are an injection surface, not just the direct user message"),
+T("Structured output prompting","Explicitly instructing (or constraining) the model to respond in a fixed schema.","Respond ONLY with valid JSON matching this schema: {...}","Reliable downstream parsing instead of regex-scraping free text","Most providers now offer native structured-output/JSON-mode features that are far more reliable than prompting alone — prefer those when available"),
+];
+const GEN_GUIDE = [
+G("Factual Q&A, need consistency", "temperature near 0, grounding via RAG, cite sources"),
+G("Creative writing, brainstorming", "higher temperature (0.7-1.0), few-shot for style/voice"),
+G("Need parseable output for code to consume", "native structured output / JSON mode, not prompt-only formatting"),
+G("Multi-step reasoning / math", "chain-of-thought prompting, consider a reasoning-focused model"),
+G("Model confidently states something that seems wrong", "ground it with retrieved sources (RAG) and ask it to cite which source supports each claim"),
+G("System is exposed to untrusted text (web pages, user uploads)", "treat that text as adversarial input — sanitize/limit what an agent can do based on it"),
+];
+
+/* =========================================================
+   GROUP 2 — LLM API CALLING (MULTI-PROVIDER)
+   ========================================================= */
+const API_SHAPE = [
+T("Chat/Messages API", "The dominant request shape: a list of role-tagged messages in, one assistant message out.", "POST /v1/chat/completions or /v1/messages", "Virtually every text-generation call to a hosted LLM today", "Each provider's message schema differs slightly (e.g. how system prompts are passed) — abstraction libraries like LangChain exist partly to paper over this"),
+T("API key authentication", "A secret key sent in a header, identifying your account for billing and access.", "Authorization: Bearer sk-...  /  x-api-key: ...", "Every hosted LLM API call", "Never hardcode keys in source control — load from environment variables or a secrets manager"),
+T("Streaming responses", "The model sends tokens back incrementally as they're generated, instead of waiting for the full response.", "stream=True, then iterate over server-sent events", "Responsive UIs (chat interfaces), long generations where users shouldn't stare at a blank screen", "Streamed responses are harder to validate/parse as structured output mid-stream — often you still buffer and parse once complete for anything beyond display"),
+T("Tool / function calling", "The model can request that your code execute a specific function, then receives the result to continue reasoning.", "tools=[{name:'get_weather', parameters:{...}}]", "Letting the model take real actions: search, calculators, database lookups, API calls", "The model decides WHEN to call a tool and WITH WHAT arguments — your code is responsible for actually executing it and returning the result"),
+T("Structured outputs / JSON mode", "Constrains generation so the output is guaranteed to match a schema (not just 'asked nicely').", "response_format={'type':'json_schema', schema:{...}}", "Reliable, code-consumable output without manual parsing/repair", "Support and exact mechanism (grammar-constrained decoding vs. fine-tuned compliance) varies notably by provider"),
+T("Multimodal input", "Sending images, audio, or documents alongside text in the same request.", "content=[{type:'image', source:{...}}, {type:'text', text:'Describe this'}]", "Vision tasks, document understanding, audio transcription-adjacent workflows", "Image token cost is usually based on resolution/tile count — large images can be surprisingly expensive"),
+T("Embeddings endpoint", "A separate API that returns a vector for input text, rather than generating more text.", "POST /v1/embeddings", "Building the vector representations RAG and semantic search depend on", "Embedding models are versioned and incompatible across versions/providers — re-embed your whole corpus if you switch"),
+];
+const API_PARAMS = [
+Md("model", "model='gpt-4o' / 'claude-opus-4-6' / 'gemini-1.5-pro'", "Selects which specific model handles the request", "Different models trade off cost, speed, and capability — pick per-task, not one model for everything"),
+Md("messages", "[{role, content}, ...]", "The conversation history sent to the model", "Most providers require alternating roles and don't auto-manage history — your code keeps and resends the full conversation each call"),
+Md("temperature / top_p", "temperature=0.7", "Controls randomness — see the sampling section above", "Defaults differ by provider; don't assume 1.0 always means 'maximum creativity' identically across APIs"),
+Md("max_tokens", "max_tokens=1024", "Caps the length of the generated response", "Some providers count this as output-only, others combine input+output against a model's total limit — read the docs per-provider"),
+Md("system / system prompt placement", "Anthropic: top-level 'system' param. OpenAI: a 'system' role message.", "Sets persistent behavior/persona for the whole call", "Moving system instructions between providers means restructuring the request, not just renaming a field"),
+Md("tools / tool_choice", "tools=[...], tool_choice='auto' | 'required' | {specific tool}", "Controls whether/which tools the model is allowed or forced to call", "tool_choice='required' forces a tool call even when a plain text answer would have been more appropriate — use deliberately"),
+Md("stop / stop_sequences", "stop=['\\n\\n']", "Strings that immediately end generation", "Naming differs slightly per provider (stop vs stop_sequences) but the concept is identical"),
+];
+const API_PROVIDERS = [
+T("OpenAI API", "Chat Completions API (and the newer Responses API) — messages in, completion out, broad tool-calling and structured-output support.", "client.chat.completions.create(model='gpt-4o', messages=[...])", "General-purpose tasks, mature tool-calling ecosystem, wide library support", "Two parallel API surfaces (Chat Completions vs. Responses) currently coexist — check which one a given library/example targets"),
+T("Anthropic API", "Messages API — similar shape to OpenAI's, with system prompt as a dedicated top-level parameter rather than a message role.", "client.messages.create(model='claude-opus-4-6', system='...', messages=[...])", "Long-context tasks, careful instruction-following, strong tool use", "Anthropic's content blocks (text/tool_use/tool_result) nest slightly differently than OpenAI's flatter message format"),
+T("Google Gemini API", "Supports very large context windows and native multimodal (video/audio) input.", "model.generate_content([...])", "Long-document analysis, multimodal tasks beyond just images", "Safety filtering behavior and content-blocking thresholds are more aggressive by default than some other providers — tune safety_settings if legitimately blocked"),
+T("Open-source / self-hosted (via Ollama, vLLM, etc.)", "Run open-weight models (Llama, Mistral, Qwen, etc.) locally or on your own infrastructure.", "ollama.chat(model='llama3', messages=[...])", "Data privacy requirements, cost control at high volume, offline/edge use", "Tool-calling and structured-output reliability vary a lot more by model than with the major hosted providers — test thoroughly before relying on it"),
+T("Unified/abstraction layers", "Libraries like LangChain or LiteLLM that present one interface over many providers.", "ChatOpenAI(...) and ChatAnthropic(...) share the same .invoke() interface", "Swapping models/providers without rewriting application logic", "Abstraction has a cost: provider-specific features (a particular model's unique parameter) are sometimes unsupported or awkwardly exposed through the common interface"),
+];
+const API_PRACTICAL = [
+T("Retries with backoff", "Automatically retrying a failed request after a delay, increasing the delay on repeated failures.", "exponential backoff: 1s, 2s, 4s, 8s...", "Handling transient rate limits (429) and server errors (5xx) gracefully", "Retrying a non-idempotent side-effecting tool call blindly can cause duplicate actions — only auto-retry safely-repeatable requests"),
+T("Rate limits", "Providers cap requests-per-minute and/or tokens-per-minute per account/tier.", "429 Too Many Requests", "Designing for production traffic, not just notebook experiments", "Rate limits often scale with usage tier/spend — a sudden traffic spike on a new account hits limits much sooner than expected"),
+T("Cost tracking", "Monitoring token usage and dollar cost per request/feature.", "response.usage.prompt_tokens, .completion_tokens", "Budgeting, identifying which feature/prompt is unexpectedly expensive", "Long conversation histories resent on every call mean cost grows roughly with the SQUARE of conversation length if you're not careful — trim or summarize history"),
+T("Caching", "Reusing a previous response (or a cached prefix) instead of recomputing it.", "Anthropic prompt caching, OpenAI's automatic prefix caching", "Repeated calls with a large shared prefix (e.g. a long system prompt or document) across many requests", "Cache hits typically require an exact prefix match — even a tiny change earlier in the prompt invalidates the cached portion"),
+T("Error handling by status code", "400 (bad request) vs 401 (auth) vs 429 (rate limit) vs 5xx (server error) need different handling.", "if status==429: backoff_and_retry()", "Robust production integrations instead of a single blanket try/except", "A 400 usually means YOUR request is malformed — retrying it identically will just fail again forever"),
+];
+
+/* =========================================================
+   GROUP 3 — CHUNKING STRATEGIES
+   ========================================================= */
+const CHUNK_STRATS = [
+T("Fixed-size chunking", "Split text into chunks of a fixed character or token count, often with overlap.", "chunk_size=500, chunk_overlap=50", "Simple, fast baseline; works acceptably on fairly uniform prose", "Can split mid-sentence or mid-table, breaking semantic units arbitrarily at the boundary"),
+T("Recursive character splitting", "Try splitting on the largest separator first (paragraphs), falling back to smaller ones (sentences, then words) only if a chunk is still too big.", "separators=['\\n\\n', '\\n', '. ', ' ']", "The most common practical default — respects natural text structure when possible", "Still ultimately falls back to a hard character cutoff if no natural separator is found in time"),
+T("Sentence-based chunking", "Split on sentence boundaries, then group sentences up to a target size.", "Using a sentence tokenizer (e.g. NLTK, spaCy) rather than naive period-splitting", "Preserving complete thoughts/sentences as the atomic unit", "Naive '.' splitting breaks on abbreviations ('Dr.', 'U.S.') — use a real sentence tokenizer, not a simple split('.')"),
+T("Semantic chunking", "Split based on meaning shifts — measuring embedding similarity between adjacent sentences and cutting where it drops.", "Compute embeddings per sentence, split where cosine similarity dips below a threshold", "Topically coherent chunks, better retrieval relevance on heterogeneous documents", "Computationally more expensive (an embedding call per sentence) than rule-based splitting"),
+T("Document-structure-aware chunking", "Split along the document's own structure: markdown headers, HTML tags, code function boundaries.", "MarkdownHeaderTextSplitter, splitting code by function/class", "Structured source documents (docs, code, formatted reports) where structure IS the meaning", "Loses effectiveness on unstructured or inconsistently-formatted source documents"),
+T("Sliding window / overlap", "Each chunk shares a portion of text with its neighbor, so context isn't lost exactly at a cut boundary.", "chunk_overlap=50-100 tokens, ~10-20% of chunk_size", "Preventing a key fact from being split exactly across two chunks and lost from both", "Overlap increases total stored chunks (and embedding/storage cost) without adding new information"),
+T("Parent-child / hierarchical chunking", "Retrieve using small, precise child chunks, but feed the model the larger parent chunk/section they belong to.", "Embed small chunks for search; return their parent document/section as context", "Balancing precise retrieval with sufficient surrounding context for the LLM to actually use", "Requires maintaining the parent-child mapping in your retrieval system, not just a flat list of chunks"),
+];
+const CHUNK_TRADEOFFS = [
+T("Small chunks (e.g. 100-300 tokens)", "More precise retrieval — less irrelevant text per chunk competing for the model's attention.", "Better for narrow, fact-lookup queries", "FAQ-style Q&A, precise fact retrieval", "Can lose surrounding context needed to correctly interpret an isolated fact (pronouns, prior clauses)"),
+T("Large chunks (e.g. 1000+ tokens)", "More context per chunk, fewer total chunks to manage and embed.", "Better for tasks needing broader context to answer well", "Summarization, narrative/argument-following questions", "Dilutes relevance — a chunk can be a marginal match overall even if one sentence inside it is a perfect match, hurting retrieval ranking"),
+T("Choosing chunk size in practice", "There's no universal best size — it depends on document type, query type, and embedding model.", "Common starting points: 256–512 tokens, 10-20% overlap", "A reasonable default to start experimenting from, not a final answer", "Always evaluate retrieval quality empirically on YOUR documents and queries rather than trusting a one-size-fits-all default"),
+];
+
+/* =========================================================
+   GROUP 4 — RAG (RETRIEVAL AUGMENTED GENERATION)
+   ========================================================= */
+const RAG_PIPELINE = [
+T("Ingestion", "Load raw documents, chunk them, embed each chunk, and store the vectors + metadata.", "PDF/HTML/Markdown → chunks → embeddings → vector store", "The one-time (or periodically refreshed) setup phase before any querying happens", "Garbage in, garbage out — poor chunking or a mismatched embedding model silently caps your retrieval quality ceiling regardless of how good the LLM is later"),
+T("Query embedding", "The user's question is embedded with the SAME embedding model used for the documents.", "embed(user_query) → query_vector", "Making the query comparable to the stored document vectors", "Using a different embedding model for the query than for the documents produces meaningless similarity scores"),
+T("Retrieval", "Find the top-k most similar chunks to the query vector from the vector store.", "vector_store.similarity_search(query_vector, k=5)", "Narrowing a large corpus down to a small, relevant context for the LLM", "Pure similarity search can retrieve chunks that are topically related but don't actually answer the specific question asked"),
+T("Augmentation", "Insert the retrieved chunks into the prompt as context, alongside the user's original question.", "'Context: {chunks}\\n\\nQuestion: {query}\\nAnswer using only the context above.'", "Giving the LLM grounded, specific material instead of relying purely on its training data", "Stuffing too many retrieved chunks into the prompt can bury the genuinely relevant one and increase cost/latency for little benefit"),
+T("Generation", "The LLM produces an answer conditioned on both the query and the retrieved context.", "llm.invoke(augmented_prompt)", "The final user-facing step of the RAG pipeline", "The LLM can still ignore the provided context and hallucinate, especially if the retrieved chunks don't actually contain the answer"),
+];
+const RAG_VECTORDB = [
+T("Vector database", "A database optimized for storing high-dimensional vectors and performing fast similarity search over millions+ of them.", "Pinecone, Weaviate, Qdrant, Milvus, Chroma, pgvector (Postgres extension), FAISS (library, not a full DB)", "Storing and querying embeddings at any meaningful scale", "FAISS is an in-memory library, not a persistent managed database — fine for prototypes, needs extra work for production durability"),
+T("Approximate Nearest Neighbor (ANN)", "Algorithms (HNSW, IVF, etc.) that find very-likely-nearest vectors fast, trading a small amount of exact accuracy for huge speed gains.", "HNSW (Hierarchical Navigable Small World) is the most common modern default", "Making similarity search feasible at scale (millions of vectors) where exact search would be too slow", "ANN is approximate by design — at extreme scale or high precision requirements, occasionally the truly-closest vector is missed"),
+T("Cosine similarity", "Measures the angle between two vectors, ignoring their magnitude — the most common metric for text embeddings.", "cos(θ) = (A·B)/(‖A‖‖B‖), ranges -1 to 1", "The default similarity metric for most embedding-based search", "Some embedding models are specifically normalized/trained for dot product instead — check the model's recommended metric rather than assuming cosine always"),
+T("Dot product", "Similar to cosine but also sensitive to vector magnitude.", "A·B = Σ(aᵢ·bᵢ)", "When the embedding model was specifically trained/normalized for this metric", "Using the wrong metric for a given embedding model can silently degrade retrieval quality without any obvious error"),
+T("Metadata filtering", "Combining vector similarity search with traditional filters on structured fields.", "similarity_search(query, filter={'category':'finance', 'date':{'$gte':'2024-01-01'}})", "Narrowing search within a specific subset (a user's own documents, a date range, a department)", "Over-filtering can return zero results even when relevant documents exist — design filters as a refinement, not the primary search mechanism"),
+T("Index updates / freshness", "Keeping the vector store in sync as source documents are added, edited, or deleted.", "Re-embed and upsert changed documents; delete vectors for removed ones", "Any RAG system over documents that change over time, not a static one-time corpus", "Stale embeddings (an old version of a doc still searchable after it was updated) is a very common, hard-to-notice production bug"),
+];
+const RAG_RETRIEVAL_METHODS = [
+T("Dense retrieval", "Pure embedding-based similarity search — understands semantic meaning, not just exact word matches.", "Default RAG retrieval method", "Queries phrased differently than the source text but meaning the same thing", "Can underperform on queries needing exact keyword/code/ID matches — 'find error code E4042' may not embed distinctively"),
+T("Sparse retrieval (BM25 / keyword)", "Classic term-frequency-based search — strong on exact terms, codes, names, rare words.", "BM25 scoring based on term frequency and inverse document frequency", "Exact-match-sensitive queries: product codes, names, specific terminology", "Misses semantically-equivalent phrasing that uses different words than the query"),
+T("Hybrid search", "Combines dense and sparse retrieval, then merges/reranks the results.", "Weighted combination or Reciprocal Rank Fusion (RRF) of both result sets", "Most production RAG systems — covers both semantic and exact-match query types", "Adds complexity and another tunable weighting parameter (how much to trust dense vs. sparse) that needs real evaluation"),
+T("Reranking", "After an initial fast retrieval (e.g. top 50), a more expensive, more accurate model re-scores and reorders the smaller candidate set.", "Cross-encoder rerankers (e.g. Cohere Rerank, BGE-reranker) score (query, chunk) pairs jointly", "Squeezing meaningfully better precision out of the final top-k sent to the LLM", "Rerankers are much slower per-item than the initial retrieval — only run them on a pre-filtered candidate set, never the whole corpus"),
+T("Query expansion / rewriting", "Transform the user's raw query into one or more better-suited search queries before retrieving.", "Rewriting a vague follow-up question into a fully self-contained query using conversation history", "Conversational RAG where queries reference prior turns ('what about for Q3?')", "An LLM-based rewrite step adds latency and cost to every single query — weigh it against the retrieval-quality gain for your use case"),
+T("Multi-query retrieval", "Generate several paraphrased versions of the query, retrieve for each, then merge/dedupe results.", "1 query → 3-5 LLM-generated variations → union of retrieved chunks", "Improving recall on ambiguous or under-specified queries", "Multiplies retrieval cost/latency by the number of query variants generated"),
+T("HyDE (Hypothetical Document Embeddings)", "Ask the LLM to generate a hypothetical ANSWER to the query first, then embed and search using THAT instead of the raw question.", "LLM generates a plausible answer paragraph → embed it → retrieve similar real chunks", "Bridging the gap when questions and answers are phrased very differently (common with short, terse queries)", "The hypothetical answer can be wrong/hallucinated — you're searching based on a guess, which can occasionally mislead retrieval rather than help it"),
+];
+const RAG_EVAL = [
+T("Faithfulness / groundedness", "Does the generated answer actually follow from the retrieved context, with no unsupported claims added?", "Checked via an LLM-as-judge comparing claims in the answer against the provided context", "Catching hallucination that slips through even with retrieved context present", "LLM-as-judge evaluation has its own failure modes (bias, inconsistency) — treat scores as directional signal, not ground truth"),
+T("Answer relevance", "Does the generated answer actually address what the user asked, regardless of factual grounding?", "An answer can be perfectly grounded in the context yet fail to address the actual question asked", "Distinguishing 'technically true but unhelpful' answers from genuinely useful ones", "Easy to conflate with faithfulness — they measure two different failure modes and should be scored separately"),
+T("Context precision", "Of the chunks retrieved, what fraction were actually relevant/useful for answering the query?", "relevant_retrieved_chunks / total_retrieved_chunks", "Diagnosing whether your retrieval step is too noisy (returning a lot of irrelevant filler)", "High precision with low recall can still mean you're missing the one chunk that actually had the answer"),
+T("Context recall", "Of all the chunks that WOULD have been relevant in the whole corpus, what fraction did retrieval actually find?", "relevant_retrieved_chunks / all_relevant_chunks_in_corpus", "Diagnosing whether retrieval is missing important information entirely", "Requires a labeled 'ground truth relevant chunks' set per query to measure properly — harder to get than precision in practice"),
+T("End-to-end evaluation datasets", "A curated set of (question, expected answer, expected source) triples used to regression-test the whole pipeline.", "Frameworks: RAGAS, DeepEval, custom eval harnesses against a golden dataset", "Catching regressions when you change chunking, the embedding model, or the prompt", "Needs ongoing maintenance — a static eval set goes stale as your real documents and user queries evolve"),
+];
+const RAG_ADVANCED = [
+T("Contextual compression", "After retrieval, strip down each chunk to only the sentences actually relevant to the query before sending to the LLM.", "An LLM or smaller extraction model filters each retrieved chunk down before augmentation", "Reducing prompt size/cost/noise when retrieved chunks are long but only partly relevant", "Adds an extra LLM call per retrieved chunk — a real latency/cost trade-off for the precision gain"),
+T("Self-RAG / corrective RAG", "The system critiques its own retrieval and generation, re-retrieving or abstaining if the first pass looks insufficient.", "Generate → self-grade relevance/support → re-retrieve or answer with caveats if support is weak", "Higher-stakes RAG where confidently-wrong answers are costly", "Significantly more LLM calls per query — a real latency and cost increase for the reliability gain"),
+T("Agentic RAG", "An agent decides WHETHER to retrieve, WHAT to search for, and whether one retrieval round is enough — rather than a fixed always-retrieve-once pipeline.", "Agent reasons: 'I need to search for X first, then Y based on what I find'", "Complex, multi-hop questions that a single fixed retrieval pass can't answer well", "Far less predictable latency/cost than fixed-pipeline RAG — the agent might loop through several retrieval rounds"),
+T("GraphRAG", "Builds a knowledge graph from the corpus (entities + relationships) and retrieves/reasons over graph structure, not just flat text similarity.", "Extract entities/relations during ingestion → query the graph for connected context", "Questions requiring multi-hop reasoning across explicitly connected entities/facts", "Substantially more complex ingestion pipeline — extracting a clean, useful graph from unstructured text is itself a hard, error-prone problem"),
+T("Long-context vs RAG debate", "As context windows grow huge, sometimes just stuffing the whole document set into the prompt competes with RAG.", "'Needle in a haystack' tests show recall degrades for buried facts even in huge contexts", "Small, fairly static document sets that fit comfortably in context", "Long-context is far more expensive per call than retrieving a small relevant subset, and recall on buried details isn't perfectly reliable even in big-context models — RAG still usually wins for large/changing corpora"),
+];
+
+/* =========================================================
+   GROUP 5 — LANGCHAIN
+   ========================================================= */
+const LC_CORE = [
+T("ChatModel", "A standardized wrapper around any provider's chat API, exposing the same interface regardless of underlying model.", "ChatOpenAI(model='gpt-4o') / ChatAnthropic(model='claude-opus-4-6')", "Writing model-agnostic application code that can swap providers easily", "The standardized interface can't always expose every provider-specific feature equally well — check docs when you need something niche"),
+T("PromptTemplate / ChatPromptTemplate", "A reusable, parameterized prompt with named placeholder variables.", "ChatPromptTemplate.from_messages([('system','...'), ('user','{question}')])", "Keeping prompt text separate from application logic, reusable across calls", "Templates silently fail to catch a typo'd variable name until runtime — no compile-time check that all placeholders are actually filled"),
+T("Output parser", "Converts the raw LLM text response into a structured Python object.", "StrOutputParser(), JsonOutputParser(), or a Pydantic model via .with_structured_output()", "Reliable downstream consumption of model output instead of manual string parsing", "A parser can throw if the model's output doesn't actually match the expected shape — pair with retry/fallback logic for production robustness"),
+T("Runnable / LCEL", "LangChain Expression Language — chains components together with the `|` pipe operator into a single executable pipeline.", "chain = prompt | model | output_parser", "Composing prompt → model → parser (and more) declaratively and concisely", "Debugging a long piped chain can be harder than reading equivalent step-by-step imperative code — use .invoke() on sub-pieces to isolate issues"),
+T("Memory", "Persisting conversation history (or a summary of it) across multiple calls.", "ConversationBufferMemory, ConversationSummaryMemory", "Multi-turn chat applications that need to remember prior context", "Unbounded buffer memory grows the prompt (and cost) with every turn — summary or windowed memory is usually needed for long conversations"),
+T("Document loaders", "Standardized loaders that pull in raw content from various sources as LangChain Document objects.", "PyPDFLoader, WebBaseLoader, CSVLoader, NotionDirectoryLoader", "The first step of a RAG ingestion pipeline, regardless of source format", "Loader output quality varies a lot by source format — PDF extraction in particular can mangle tables/columns/layout"),
+T("Text splitters", "LangChain's chunking utilities, implementing the chunking strategies covered earlier in this page.", "RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)", "Turning loaded documents into appropriately-sized chunks for embedding", "Default separators are tuned for general prose — code or tabular documents often need a custom splitter/separators list"),
+T("Vector store integration", "A unified interface over many different vector databases.", "Chroma.from_documents(docs, embedding_model)", "Swapping the underlying vector DB without rewriting retrieval code", "As with ChatModels, some vector-DB-specific advanced features aren't exposed through the common interface"),
+T("Retriever", "An object that wraps a vector store (or other retrieval logic) behind a standard .invoke(query) → documents interface.", "vector_store.as_retriever(search_kwargs={'k':5})", "Plugging retrieval into a larger LCEL chain alongside prompting/generation", "A retriever's k and search params are usually set once at creation — adjusting them per-query takes extra wiring"),
+];
+const LC_AGENTS_LEGACY = [
+T("Tool", "A function wrapped with a name, description, and input schema that an LLM can choose to call.", "@tool\\ndef search(query: str) -> str: ...", "Giving an agent capabilities beyond text generation", "The tool's natural-language description is what the LLM uses to decide when to call it — a vague description leads to the tool being mis-used or ignored"),
+T("AgentExecutor (legacy)", "LangChain's original agent runtime — loops the model through reasoning and tool calls until it produces a final answer.", "AgentExecutor(agent=agent, tools=tools)", "Older LangChain codebases; conceptually superseded by LangGraph for new projects", "LangChain's own docs now recommend LangGraph for new agent development — AgentExecutor is in a maintenance, not growth, phase"),
+T("Callbacks", "Hooks that fire on events during a chain/agent run (start, end, token, error) — used for logging, tracing, streaming.", "Custom CallbackHandler with on_llm_new_token(), on_tool_start(), etc.", "Observability: debugging, cost tracking, custom UI streaming", "Easy to forget to propagate callbacks through nested chains, silently losing visibility into sub-steps"),
+T("LangSmith", "LangChain's companion tracing/observability platform.", "Automatically traces chain/agent runs when configured", "Debugging exactly what a chain or agent actually did, step by step, in production", "A separate paid/hosted product from the open-source LangChain library itself — not bundled by default"),
+];
+
+/* =========================================================
+   GROUP 6 — LANGGRAPH
+   ========================================================= */
+const LG_CORE = [
+T("Why LangGraph (vs. plain chains)", "Real agent behavior is rarely a straight line — it loops, branches, and revisits earlier steps. LangGraph models that explicitly as a graph instead of forcing it into a linear chain.", "Agents that retry, ask clarifying questions, or route between specialized sub-tasks", "Any agent more complex than 'call the model once, maybe call one tool, done'", "Reaching for LangGraph on a genuinely simple, linear task adds unnecessary structural overhead — plain LCEL chains are still right for straight-line workflows"),
+T("State", "A shared, typed data structure that flows through every node in the graph, accumulating/updating as it goes.", "class State(TypedDict): messages: list; retrieved_docs: list", "Carrying conversation history, intermediate results, and scratch data between steps", "Every node must explicitly return the state updates it makes — forgetting to update a field means that data silently doesn't propagate forward"),
+T("Node", "A single step in the graph — typically a function that takes the current state and returns updates to it.", "def call_model(state): return {'messages': [llm.invoke(state['messages'])]}", "Each discrete unit of work: calling the LLM, calling a tool, running a check", "Nodes should generally be deterministic given their inputs where possible — easier to test, replay, and debug"),
+T("Edge", "A connection defining which node runs next.", "graph.add_edge('call_model', 'call_tool')", "Defining the normal, fixed flow between two steps", "A graph with no edge into a node makes that node unreachable — easy to silently 'orphan' a node while refactoring"),
+T("Conditional edge", "A connection whose destination is decided at runtime by a routing function inspecting the current state.", "graph.add_conditional_edges('call_model', route_fn, {'tool':'call_tool', 'end':END})", "Branching logic: 'did the model ask for a tool, or is it done?'", "The routing function must return a value that exactly matches one of the declared destination keys, or the graph errors at runtime"),
+T("Cycles / loops", "Unlike a plain DAG-based chain, LangGraph explicitly supports edges that loop back to an earlier node.", "tool result → back to call_model → maybe another tool call → ... → END", "The fundamental pattern behind ReAct-style agents: reason, act, observe, repeat", "An agent without a clear termination condition can loop indefinitely — always design an explicit exit path and/or a max-iteration safeguard"),
+T("START / END", "Special built-in nodes marking the graph's entry and exit points.", "graph.add_edge(START, 'call_model')", "Every graph needs at least one path from START to END", "Forgetting to route any path to END means the graph technically never 'finishes' from the runtime's perspective"),
+T("Checkpointing / persistence", "Saves the graph's state at each step, enabling pause/resume, time-travel debugging, and durability across restarts.", "graph.compile(checkpointer=MemorySaver())", "Long-running agents, human-in-the-loop workflows, surviving a process restart mid-task", "Checkpointers need a real persistent backend (not just in-memory) for anything beyond local development"),
+T("Human-in-the-loop", "Explicitly pausing graph execution to wait for human approval/input before continuing.", "interrupt_before=['execute_action']", "High-stakes actions (sending an email, making a purchase, deleting data) needing a human checkpoint", "Without checkpointing configured, an interrupted graph has nowhere durable to resume from after the pause"),
+];
+const LG_PATTERNS = [
+T("ReAct loop (Reason + Act)", "The agent alternates between reasoning about what to do next and actually taking an action (tool call), observing the result, and reasoning again.", "Thought → Action → Observation → Thought → ... → Final Answer", "The default, general-purpose pattern for most tool-using agents", "Without a step limit, a confused agent can loop on the same failing action repeatedly — always cap max iterations"),
+T("Supervisor / orchestrator pattern", "One central agent node routes tasks to specialized worker agents/sub-graphs and combines their results.", "Supervisor decides: 'this needs the research agent, then the writer agent'", "Multi-agent systems where different sub-tasks need genuinely different tools/prompts/expertise", "The supervisor's routing logic itself becomes a critical, hard-to-debug component — log its decisions explicitly"),
+T("Hierarchical agent teams", "Supervisors of supervisors — a tree of agents, each managing a sub-team responsible for one broad area.", "Top-level supervisor → domain supervisors (research, coding, QA) → individual worker agents", "Large, complex multi-domain tasks that don't fit one flat agent team", "Coordination overhead and latency grow with each added layer — only add hierarchy when a flat team genuinely can't handle the complexity"),
+T("Parallel / map-reduce nodes", "Fan out the same task across multiple nodes concurrently, then merge their results in a later node.", "Send the same document to N summarizer nodes for different sections, combine in a 'reduce' node", "Speeding up independent sub-tasks that don't depend on each other's output", "State-merging logic for parallel branches needs careful design — conflicting updates to the same state field need an explicit resolution strategy"),
+T("Streaming graph execution", "Emitting intermediate state/events as the graph runs, rather than waiting for the full run to complete.", "for event in graph.stream(input): ...", "Showing live progress in a UI as an agent works through multiple steps", "Streaming state updates means consumers may see partially-complete intermediate state — design the UI to handle that gracefully"),
+];
+
+/* =========================================================
+   GROUP 7 — AGENTIC AI
+   ========================================================= */
+const AG_CORE = [
+T("Agent (definition)", "A system that uses an LLM to decide its own sequence of actions toward a goal, rather than following a fixed, hardcoded sequence.", "Given a goal, the agent decides which tools to call, in what order, adapting based on results", "Open-ended tasks where the right sequence of steps can't be fully predicted in advance", "The line between 'a chain with one tool call' and 'an agent' is fuzzy — the defining trait is the LLM controlling control flow, not a human pre-deciding it"),
+T("Agent loop", "The core repeating cycle: perceive (current state/observation) → think (reason about what to do) → act (take an action) → observe the result → repeat.", "See the ReAct pattern in the LangGraph section for the concrete implementation", "The fundamental structure underlying nearly every agent framework", "Each loop iteration costs an LLM call — a poorly-bounded loop is a direct, scaling cost and latency risk, not just a logic bug"),
+T("Tool use", "The mechanism letting an agent affect or query the world beyond pure text generation.", "Search, calculator, code execution, database query, API calls, file read/write", "Any task requiring real-world information or action beyond the model's training knowledge", "An agent is only as capable and as safe as the tools it's given — overly broad tool permissions are the single biggest agent safety risk"),
+T("Planning / task decomposition", "Breaking a large, ambiguous goal into a sequence of smaller, more tractable sub-tasks before (or while) executing.", "'To plan a trip: 1) research destinations 2) check budget 3) book flights 4) book hotel'", "Complex, multi-step goals where jumping straight to action would likely miss something", "A plan made upfront can become stale/wrong as new information arrives mid-execution — good agents revise plans, not just follow them blindly"),
+T("Reflection / self-critique", "The agent reviews its own previous output or action and explicitly judges whether it was correct/sufficient.", "'Re-reading my answer, I didn't actually address the budget constraint — let me redo this step'", "Catching errors before they propagate, especially in longer multi-step tasks", "Reflection adds extra LLM calls and isn't guaranteed to catch every error — it's a quality improvement, not a correctness guarantee"),
+T("Short-term / working memory", "Information held within the current task/session — typically just the conversation and scratchpad state.", "The message history and intermediate state passed through a LangGraph run", "Maintaining coherence within a single task or conversation", "Lost when the session ends unless explicitly persisted — don't assume an agent 'remembers' anything across separate runs without deliberate storage"),
+T("Long-term memory", "Information persisted across sessions — facts, preferences, or past interactions retrieved when relevant.", "A vector store of past interactions, retrieved and injected into context for a new session", "Personalization, continuity across separate conversations with the same user", "Long-term memory retrieval has the exact same relevance/precision challenges as RAG retrieval generally — it's RAG, applied to the agent's own history"),
+T("Guardrails / safety constraints", "Explicit limits on what an agent is allowed to do, regardless of what it 'decides' it wants to do.", "Require human approval before any destructive action; hard-deny certain tool/argument combinations", "Any agent with real-world side effects: sending messages, spending money, modifying data, deleting files", "Guardrails implemented only as prompt instructions are soft, not hard — for true safety, enforce limits in code (e.g. a tool that structurally cannot delete), not just in the system prompt"),
+];
+const AG_MULTI = [
+T("Single-agent vs multi-agent", "One generalist agent handling everything, vs. several specialized agents collaborating.", "A single coding agent vs. separate planner/coder/reviewer agents", "Multi-agent shines when sub-tasks genuinely need different tools, prompts, or context windows", "Multi-agent systems are harder to debug (more moving parts) and not automatically more capable — don't add agents without a clear reason tied to task structure"),
+T("Sequential handoff", "One agent completes its sub-task fully, then explicitly hands off to the next agent in a fixed order.", "Researcher agent → Writer agent → Editor agent, each running to completion before the next starts", "Clear pipeline-style workflows where the stages genuinely happen in order", "A rigid sequence can't easily go back a step if a later agent discovers the earlier stage's output was actually insufficient"),
+T("Supervisor / worker", "A central agent dynamically routes work to specialized workers and decides when the overall task is done.", "See the LangGraph supervisor pattern above for the concrete graph implementation", "Tasks where the right sub-agent to call next depends on what's been discovered so far", "The supervisor itself is a single point of failure/bottleneck — its own reasoning quality caps the whole system's effectiveness"),
+T("Debate / multi-agent critique", "Multiple agents (sometimes instances of the same model with different prompts) argue different positions or critique each other's output before a final answer is settled.", "Two agents argue opposing sides of an analysis, a third judges", "Surfacing blind spots a single agent's single pass might miss; improving robustness on ambiguous judgment calls", "Significantly more expensive (multiple full agent passes per task) for a benefit that's genuinely use-case dependent, not universal"),
+T("Shared vs isolated context", "Whether sub-agents see the full shared conversation/state, or only the specific slice relevant to their sub-task.", "A research sub-agent might only need the search results, not the entire prior conversation", "Isolating context keeps individual agent prompts focused and reduces cost per sub-call", "Too much isolation means a sub-agent lacks context it actually needed — there's a real precision/completeness trade-off to tune"),
+];
+const AG_EVAL = [
+T("Why agent evaluation is hard", "Unlike a single LLM call with one expected output, an agent's correctness depends on its entire trajectory of decisions, not just the final answer.", "Two agents can reach the same correct final answer via very different — one efficient, one wasteful or risky — paths", "Understanding why simple 'did it get the right answer' metrics are insufficient for agents", "A 'passing' end-to-end score can hide an agent that took a dangerous or absurdly expensive path to get there"),
+T("Trajectory evaluation", "Scoring not just the final output but the sequence of tool calls/decisions the agent made along the way.", "Did it call the right tools, in a sensible order, without redundant or unsafe actions?", "Catching inefficient, risky, or fragile agent behavior that a final-answer-only check would miss", "Requires either hand-labeled 'ideal trajectories' or an LLM-as-judge over the full trace — more effort to set up than scoring final answers alone"),
+T("Task success rate", "The most basic metric: across a benchmark set of tasks, what fraction did the agent actually complete correctly?", "A held-out set of representative tasks with known correct outcomes", "A simple, necessary (but not sufficient on its own) headline metric", "Easy to overfit a benchmark set with prompt tweaking while real-world generalization doesn't actually improve"),
+T("Cost & latency per task", "Real-world agent deployment cares about how many LLM calls/tokens/seconds a task consumed, not just whether it succeeded.", "Tracking total tokens and wall-clock time per completed task across many runs", "Comparing whether a more complex agent architecture is actually worth its added overhead", "A success-rate improvement that comes with a 10x cost/latency increase may not be a net win depending on the product constraints"),
+];
+const AG_GUIDE = [
+G("Task is a single, predictable, linear sequence of steps", "A plain chain (prompt → model → parser), no agent needed"),
+G("Task needs the model to decide which tool(s) to call and in what order", "A single ReAct-style agent (LangGraph StateGraph with a model+tool loop)"),
+G("Sub-tasks genuinely need different tools/expertise/context", "Multi-agent: supervisor/worker or sequential handoff"),
+G("High-stakes actions with real-world side effects", "Add explicit guardrails + human-in-the-loop approval steps, enforced in code, not just prompted"),
+G("Need to recover gracefully from a failed tool call or wrong turn", "Build in reflection/self-critique steps and an explicit retry or escalation path"),
+G("Agent quality needs to be tracked over time, not just eyeballed", "Build a trajectory + outcome evaluation harness against a fixed benchmark task set"),
+];
+const AG_SYMPTOMS = [
+Sy("The agent loops forever calling the same tool with the same arguments", "No termination/max-iteration guard, and the agent isn't recognizing the result as 'already tried this' — add an explicit step cap and/or repetition detection"),
+Sy("The agent calls a tool with subtly wrong arguments repeatedly", "The tool's description/schema is ambiguous or the tool itself returns an unhelpful error — improve the tool's docstring/schema and make error messages actionable for the model to self-correct"),
+Sy("Multi-agent system produces inconsistent results run to run", "Routing/supervisor decisions are themselves a stochastic LLM call — add explicit logging of routing decisions and consider lowering temperature on the supervisor specifically"),
+Sy("Agent confidently completes a task but the output is subtly wrong", "Classic hallucination risk compounded across multiple steps — ground each step in actual tool/retrieval output rather than letting the model 'recall' facts from training"),
+Sy("Cost is far higher than expected for a 'simple' agent task", "Long conversation history resent every loop iteration, or unnecessary reflection/multi-query steps — measure tokens per step, not just per task"),
+Sy("Agent took a dangerous or irreversible action it shouldn't have", "A guardrail was implemented only as a prompt instruction, not enforced structurally — move the constraint into code (the tool itself refuses, not just the prompt asking nicely)"),
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){ return (s===undefined||s===null) ? "" : String(s); }
+
+function renderConceptTable(rows){
+  let head = "<tr><th>Concept</th><th>What it means</th><th>Example</th><th>When to use</th><th>Gotcha</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.c)}</td>
+      <td>${esc(r.i)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+      <td>${esc(r.u)}</td>
+      <td>${esc(r.g)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderMethodTable(rows){
+  let head = "<tr><th>Name</th><th>Signature</th><th>What it does</th><th>Example / note</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.m)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.sig)}</span></td>
+      <td>${esc(r.desc)}</td>
+      <td>${esc(r.ex)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderGuideTable(rows){
+  let head = "<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderSymptomTable(rows){
+  let head = "<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const DIAG = {};
+
+DIAG.ragPipeline = `
+<svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <text x="130" y="24" text-anchor="middle" font-weight="700" fill="#3d5a4f">Ingestion (offline, one-time / periodic)</text>
+  <rect x="20" y="36" width="100" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="70" y="60" text-anchor="middle">Documents</text>
+  <rect x="150" y="36" width="100" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="200" y="60" text-anchor="middle">Chunks</text>
+  <rect x="280" y="36" width="100" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="330" y="60" text-anchor="middle">Embeddings</text>
+  <rect x="410" y="36" width="120" height="40" rx="6" fill="#3d5a4f"/><text x="470" y="60" text-anchor="middle" fill="#fff">Vector Store</text>
+  <line x1="120" y1="56" x2="150" y2="56" stroke="#5b6260"/><line x1="250" y1="56" x2="280" y2="56" stroke="#5b6260"/><line x1="380" y1="56" x2="410" y2="56" stroke="#5b6260"/>
+
+  <text x="600" y="120" text-anchor="middle" font-weight="700" fill="#9a5b3a">Query time (every request)</text>
+  <rect x="540" y="135" width="100" height="40" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="590" y="159" text-anchor="middle">User Query</text>
+  <line x1="540" y1="155" x2="490" y2="76" stroke="#9a5b3a" stroke-dasharray="4 3"/>
+  <text x="640" y="150" font-size="10.5" fill="#5b6260">embed + search →</text>
+
+  <rect x="380" y="190" width="120" height="40" rx="6" fill="#f3e7df" stroke="#9a5b3a"/><text x="440" y="214" text-anchor="middle">Retrieved Chunks</text>
+  <line x1="490" y1="175" x2="450" y2="190" stroke="#9a5b3a"/>
+  <rect x="200" y="190" width="140" height="40" rx="6" fill="#e7eee9" stroke="#3d5a4f"/><text x="270" y="214" text-anchor="middle">Augmented Prompt</text>
+  <line x1="380" y1="210" x2="340" y2="210" stroke="#5b6260"/>
+  <line x1="600" y1="175" x2="270" y2="190" stroke="#5b6260" stroke-dasharray="2 2"/>
+  <text x="430" y="245" font-size="10" fill="#5b6260" text-anchor="middle">+ original query</text>
+  <rect x="40" y="190" width="120" height="40" rx="6" fill="#3d5a4f"/><text x="100" y="214" text-anchor="middle" fill="#fff">LLM → Answer</text>
+  <line x1="200" y1="210" x2="160" y2="210" stroke="#5b6260"/>
+</svg>`;
+
+DIAG.reactLoop = `
+<svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <circle cx="280" cy="130" r="100" fill="none" stroke="#c9c4b6" stroke-dasharray="3 3"/>
+  <rect x="230" y="20" width="100" height="40" rx="8" fill="#3d5a4f"/><text x="280" y="45" text-anchor="middle" fill="#fff">Think</text>
+  <rect x="380" y="100" width="100" height="40" rx="8" fill="#9a5b3a"/><text x="430" y="125" text-anchor="middle" fill="#fff">Act (tool)</text>
+  <rect x="230" y="200" width="100" height="40" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="280" y="225" text-anchor="middle">Observe</text>
+  <rect x="80" y="100" width="100" height="40" rx="8" fill="#f3e7df" stroke="#9a5b3a"/><text x="130" y="125" text-anchor="middle">Goal / Query</text>
+  <path d="M180 110 C 210 90, 240 60, 260 60" fill="none" stroke="#5b6260" marker-end="url(#a1)"/>
+  <path d="M330 50 C 360 60, 390 80, 400 100" fill="none" stroke="#5b6260"/>
+  <path d="M430 140 C 410 170, 360 195, 330 205" fill="none" stroke="#5b6260"/>
+  <path d="M230 220 C 190 200, 160 160, 145 140" fill="none" stroke="#5b6260"/>
+  <path d="M180 130 C 200 100, 220 70, 255 50" fill="none" stroke="#3d5a4f" stroke-dasharray="3 2"/>
+  <text x="280" y="135" text-anchor="middle" fill="#5b6260" font-size="11">loop until</text>
+  <text x="280" y="150" text-anchor="middle" fill="#5b6260" font-size="11">Final Answer</text>
+</svg>`;
+
+DIAG.multiAgent = `
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="280" y="20" width="140" height="44" rx="8" fill="#3d5a4f"/><text x="350" y="47" text-anchor="middle" fill="#fff">Supervisor</text>
+  <rect x="60" y="120" width="120" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="120" y="147" text-anchor="middle">Research agent</text>
+  <rect x="220" y="120" width="120" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="280" y="147" text-anchor="middle">Coding agent</text>
+  <rect x="380" y="120" width="120" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="440" y="147" text-anchor="middle">Writer agent</text>
+  <rect x="540" y="120" width="120" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="600" y="147" text-anchor="middle">Review agent</text>
+  <line x1="320" y1="64" x2="130" y2="120" stroke="#5b6260"/>
+  <line x1="340" y1="64" x2="280" y2="120" stroke="#5b6260"/>
+  <line x1="360" y1="64" x2="440" y2="120" stroke="#5b6260"/>
+  <line x1="380" y1="64" x2="595" y2="120" stroke="#5b6260"/>
+  <text x="350" y="200" text-anchor="middle" fill="#5b6260" font-size="11">Each worker runs independently and reports results back to the supervisor,</text>
+  <text x="350" y="218" text-anchor="middle" fill="#5b6260" font-size="11">which decides what happens next (more work, done, or escalate)</text>
+</svg>`;
+
+DIAG.langgraph = `
+<svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <circle cx="40" cy="110" r="20" fill="#1f2424"/><text x="40" y="114" text-anchor="middle" fill="#fff" font-size="10">START</text>
+  <rect x="120" y="88" width="110" height="44" rx="8" fill="#3d5a4f"/><text x="175" y="115" text-anchor="middle" fill="#fff">call_model</text>
+  <rect x="290" y="20" width="110" height="44" rx="8" fill="#9a5b3a"/><text x="345" y="47" text-anchor="middle" fill="#fff">call_tool</text>
+  <circle cx="600" cy="110" r="20" fill="#1f2424"/><text x="600" y="114" text-anchor="middle" fill="#fff" font-size="10">END</text>
+  <line x1="60" y1="110" x2="120" y2="110" stroke="#5b6260"/>
+  <path d="M230 95 C 260 75, 270 55, 290 42" fill="none" stroke="#9a5b3a"/><text x="270" y="65" font-size="10" fill="#9a5b3a">needs tool</text>
+  <path d="M290 55 C 250 75, 220 90, 230 105" fill="none" stroke="#9a5b3a"/><text x="240" y="35" font-size="10" fill="#9a5b3a">result</text>
+  <path d="M230 120 C 350 150, 480 140, 580 118" fill="none" stroke="#3d5a4f"/><text x="400" y="160" font-size="10" fill="#3d5a4f">final answer ready</text>
+  <text x="320" y="200" text-anchor="middle" fill="#5b6260" font-size="11">A conditional edge after call_model routes to call_tool or END based on the model's own output</text>
+</svg>`;
+
+DIAG.chunking = `
+<svg viewBox="0 0 680 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <rect x="20" y="20" width="640" height="30" rx="4" fill="#e7eee9" stroke="#3d5a4f"/>
+  <text x="340" y="40" text-anchor="middle" font-size="11">Full source document</text>
+  <rect x="20" y="80" width="150" height="30" rx="4" fill="#f3e7df" stroke="#9a5b3a"/><text x="95" y="100" text-anchor="middle" font-size="10">Chunk 1</text>
+  <rect x="155" y="80" width="150" height="30" rx="4" fill="#f3e7df" stroke="#9a5b3a"/><text x="230" y="100" text-anchor="middle" font-size="10">Chunk 2</text>
+  <rect x="290" y="80" width="150" height="30" rx="4" fill="#f3e7df" stroke="#9a5b3a"/><text x="365" y="100" text-anchor="middle" font-size="10">Chunk 3</text>
+  <rect x="425" y="80" width="150" height="30" rx="4" fill="#f3e7df" stroke="#9a5b3a"/><text x="500" y="100" text-anchor="middle" font-size="10">Chunk 4</text>
+  <rect x="155" y="80" width="15" height="30" fill="#9a5b3a" opacity="0.4"/>
+  <rect x="290" y="80" width="15" height="30" fill="#9a5b3a" opacity="0.4"/>
+  <rect x="425" y="80" width="15" height="30" fill="#9a5b3a" opacity="0.4"/>
+  <text x="340" y="135" text-anchor="middle" fill="#5b6260" font-size="11">Shaded overlap regions repeat text between neighboring chunks</text>
+  <text x="340" y="155" text-anchor="middle" fill="#5b6260" font-size="11">so a fact split across a boundary still appears whole in at least one chunk</text>
+</svg>`;
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS = [
+{
+  id:"genai", title:"1 · Generative AI Foundations", lede:"The vocabulary and mechanics underneath every LLM call — tokens, embeddings, sampling parameters, and prompting technique.",
+  subs:[
+    {id:"gen-core", title:"Core concepts", table:GEN_CORE},
+    {id:"gen-sampling", title:"Sampling & generation parameters", table:GEN_SAMPLING},
+    {id:"gen-prompting", title:"Prompting techniques", table:GEN_PROMPTING},
+    {id:"gen-guide", title:"Quick decision guide", table2:GEN_GUIDE},
+  ],
+  callout:"<b>Hallucination isn't a bug to patch out — it's structural.</b> An LLM predicts plausible next tokens; it has no built-in fact-checking step. Every technique on this page (grounding, RAG, structured output, reflection) is really a different way of constraining or checking that prediction, not eliminating the underlying mechanism."
+},
+{
+  id:"apicall", title:"2 · LLM API Calling — Multi-Provider", lede:"The common request shape across providers, the parameters that matter, and the practical concerns (retries, rate limits, cost, caching) that show up the moment you leave a notebook.",
+  subs:[
+    {id:"api-shape", title:"The common request shape", table:API_SHAPE},
+    {id:"api-params", title:"Common parameters across providers", table:API_PARAMS},
+    {id:"api-providers", title:"Provider-by-provider notes", table:API_PROVIDERS},
+    {id:"api-practical", title:"Production concerns", table:API_PRACTICAL},
+  ],
+  callout:"<b>Cost grows roughly quadratically with naive multi-turn chat</b> if you resend the entire growing history on every call (which is the default behavior) — for long conversations, summarization or windowed memory isn't an optimization nicety, it's often a necessity."
+},
+{
+  id:"chunk", title:"3 · Chunking Strategies", lede:"How source documents get split into retrievable pieces before they're ever embedded — the decision with the most outsized, easy-to-overlook impact on RAG quality.",
+  subs:[
+    {id:"chunk-strats", title:"Chunking strategies", note:"Overlap exists specifically to prevent this failure mode.", diagram:"chunking", cap:"Without overlap, a fact that straddles a chunk boundary can end up incomplete in both neighboring chunks and fully present in neither.", table:CHUNK_STRATS},
+    {id:"chunk-tradeoffs", title:"Chunk size trade-offs", table:CHUNK_TRADEOFFS},
+  ],
+  callout:"<b>Chunking is usually the highest-leverage, least-glamorous lever in a RAG system.</b> Teams often spend their tuning effort on prompts or model choice when the retrieval quality ceiling was actually set, silently, by a chunking decision made on day one."
+},
+{
+  id:"rag", title:"4 · RAG — Retrieval Augmented Generation", lede:"The full pipeline from documents to grounded answers — vector stores, retrieval methods, evaluation, and the more advanced patterns built on top of the basic version.",
+  subs:[
+    {id:"rag-pipeline", title:"The RAG pipeline, end to end", note:"Ingestion happens up front; retrieval and generation happen on every query.", diagram:"ragPipeline", cap:"The query is embedded with the SAME model used for documents, compared against stored vectors, and the top matches become context for generation.", table:RAG_PIPELINE},
+    {id:"rag-vectordb", title:"Vector databases & similarity", table:RAG_VECTORDB},
+    {id:"rag-retrieval", title:"Retrieval methods", table:RAG_RETRIEVAL_METHODS},
+    {id:"rag-eval", title:"RAG evaluation", table:RAG_EVAL},
+    {id:"rag-advanced", title:"Advanced RAG patterns", table:RAG_ADVANCED},
+  ],
+  callout:"<b>RAG reduces hallucination, it doesn't eliminate it.</b> The model can still misread, over-extrapolate from, or simply ignore the retrieved context. Faithfulness evaluation exists precisely because 'we added RAG' is not the same claim as 'the system no longer makes things up.'"
+},
+{
+  id:"langchain", title:"5 · LangChain", lede:"The most widely-used framework for composing prompts, models, parsers, retrievers, and (historically) agents into a single pipeline.",
+  subs:[
+    {id:"lc-core", title:"Core abstractions & LCEL", table:LC_CORE},
+    {id:"lc-agents", title:"Tools, legacy agents & observability", table:LC_AGENTS_LEGACY},
+  ],
+  callout:"<b>LangChain's own current guidance:</b> for new agent development, prefer LangGraph over the legacy AgentExecutor. LangChain itself remains the right layer for models, prompts, parsers, retrievers, and document loading — the agent orchestration layer has moved."
+},
+{
+  id:"langgraph", title:"6 · LangGraph", lede:"Graph-based orchestration for agents that loop, branch, and persist — built specifically to handle control flow that a linear chain can't express.",
+  subs:[
+    {id:"lg-core", title:"Core concepts", note:"A conditional edge is what turns a fixed pipeline into a real agent.", diagram:"langgraph", cap:"After the model responds, a routing function inspects the output: did it ask for a tool, or is it actually done? That single branch point is the structural difference between a chain and an agent.", table:LG_CORE},
+    {id:"lg-patterns", title:"Orchestration patterns", table:LG_PATTERNS},
+  ],
+  callout:"<b>Cycles are the whole point.</b> A standard chain is a DAG — data flows one direction, once. LangGraph's defining feature is allowing a loop back to an earlier node, which is exactly the structure a 'reason, act, observe, repeat' agent needs and a linear chain structurally cannot express."
+},
+{
+  id:"agentic", title:"7 · Agentic AI", lede:"What actually makes something an 'agent' rather than a chain, the core loop underneath nearly every agent framework, multi-agent topologies, and why evaluating agents is harder than evaluating a single LLM call.",
+  subs:[
+    {id:"ag-core", title:"Core agent concepts", note:"The agent loop is the structural heart of every agent framework, regardless of branding.", diagram:"reactLoop", cap:"Think → Act → Observe, repeated until the model decides it has a final answer — LangGraph's cyclic graphs are one concrete implementation of exactly this loop.", table:AG_CORE},
+    {id:"ag-multi", title:"Multi-agent systems", note:"Specialization has a coordination cost — add agents because the task structure demands it, not by default.", diagram:"multiAgent", cap:"A supervisor routes work to specialized workers and decides what happens next based on their results — the supervisor's own reasoning quality becomes the system's effective ceiling.", table:AG_MULTI},
+    {id:"ag-eval", title:"Evaluating agents", table:AG_EVAL},
+    {id:"ag-guide", title:"Quick decision guide", table2:AG_GUIDE},
+    {id:"ag-symptoms", title:"Symptom → likely cause", table3:AG_SYMPTOMS},
+  ],
+  callout:"<b>The single biggest agent safety principle:</b> a guardrail that lives only in the system prompt is a request, not a constraint — a sufficiently unusual input can route around it. Real safety for high-stakes actions (sending messages, spending money, deleting data) has to be enforced in code: a tool that is structurally incapable of the dangerous action, or a human-approval step the graph cannot skip."
+},
+];
+
+function buildDiagram(key, cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+function buildSub(sub){
+  let html = `<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html += `<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html += buildDiagram(sub.diagram, sub.cap);
+  if(sub.table) html += renderConceptTable(sub.table);
+  if(sub.table2) html += renderGuideTable(sub.table2);
+  if(sub.table3) html += renderSymptomTable(sub.table3);
+  html += `</div>`;
+  return html;
+}
+function buildGroup(g){
+  let html = `<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=> html += buildSub(s));
+  if(g.callout) html += `<div class="callout">${g.callout}</div>`;
+  html += `</section>`;
+  return html;
+}
+document.getElementById("content").innerHTML = SECTIONS.map(buildGroup).join("");
+
+let navHtml = "";
+SECTIONS.forEach(g=>{
+  navHtml += `<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=> navHtml += `<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML = navHtml;
+
+document.getElementById("globalFilter").addEventListener("input", function(e){
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){ tr.classList.remove("row-hidden"); return; }
+    const txt = tr.textContent.toLowerCase();
+    tr.classList.toggle("row-hidden", !txt.includes(q));
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide 2 Study</title>
+<style>
+  :root{
+    --bg:#fbfaf8;
+    --panel:#ffffff;
+    --ink:#1f2424;
+    --ink-soft:#5b6260;
+    --line:#e3e0d8;
+    --accent:#3d5a4f;
+    --accent-soft:#e7eee9;
+    --warn:#9a5b3a;
+    --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex; min-height:100vh;}
+  a{color:var(--accent);}
+
+  /* ---- sidebar ---- */
+  #sidebar{
+    width:230px; flex:0 0 230px;
+    border-right:1px solid var(--line);
+    background:var(--panel);
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    padding:20px 14px;
+  }
+  #sidebar h1{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{
+    display:block; padding:7px 8px; border-radius:6px; font-size:13.5px;
+    color:var(--ink); text-decoration:none; font-weight:600; margin-top:6px;
+  }
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{
+    display:block; padding:4px 8px 4px 18px; border-radius:6px; font-size:12.5px;
+    color:var(--ink-soft); text-decoration:none;
+  }
+  #sidebar nav a.sublink:hover{background:var(--accent-soft); color:var(--ink);}
+  #sidebar input{
+    width:100%; padding:7px 9px; margin-bottom:14px; border:1px solid var(--line);
+    border-radius:6px; font-size:12.5px; font-family:var(--sans); background:#fff;
+  }
+
+  /* ---- main ---- */
+  #main{flex:1; min-width:0; padding:38px 44px 80px; max-width:1180px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px; margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft); font-size:14px; margin:0; max-width:640px; line-height:1.5;}
+
+  section.group{margin-bottom:56px;}
+  section.group > h2{
+    font-size:21px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px;
+  }
+  section.group > .lede{color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; max-width:760px; line-height:1.5;}
+
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{
+    font-size:15px; margin:0 0 4px; color:var(--accent); letter-spacing:.01em;
+  }
+  .subsection .note{color:var(--ink-soft); font-size:12.5px; margin:0 0 12px;}
+
+  /* table */
+  .twrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.6px; min-width:860px;}
+  td.viz{width:118px; padding:6px 8px;}
+  .microviz{width:110px; height:62px; display:block;}
+  thead th{
+    text-align:left; background:#f1efe9; color:var(--ink-soft);
+    font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    padding:9px 12px; border-bottom:1px solid var(--line); position:sticky; top:0;
+  }
+  tbody td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700; white-space:nowrap;}
+  td .formula{display:block; font-family:var(--mono); font-size:11.5px; color:var(--warn); margin-top:3px;}
+  td ul{margin:0; padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:10px; background:var(--accent-soft); color:var(--accent); margin-right:4px; white-space:nowrap;}
+
+  .callout{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:12px 16px; font-size:13px; border-radius:0 6px 6px 0; margin:18px 0 8px; line-height:1.55;
+  }
+  .callout b{color:var(--accent);}
+
+  .diagram{
+    border:1px solid var(--line); border-radius:8px; background:#fff;
+    padding:18px; margin:18px 0 28px; text-align:center;
+  }
+  .diagram .cap{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:left;}
+  .diagram svg{max-width:100%; height:auto;}
+
+  .quickgrid{display:grid; grid-template-columns:1fr 1fr; gap:0;}
+  .quickgrid .twrap{min-width:0;}
+
+  mark.row-hidden{display:none;}
+
+  @media (max-width: 880px){
+    #sidebar{display:none;}
+    #main{padding:24px 16px 60px;}
+    .quickgrid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <h1>Reference</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. overfit)">
+  <nav id="navTree"></nav>
+</aside>
+
+<main id="main">
+  <div class="pagehead">
+    <h1>ML · Deep Learning · Statistics · Math</h1>
+    
+    <div style="text-align: right; margin: 20px;">
+
+        <button onclick="window.location.href='index.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer;">
+            Python
+        </button>
+
+        <button onclick="window.location.href='ml-stats-math-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            ML | Stats
+        </button>
+
+        <button onclick="window.location.href='ai-engineering-reference.html'"
+            style="background:#1f2424; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin-left:10px;">
+            Agentic AI
+        </button>
+
+    </div>
+
+
+  </div>
+
+  <div id="content"></div>
+</main>
+
+<script>
+/* =========================================================
+   DATA — every row from the source cheat sheets, restructured
+   into: concept, idea (how it works / formula), pros, cons,
+   use (when to use), fail (where it fails), under, over, data
+   ========================================================= */
+
+const ML_REG = [
+{c:"Linear Regression", i:"Fits a straight line minimizing the sum of squared residuals.", f:"ŷ = w₀+w₁x₁+…+wₙxₙ, minimizing Σ(y−ŷ)²", p:"Simple, interpretable, fast", n:"Assumes linearity; sensitive to outliers & multicollinearity", u:"Linear relationship between features and target", fail:"Non-linear relationships, heteroscedastic data, multicollinearity", under:"Relationship is curved but forced into a straight line", over:"Rarely on its own — but can with many irrelevant features", d:"Numeric, linear-relationship data"},
+{c:"Polynomial Regression", i:"Linear regression on polynomial-transformed features.", f:"ŷ = w₀+w₁x+w₂x²+…", p:"Captures non-linear trends", n:"Easily overfits at high degree", u:"Curved relationship, small feature count", fail:"Extrapolating beyond the training range — wild swings", under:"Degree too low — misses curvature", over:"Degree too high — wiggly curve fits noise", d:"Numeric, curved relationships"},
+{c:"Ridge Regression (L2)", i:"Linear regression plus a penalty on squared coefficients.", f:"min Σ(y−ŷ)² + λΣw²", p:"Reduces overfitting, handles multicollinearity", n:"Doesn't zero out features", u:"Many correlated features", fail:"Doesn't help when irrelevant features need full removal", under:"λ too high — shrinks all weights too much", over:"λ too low — behaves like plain linear regression", d:"Numeric, many correlated features"},
+{c:"Lasso Regression (L1)", i:"Linear regression plus a penalty on absolute coefficients.", f:"min Σ(y−ŷ)² + λΣ|w|", p:"Automatic feature selection (zeros out weights)", n:"Can arbitrarily drop correlated features", u:"Need a sparse / interpretable model", fail:"Arbitrarily drops one of two correlated features", under:"λ too high — zeros out useful features", over:"λ too low — keeps noise features", d:"Numeric, sparse / high-dim features"},
+{c:"Elastic Net", i:"Combines L1 and L2 penalties.", f:"λ₁Σ|w| + λ₂Σw²", p:"Balances Ridge & Lasso benefits", n:"Two hyperparameters to tune", u:"Many features, some correlated", fail:"Two hyperparameters (λ1, λ2) — easy to mistune", under:"Both penalties too strong — over-shrinks", over:"Both penalties too weak — reverts to plain regression", d:"Numeric, correlated + sparse mix"},
+{c:"Support Vector Regression", i:"Fits within an ε-margin tube, ignores errors inside it.", f:"min ‖w‖² s.t. |y−ŷ| ≤ ε", p:"Robust to outliers within the margin", n:"Slow on large datasets; kernel choice matters", u:"Non-linear regression with outliers", fail:"Large datasets (slow); poor kernel choice misses the pattern", under:"ε too large / kernel too simple — misses pattern", over:"C too high, ε too small — fits noise inside the margin", d:"Numeric, small–medium datasets with outliers"},
+{c:"Decision Tree Regression", i:"Splits data into regions, predicts the region average.", f:"Minimizes variance within each leaf", p:"Handles non-linearity, no scaling needed", n:"Prone to overfitting, unstable (high variance)", u:"Non-linear data, interpretability needed", fail:"Extrapolation (flat prediction beyond range); unstable to small data changes", under:"Max depth too shallow — coarse predictions", over:"No pruning — memorizes training data", d:"Numeric + categorical, non-linear data"},
+{c:"Random Forest Regression", i:"Averages predictions of many decision trees (bagging).", f:"ŷ = (1/T)Σ treeᵗ(x)", p:"Reduces variance vs. a single tree, robust", n:"Less interpretable, slower than a single tree", u:"Robust general-purpose regression", fail:"Extrapolation beyond training range; slow inference at scale", under:"Too few / too shallow trees — high bias", over:"Trees too deep + too correlated — overfits", d:"Numeric + categorical, structured/tabular data"},
+{c:"Gradient Boosting Regression", i:"Sequentially fits trees to the residual errors.", f:"ŷₜ = ŷₜ₋₁ + η·tree(residual)", p:"Very high accuracy", n:"Prone to overfitting if untuned, slower to train", u:"Competitions, tabular data, max accuracy", fail:"Noisy / outlier-heavy data (boosting amplifies hard points)", under:"Learning rate too low + too few estimators", over:"Too many rounds / learning rate too high — memorizes noise", d:"Numeric + categorical, structured/tabular data"},
+];
+
+const ML_CLS = [
+{c:"Logistic Regression", i:"Linear combination passed through a sigmoid for probability.", f:"σ(x)=1/(1+e⁻ˣ); boundary at 0.5", p:"Fast, interpretable, outputs probabilities", n:"Assumes a linear decision boundary", u:"Binary classification, baseline model", fail:"Non-linear boundaries; imbalanced classes without weighting", under:"Features relate non-linearly to log-odds", over:"Rarely alone — but can with many features + no regularization", d:"Numeric + encoded categorical, linearly separable"},
+{c:"K-Nearest Neighbors", i:"Classifies by majority vote among k nearest points.", f:"Distance metric + majority vote", p:"No training phase, simple, non-parametric", n:"Slow at prediction; sensitive to scale & k", u:"Small datasets, non-linear boundaries", fail:"High-dimensional data (curse of dimensionality); unscaled features", under:"k too large — oversmoothed", over:"k too small (k=1) — memorizes noise", d:"Numeric (needs scaling), small–medium datasets"},
+{c:"Naive Bayes", i:"Probabilistic classifier assuming feature independence.", f:"P(y|x) ∝ P(y)·ΠP(xᵢ|y)", p:"Fast, works well in high dimensions (text)", n:"\"Naive\" independence assumption often false", u:"Text classification, spam filtering", fail:"Strongly correlated features (violates independence)", under:"Rarely — the assumption itself just biases the estimate", over:"Rarely — high bias, low variance by design", d:"Text/categorical, high-dimensional sparse data"},
+{c:"Decision Tree", i:"Splits data on feature thresholds to maximize purity.", f:"Entropy or Gini Index chooses the split", p:"Interpretable, handles non-linear & mixed data", n:"Overfits easily, unstable to small data changes", u:"Need interpretability, mixed data types", fail:"Extrapolation; small data variations → very different trees", under:"Max depth too shallow — misses patterns", over:"No max depth/pruning — memorizes training data", d:"Numeric + categorical, mixed, missing values"},
+{c:"Random Forest", i:"Ensemble of trees on bootstrapped samples + random feature subsets.", f:"Majority vote across T trees", p:"Reduces overfitting vs. a single tree, handles high dims", n:"Less interpretable, slower, memory-heavy", u:"General-purpose, robust baseline", fail:"Very high-dimensional sparse data (text)", under:"Too few / too shallow trees — weak ensemble", over:"Highly correlated, deep trees (low max_features)", d:"Numeric + categorical, structured/tabular data"},
+{c:"Support Vector Machine", i:"Finds the hyperplane maximizing margin between classes.", f:"max margin = 2/‖w‖; kernel trick for non-linear data", p:"Effective in high dimensions, robust with right margin", n:"Slow on large datasets; kernel/C tuning needed", u:"High-dim, clear-margin data (text, images)", fail:"Large datasets (slow); overlapping classes, no clear margin", under:"Wrong kernel (e.g. linear for non-linear data)", over:"C too high + RBF — fits noise points exactly", d:"Numeric (scaled), high-dim text/image data"},
+{c:"AdaBoost", i:"Sequentially reweights misclassified samples, combines weak learners.", f:"Final = Σ αₜ·weak_learnerₜ(x)", p:"Good accuracy, less overfit-prone than a single tree", n:"Sensitive to noisy data / outliers", u:"Boosting weak learners (e.g. stumps)", fail:"Noisy data / outliers (weak learners chase mislabeled points)", under:"Too few estimators / too-simple learners", over:"Too many estimators on noisy data", d:"Numeric + categorical, clean-ish structured data"},
+{c:"Gradient Boosting (GBM)", i:"Sequentially fits learners to residual errors of the previous one.", f:"Fₜ(x)=Fₜ₋₁(x)+η·hₜ(x)", p:"Very high accuracy on tabular data", n:"Slow training, easy to overfit if untuned", u:"Tabular data competitions", fail:"Very noisy labels, extreme class imbalance untuned", under:"Low learning rate + few trees — high bias", over:"Too many trees/depth, no early stopping", d:"Numeric + categorical, structured/tabular data"},
+{c:"XGBoost", i:"Regularized, optimized gradient boosting.", f:"Adds L1/L2 regularization + smart pruning to GBM", p:"Fast, high accuracy, handles missing values", n:"Many hyperparameters to tune", u:"Industry-standard for structured/tabular data", fail:"Same as GBM, amplified by aggressive defaults", under:"Low learning rate + few trees", over:"Too many trees/depth, no early stopping", d:"Numeric + categorical, structured/tabular data"},
+{c:"LightGBM", i:"Gradient boosting with leaf-wise (not level-wise) tree growth.", f:"Splits the leaf with max loss reduction first", p:"Very fast, handles large datasets well", n:"Can overfit on small datasets", u:"Large datasets, speed-critical tasks", fail:"Small datasets — leaf-wise growth overfits fast", under:"Too few leaves/iterations", over:"Unchecked leaf-wise growth on small data", d:"Large structured/tabular datasets"},
+{c:"CatBoost", i:"Gradient boosting with native categorical feature handling.", f:"Ordered boosting avoids target leakage", p:"No need to manually encode categoricals", n:"Slightly slower than LightGBM", u:"Data with many categorical features", fail:"Very high-cardinality categoricals without enough data per category", under:"Too few iterations", over:"Too many iterations, no regularization", d:"Numeric + many categorical features"},
+];
+
+const ML_CLUST = [
+{c:"K-Means", i:"Partitions data into k clusters by minimizing distance to centroids.", f:"min Σ‖x−centroid‖² (inertia)", p:"Fast, simple, scales well", n:"Must pick k upfront; assumes spherical clusters; sensitive to init", u:"Well-separated, roughly spherical clusters", fail:"Non-spherical clusters, very different sizes/density, categorical data", under:"k too small — merges distinct groups", over:"k too large — splits one group into many", d:"Numeric, continuous, roughly spherical"},
+{c:"K-Means++", i:"K-Means with smarter, spread-out centroid initialization.", f:"Picks initial centroids probabilistically far apart", p:"Better convergence than random init", n:"Still needs k chosen upfront", u:"Same as K-Means, more reliable", fail:"Same limits as K-Means", under:"k too small", over:"k too large", d:"Same as K-Means"},
+{c:"Hierarchical (Agglomerative)", i:"Builds nested clusters bottom-up by merging closest pairs.", f:"Linkage: single / complete / average distance", p:"No need to pick k upfront, dendrogram visual", n:"Slow on large datasets (O(n²) or worse)", u:"Small datasets, want hierarchy / visual structure", fail:"Large datasets (expensive); noisy data distorts dendrogram", under:"Cutting dendrogram too high — too few, broad clusters", over:"Cutting too low — many tiny fragmented clusters", d:"Numeric, small–medium datasets"},
+{c:"DBSCAN", i:"Density-based — groups dense regions, flags sparse points as noise.", f:"Params: ε (radius), MinPts", p:"Finds arbitrary shapes, detects outliers automatically", n:"Struggles with varying density; sensitive to ε/MinPts", u:"Irregular-shaped clusters, noisy data with outliers", fail:"Varying-density clusters (a single ε can't fit all)", under:"ε too large / MinPts too low — merges clusters", over:"ε too small / MinPts too high — everything flagged as noise", d:"Numeric, arbitrary shapes with outliers"},
+{c:"Gaussian Mixture Model", i:"Assumes data is a mixture of k Gaussians, assigns soft probabilities.", f:"EM algorithm estimates Gaussian parameters", p:"Soft, probabilistic clustering; flexible shapes", n:"Slower than K-Means; assumes Gaussian shapes", u:"Overlapping clusters, need membership probability", fail:"Non-Gaussian clusters; high-dim covariance breaks down", under:"Too few components — broad, imprecise grouping", over:"Too many components — fits noise as its own cluster", d:"Numeric, continuous, overlapping/elliptical"},
+];
+
+const ML_DIM = [
+{c:"PCA", i:"Projects data onto directions (components) of max variance.", f:"Eigenvectors of covariance matrix = components", p:"Fast, reduces noise, removes multicollinearity", n:"Components lose direct interpretability; linear only", u:"Preprocessing, visualization, noise reduction", fail:"Non-linear relationships (it's a linear method); unscaled features", under:"Too few components kept — loses signal", over:"Too many kept — retains noise", d:"Numeric, linearly-correlated features"},
+{c:"LDA", i:"Like PCA but maximizes class separability (supervised).", f:"max between-class var / within-class var", p:"Good for classification preprocessing", n:"Needs labels; assumes Gaussian class distributions", u:"Dimensionality reduction with known classes", fail:"Non-Gaussian class distributions, classes with similar means", under:"Too few discriminant components — poor separation", over:"Rare; can occur with too few samples per class vs. features", d:"Numeric, labeled data"},
+{c:"t-SNE", i:"Non-linear technique preserving local neighborhood structure.", f:"Minimizes KL divergence (high-D vs low-D)", p:"Excellent for visualizing clusters in 2D/3D", n:"Slow, non-deterministic, not for general preprocessing", u:"Visualizing high-dim data (embeddings, clusters)", fail:"Large datasets (slow); axis distances aren't meaningful", under:"Perplexity too high — clusters blur together", over:"Perplexity too low — fake, spurious tiny clusters", d:"Numeric, high-dim embeddings"},
+{c:"UMAP", i:"Similar goal to t-SNE, faster, preserves more global structure.", f:"Graph-based manifold approximation", p:"Faster than t-SNE, better global structure", n:"Newer, less theoretical grounding than PCA", u:"Large datasets needing visualization", fail:"Same axis-interpretation pitfall as t-SNE", under:"n_neighbors too high — overly smoothed", over:"n_neighbors too low — fragments into local pockets", d:"Numeric, high-dim embeddings, larger datasets"},
+{c:"Autoencoders", i:"Neural net compresses then reconstructs input via a bottleneck.", f:"Encoder → latent space → Decoder; min reconstruction loss", p:"Captures non-linear structure, flexible", n:"Needs more data/tuning than PCA; less interpretable", u:"Complex non-linear data (images, embeddings)", fail:"Small datasets (needs lots of data)", under:"Bottleneck too small / too few epochs — blurry, lossy", over:"Bottleneck too large / too many epochs — learns identity", d:"Images, numeric, any data needing compression"},
+];
+
+const ML_ENSEMBLE = [
+{c:"Bagging", i:"Train models in parallel on bootstrapped samples, then average/vote.", f:"Reduces variance", p:"—", n:"—", u:"Random Forest", fail:"—", under:"—", over:"—", d:"Any base learner, parallel"},
+{c:"Boosting", i:"Train models sequentially, each correcting the previous one's errors.", f:"Reduces bias", p:"—", n:"—", u:"AdaBoost, GBM, XGBoost", fail:"—", under:"—", over:"—", d:"Any base learner, sequential"},
+{c:"Stacking", i:"Combine predictions of diverse models using a meta-model.", f:"Reduces both (model diversity)", p:"—", n:"—", u:"Base learners + meta-learner (e.g. logistic regression)", fail:"—", under:"—", over:"—", d:"Any combination"},
+{c:"Voting", i:"Combine predictions by majority vote (hard) or averaged probability (soft).", f:"Reduces variance", p:"—", n:"—", u:"Any combination of classifiers", fail:"—", under:"—", over:"—", d:"Any combination"},
+];
+
+const ML_GUIDE = [
+{scenario:"Need interpretability", pick:"Linear / Logistic Regression, single Decision Tree"},
+{scenario:"High-dimensional sparse data (text)", pick:"Naive Bayes, Linear SVM, Logistic Regression"},
+{scenario:"Tabular data, need top accuracy", pick:"XGBoost / LightGBM / CatBoost"},
+{scenario:"Small dataset, non-linear boundary", pick:"KNN, SVM with RBF kernel"},
+{scenario:"Need automatic feature selection", pick:"Lasso Regression, tree-based feature importance"},
+{scenario:"Clusters unknown shape + outliers", pick:"DBSCAN"},
+{scenario:"Need soft / probabilistic clustering", pick:"GMM"},
+{scenario:"Visualizing high-dim data", pick:"t-SNE / UMAP"},
+{scenario:"Preprocessing before modeling (reduce dims)", pick:"PCA"},
+{scenario:"Imbalanced classification", pick:"Random Forest / XGBoost with class weights — avoid plain KNN"},
+];
+
+const ML_SYMPTOMS = [
+{s:"Train accuracy low, test accuracy low", cause:"Underfitting — model too simple, increase complexity/features"},
+{s:"Train accuracy high, test accuracy low", cause:"Overfitting — reduce complexity, add regularization, get more data"},
+{s:"Model fails specifically on a rare class", cause:"Class imbalance — class weighting or resampling (SMOTE), not an algorithm change"},
+{s:"Model fails on new / unseen categories", cause:"Tree-based / KNN models extrapolate poorly — check for distribution shift"},
+{s:"Clustering gives one giant blob", cause:"Features unscaled, or algorithm/distance metric mismatched to data shape"},
+{s:"Dimensionality reduction loses obvious structure", cause:"Linear method (PCA) used on non-linear data — try t-SNE/UMAP/Autoencoder"},
+];
+
+const DL_ARCH = [
+{c:"Feedforward NN (MLP)", i:"Layers of fully-connected neurons; weighted sum + activation, trained via backprop.", p:"Universal function approximator, flexible", n:"No spatial/temporal awareness; needs lots of data & params", u:"Tabular data, simple pattern recognition", fail:"Loses structure in images/sequences (treats inputs as independent)", under:"Too few layers/neurons — can't capture complex patterns", over:"Too many layers/neurons + small dataset — memorizes data", d:"Tabular/structured numeric data"},
+{c:"CNN", i:"Convolutional filters slide over input, detecting local spatial patterns.", p:"Spatial hierarchy, fewer params (weight sharing), translation-invariant", n:"Needs lots of labeled data; struggles with rotation/scale unless augmented", u:"Images, spatial grid data, some 1D signals", fail:"Out-of-distribution images, unusual angles/lighting", under:"Too few filters/layers — blurry feature maps", over:"Too many layers + small dataset — memorizes images", d:"Images, grid-structured data, video, 1D signals"},
+{c:"RNN", i:"Maintains a hidden state, processes sequences step-by-step.", p:"Handles variable-length sequences, captures temporal order", n:"Vanishing gradient on long sequences; sequential, slow; short memory", u:"Short sequences, simple time-series", fail:"Long sequences — \"forgets\" early context", under:"Hidden state too small / too few layers", over:"Too many params relative to data", d:"Sequential data (text, time-series, short sequences)"},
+{c:"LSTM", i:"RNN with gates (forget/input/output) controlling cell-state memory.", p:"Solves vanishing gradient better, captures long-term dependencies", n:"Still sequential (slow); more params than RNN", u:"Long sequences, language modeling, time-series", fail:"Extremely long sequences (>1000 steps); sequential bottleneck", under:"Hidden/cell state too small", over:"Too many stacked layers + small dataset", d:"Sequential, long-term memory (text, speech, time-series)"},
+{c:"GRU", i:"Simplified LSTM — combines forget+input gates into one update gate.", p:"Faster than LSTM (fewer params), similar performance", n:"Slightly less expressive on very long-range dependencies", u:"Same as LSTM, when speed matters", fail:"Same long-sequence ceiling as LSTM", under:"Hidden size too small / too few units", over:"Too many GRU layers + small dataset", d:"Sequential data, speed-priority default"},
+{c:"Transformer", i:"Self-attention lets every token attend to every other, in parallel.", p:"Parallelizable, captures long-range dependencies, state-of-the-art", n:"O(n²) attention cost; needs huge data + compute", u:"Long sequences, NLP, vision (ViT)", fail:"Very long sequences (memory/compute explodes); small datasets", under:"Too few layers/heads — can't capture complex relations", over:"Too many params + small fine-tuning data (common in LLM fine-tuning)", d:"Text, sequences, images (ViT), tokenizable data"},
+{c:"Autoencoder", i:"Encoder compresses to a latent bottleneck, decoder reconstructs.", p:"Unsupervised representation learning, dimensionality reduction, denoising", n:"Needs careful bottleneck tuning; latent space not always interpretable", u:"Anomaly detection, denoising, pretraining, compression", fail:"Data far from training distribution — reconstructs poorly", under:"Bottleneck too small / too few epochs — blurry reconstruction", over:"Bottleneck too large / too many epochs — learns identity function", d:"Images, numeric, compressed representation"},
+{c:"VAE", i:"Autoencoder that learns a probabilistic latent distribution (mean+var).", p:"Generates new samples, smooth & interpretable latent space", n:"Outputs often blurrier than GANs; harder to train", u:"Generative tasks needing smooth latent space", fail:"Complex/high-detail data (images often come out blurry)", under:"KL term dominates — latent space collapses, generic outputs", over:"Reconstruction term dominates — loses smoothness", d:"Images, structured data needing generative sampling"},
+{c:"GAN", i:"Generator creates fakes; discriminator tries to spot them — both improve.", p:"Produces sharp, realistic samples", n:"Notoriously unstable to train; mode collapse", u:"High-quality image/data generation", fail:"Mode collapse, training instability", under:"Generator too weak / undertrained", over:"Discriminator overpowers generator, or generator memorizes data", d:"Images primarily, also audio/tabular generation"},
+{c:"ResNet", i:"CNN with skip/residual connections letting gradient bypass layers.", p:"Enables very deep networks without vanishing gradient", n:"Still computationally heavy", u:"Very deep CNNs for image tasks", fail:"Same image-OOD issues as CNN", under:"Too few residual blocks — like a shallow CNN", over:"Too many blocks + small dataset (less prone than plain deep CNN)", d:"Images, deep vision tasks"},
+{c:"Attention Mechanism", i:"Computes weighted relevance (\"focus\") of each input element to others.", p:"Long-range dependencies, interpretable weights, core of transformers", n:"Quadratic cost with sequence length", u:"Any task needing dynamic context weighting", fail:"Very long sequences (cost); attending to noise if undertrained", under:"Too few attention heads — misses relationship types", over:"Too many heads/layers + small data", d:"Sequential/structured data, text and vision"},
+];
+
+const DL_TRAIN = [
+{c:"ReLU Activation", i:"f(x) = max(0,x)", p:"Avoids vanishing gradient (positive side), cheap", n:"\"Dead neurons\" for negative inputs", u:"Default for most hidden layers", fail:"Large negative bias shift can kill many neurons", under:"N/A — activation choice, not capacity", over:"N/A — comes from architecture/data, not activation", d:"Any numeric hidden-layer activations"},
+{c:"Sigmoid Activation", i:"σ(x)=1/(1+e⁻ˣ), squashes to (0,1)", p:"Good for binary output/probability", n:"Vanishing gradient at extremes, not zero-centered", u:"Output layer for binary classification", fail:"Deep networks — gradients vanish through many sigmoid layers", under:"N/A", over:"N/A", d:"Binary probability outputs"},
+{c:"Softmax Activation", i:"Converts logits to a probability distribution summing to 1.", p:"Clean probabilistic multi-class output", n:"Sensitive to extreme logit values", u:"Output layer for multi-class classification", fail:"Very large/small logits without normalization", under:"N/A", over:"N/A", d:"Multi-class classification outputs"},
+{c:"Dropout", i:"Randomly disables a fraction of neurons each training step.", p:"Strong, simple regularizer; reduces neuron co-dependency", n:"Slows convergence; not always effective on small networks", u:"Networks showing overfitting (train ≫ test)", fail:"Applied to tiny networks — drops too much signal", under:"Rate too high — destroys signal", over:"Rate too low / absent on a large network", d:"Any deep network needing regularization"},
+{c:"Batch Normalization", i:"Normalizes layer inputs (mean 0, var 1) per mini-batch.", p:"Stabilizes/speeds training, allows higher learning rates", n:"Adds complexity; train/inference differ; batch-size dependent", u:"Deep networks with unstable/slow training", fail:"Very small batch sizes — noisy statistics", under:"Manifests as poor convergence", over:"Rarely overfits itself; can mask it by smoothing loss", d:"Any deep network, especially CNNs"},
+{c:"Early Stopping", i:"Halts training when validation loss stops improving.", p:"Simple, effective, prevents wasted compute", n:"Needs a validation set; can stop too early on noisy loss", u:"Any training run, especially limited data", fail:"Noisy validation loss — stops on a random uptick", under:"Stopping too early — hasn't learned enough", over:"Stopping too late — already memorized training data", d:"Universal training technique"},
+{c:"Learning Rate Scheduling", i:"Decreases (or warms up then decreases) the LR over training.", p:"Faster initial progress + fine convergence later", n:"Adds tuning complexity (shape, decay rate)", u:"Long training runs, fine-tuning pretrained models", fail:"Wrong shape — decays too fast or too slow", under:"LR too high throughout — never settles", over:"N/A directly — affects convergence, not overfitting", d:"Universal training technique"},
+{c:"Adam Optimizer", i:"Combines momentum + adaptive per-parameter learning rates.", p:"Fast convergence, robust default, little tuning", n:"Can generalize slightly worse than well-tuned SGD", u:"Default optimizer for most deep learning tasks", fail:"Sometimes converges to sharper minima that generalize worse", under:"LR too low — very slow training", over:"N/A directly", d:"Universal training technique"},
+{c:"Backpropagation", i:"Computes gradients of loss w.r.t. every weight via the chain rule.", p:"Enables gradient-based learning in any differentiable network", n:"Vanishing/exploding gradients in deep/recurrent nets", u:"Universal — how all neural nets are trained", fail:"Very deep nets without skip connections/normalization", under:"N/A (mechanism, not a model choice)", over:"N/A", d:"Universal mechanism"},
+{c:"Transfer Learning / Fine-tuning", i:"Reuses a pretrained model's weights, adapts to a related task.", p:"Needs far less data/compute, strong performance", n:"Domain mismatch hurts; catastrophic forgetting risk", u:"Limited labeled data, related pretrained model exists", fail:"Target domain very different from pretraining domain", under:"Freezing too many layers / fine-tuning too little", over:"Fine-tuning too aggressively on a small dataset", d:"Any domain with pretrained models (vision, NLP)"},
+];
+
+const DL_SYMPTOMS = [
+{s:"Loss stuck high, not decreasing", cause:"LR too low/high, dead ReLUs, vanishing gradient — check depth + normalization"},
+{s:"Train loss low, val loss high (diverging)", cause:"Overfitting — add dropout/regularization, reduce model size, more data/augmentation"},
+{s:"Loss oscillates wildly, never settles", cause:"LR too high, batch size too small, no gradient clipping"},
+{s:"Works on training images, fails on rotated/shifted versions", cause:"Insufficient data augmentation, CNN not robust to that transform"},
+{s:"RNN/LSTM forgets long-range context", cause:"Sequence too long for architecture — consider a Transformer / attention"},
+{s:"GAN generator repeats the same few outputs", cause:"Mode collapse — adjust loss, add diversity penalty, balance G/D training"},
+{s:"Fine-tuned model worse than pretrained on related task", cause:"Catastrophic forgetting — lower LR, freeze more layers"},
+];
+
+// ---- statistics ----
+function S(c,f,w,r,d,e){return{c,f,w,r,d,e};}
+const ST_CENTRAL = [
+S("Mean","Σx/n","Summarize typical value, no extreme outliers","Median, Mode, Weighted Mean","Continuous/Discrete numeric","Average revenue per customer"),
+S("Median","Middle value when sorted","Skewed data or outliers present","Mean, Quartiles","Numeric (ordinal works)","Median household income"),
+S("Mode","Most frequent value","Categorical data, multimodal distributions","Frequency distribution","Categorical/Discrete","Most common product purchased"),
+S("Weighted Mean","Σ(wᵢxᵢ)/Σwᵢ","Values differ in importance/frequency","Mean","Numeric with weights","Weighted GPA, portfolio returns"),
+S("Trimmed Mean","Mean after removing top/bottom %","Outliers present, want more data than median","Mean, Median","Numeric","Robust average in noisy sensor data"),
+S("Geometric Mean","(x₁×x₂×…×xₙ)^(1/n)","Growth rates, ratios, multiplicative data","Arithmetic Mean","Ratios, percentages","Average annual growth rate (CAGR)"),
+S("Harmonic Mean","n/Σ(1/xᵢ)","Rates where small values dominate","Arithmetic/Geometric Mean","Rates","Average speed over equal distances"),
+];
+const ST_SPREAD = [
+S("Range","Max − Min","Quick, rough spread estimate","Variance, IQR","Numeric","Initial data exploration"),
+S("Variance","Σ(x−x̄)²/n (pop) or /(n−1) (sample)","Measure average squared deviation","Std Dev","Numeric","Risk measurement in finance"),
+S("Standard Deviation","√Variance","Same units as data, most common spread measure","Variance, Z-score","Numeric","Quality control (Six Sigma)"),
+S("Coefficient of Variation","(SD/Mean)×100","Compare variability across different scales","Std Dev","Numeric (ratio scale)","Comparing volatility of two stocks"),
+S("IQR","Q3 − Q1","Robust spread measure, outlier detection","Quartiles, Boxplot","Numeric/Ordinal","Boxplot whisker calculation"),
+S("Mean Absolute Deviation","Σ|x−x̄|/n","Simpler, less outlier-sensitive than variance","Variance","Numeric","Forecast error measurement"),
+S("Skewness","E[(X−μ)³]/σ³","Detect asymmetry in distribution","Kurtosis, Normal dist.","Numeric","Checking if data needs log-transform"),
+S("Kurtosis","E[(X−μ)⁴]/σ⁴","Detect tail heaviness / peakedness","Skewness","Numeric","Risk modeling (fat-tail detection)"),
+];
+const ST_POSITION = [
+S("Percentile","% of data below a value","Relative standing within a dataset","Quartiles","Numeric/Ordinal","\"You're in the 90th percentile\""),
+S("Quartiles","25th, 50th, 75th percentile","Divide data into 4 equal parts","IQR, Boxplot","Numeric","Salary band analysis"),
+S("Z-score","(x−μ)/σ","Standardize values, compare across distributions","Standard Normal","Numeric","Outlier detection, standardization"),
+S("Outlier Detection (IQR)","Below Q1−1.5×IQR or above Q3+1.5×IQR","Flag extreme values","Boxplot, Z-score method","Numeric","Data cleaning pipelines"),
+];
+const ST_PROB = [
+S("Classical Probability","Favorable / Total outcomes","Equally likely outcomes","Sample space","Discrete events","Dice, cards, coin flip"),
+S("Conditional Probability","P(A|B)=P(A∩B)/P(B)","Probability given prior info","Bayes' Theorem","Events","Disease test given symptom"),
+S("Bayes' Theorem","P(A|B)=P(B|A)P(A)/P(B)","Update belief with new evidence","Prior/Posterior, Naive Bayes","Events, probabilities","Spam filtering, medical diagnosis"),
+S("Law of Total Probability","P(B)=ΣP(B|Aᵢ)P(Aᵢ)","Break a complex event into simpler pieces","Bayes' Theorem","Events","Multi-cause probability problems"),
+S("Independence","P(A∩B)=P(A)P(B)","Check if events affect each other","Conditional probability","Events","A/B test validity checks"),
+S("Expected Value","Σx·P(x)","Long-run average outcome","Variance","Random variables","Expected profit/loss in betting/insurance"),
+S("Law of Large Numbers","Sample mean → population mean as n→∞","Justifies using samples to estimate populations","CLT","Numeric samples","Why larger samples are more reliable"),
+];
+const ST_DISC = [
+S("Bernoulli","P(X=1)=p, P(X=0)=1−p","Single yes/no trial","Binomial","Binary","Single coin flip"),
+S("Binomial","P(X=k)=C(n,k)pᵏ(1−p)ⁿ⁻ᵏ","Fixed n independent yes/no trials","Bernoulli, Normal (large n)","Count data","Conversion rate over 100 visits"),
+S("Poisson","P(X=k)=λᵏe⁻λ/k!","Rare events over fixed time/space","Exponential (gap between events)","Count data","Customer complaints per day"),
+S("Geometric","P(X=k)=(1−p)ᵏ⁻¹p","Number of trials until first success","Negative Binomial","Count data","Trials until first conversion"),
+S("Negative Binomial","P(X=k)=C(k−1,r−1)pʳ(1−p)ᵏ⁻ʳ","Number of trials until r successes","Geometric, Binomial","Count data","Trials until 3rd sale"),
+S("Hypergeometric","Sampling without replacement","Finite population, no replacement","Binomial (with-replacement version)","Count data","Drawing defective items from a batch"),
+S("Multinomial","Generalizes Binomial to >2 outcomes","Multiple categorical outcomes per trial","Binomial, Chi-square","Categorical counts","Dice roll outcome distribution"),
+];
+const ST_CONT = [
+S("Normal / Gaussian","f(x)=1/(σ√2π)·e^(−(x−μ)²/2σ²)","Bell-curve natural phenomena, basis of CLT","Z-score, CLT","Continuous numeric","Heights, test scores, measurement error"),
+S("Standard Normal","Normal with μ=0, σ=1","Standardizing/comparing across scales","Z-score, Z-table","Continuous numeric","Z-test calculations"),
+S("Uniform","Equal probability over [a,b]","No prior knowledge favoring any value","Random sampling","Continuous/discrete","Random number generation"),
+S("Exponential","f(x)=λe⁻λˣ","Time between independent events, memoryless","Poisson (counts vs waiting time)","Continuous (time/distance)","Time between website signups"),
+S("Log-Normal","log(X) is normally distributed","Multiplicative processes, always-positive skewed data","Normal distribution","Continuous, positive-only","Income distribution, stock prices"),
+S("Gamma","Generalizes Exponential (sum of exponentials)","Waiting time for multiple events","Exponential, Chi-square","Continuous, positive","Insurance claim amounts"),
+S("Beta","Models probabilities/proportions themselves","Bayesian prior for probabilities (0–1 range)","Bayesian inference","Continuous, [0,1]","Modeling conversion-rate uncertainty"),
+S("Chi-square","Sum of squared standard normals","Goodness of fit, variance testing, independence test","Chi-square test, F-dist.","Continuous, derived from normal","Categorical independence testing"),
+S("Student's t","Like normal but fatter tails","Small samples, unknown population SD","t-test, Normal (n→∞)","Continuous numeric","Small-sample mean comparison"),
+S("F-distribution","Ratio of two chi-square distributions","Comparing variances, ANOVA","F-test, ANOVA","Continuous, derived","Comparing variance across groups"),
+];
+const ST_SAMPLING = [
+S("Population vs Sample","Entire group vs subset","Foundation of all inference","Sampling distribution","Any","Surveying voters via a poll sample"),
+S("Sampling Distribution","Distribution of a statistic across many samples","Foundation for hypothesis testing","CLT","Statistic values (e.g. means)","Understanding sample-mean variability"),
+S("Central Limit Theorem","Sample means → Normal as n grows, any population shape","Justifies normal-based tests on non-normal data","Standard Error, Z-test","Numeric","Why n≥30 \"works\" for many tests"),
+S("Standard Error","SD/√n","Measures variability of the sample-mean estimate","Confidence Interval","Numeric","Margin of error in polls"),
+S("Point Estimate","Single value estimate (e.g. sample mean)","Quick estimate of a population parameter","Confidence Interval","Numeric","\"Average satisfaction score is 7.2\""),
+S("Confidence Interval","Estimate ± (Critical value × SE)","Range likely containing the true parameter","Margin of Error, t/Z critical values","Numeric","\"95% CI: $45K–$52K average salary\""),
+S("Margin of Error","Critical value × SE","Quantify uncertainty in an estimate","Confidence Interval","Numeric","Election poll reporting (±3%)"),
+S("Bias (Estimator)","E[θ̂]−θ","Check if an estimator systematically over/underestimates","MLE, Unbiased estimator","Numeric","Sample variance correction (n−1)"),
+S("Consistency","Estimator → true value as n→∞","Validate estimator quality for large samples","LLN","Numeric","Justifying large-sample estimators"),
+S("MLE","Parameter maximizing P(data|parameter)","Fit distribution parameters to data","Likelihood function, Bayesian estimation","Any parametric data","Fitting Normal/Poisson parameters"),
+S("Method of Moments","Match sample moments to theoretical moments","Simpler alternative to MLE","MLE","Numeric","Quick parameter estimation"),
+S("Bootstrap","Resampling with replacement from the sample itself","Estimate the sampling distribution without assumptions","Confidence Interval, Resampling","Any numeric sample","CI estimation for non-normal statistics"),
+];
+const ST_HYPO = [
+S("Null Hypothesis (H₀)","Assumption of no effect/difference","Starting assumption to test against","Alternative Hypothesis","Any","\"New drug has no effect\""),
+S("Alternative Hypothesis (H₁)","The effect you're testing for","What you accept if H₀ is rejected","Null Hypothesis","Any","\"New drug improves outcomes\""),
+S("P-value","P(data this extreme | H₀ true)","Decide whether to reject H₀","Significance level","Any test statistic","A/B test result interpretation"),
+S("Significance Level (α)","Threshold for rejecting H₀ (commonly 0.05)","Set acceptable false-positive risk before testing","Type I Error","Any","Setting test strictness"),
+S("Type I Error","Rejecting a true H₀ (false positive), rate=α","Risk of a false alarm","Significance level","Any","Approving an ineffective drug"),
+S("Type II Error","Failing to reject a false H₀ (false negative), rate=β","Risk of missing a real effect","Statistical Power","Any","Missing a real drug benefit"),
+S("Statistical Power","1−β","Probability of detecting a true effect","Sample size, Effect size","Any","Determining needed sample size"),
+S("Effect Size","Standardized magnitude of difference (e.g. Cohen's d)","Practical significance, not just statistical","Power analysis","Numeric","\"Significant AND meaningful\""),
+S("One- vs Two-tailed Test","Direction-specific vs either-direction","Choose based on hypothesis direction","Z/t critical values","Any","One-tailed: \"is X greater than Y\""),
+S("Degrees of Freedom","n − (parameters estimated)","Determines shape of t/chi-square/F distributions","t-test, Chi-square, ANOVA","Any","Adjusting critical-value tables"),
+];
+const ST_TESTS = [
+S("One-sample t-test","Compare sample mean to a known value","Small sample, unknown population SD","t-distribution","Numeric, 1 group","Is avg delivery time ≠ 3 days?"),
+S("Independent t-test","Compare means of 2 different groups","Two separate, unrelated groups","t-distribution","Numeric, 2 groups","Spend: Group A vs Group B"),
+S("Paired t-test","Compare means of the same group, before/after","Matched / repeated measurements","t-distribution","Numeric, paired","Test scores before/after training"),
+S("Z-test","Compare means/proportions, large n, known σ","Large samples, known population SD","Normal distribution","Numeric, large n","Large-sample proportion test"),
+S("F-test","Compare variances of 2+ groups","Check equal-variance assumption","ANOVA, F-distribution","Numeric, 2+ groups","Comparing variability across campaigns"),
+S("ANOVA (One-way)","Compare means across 3+ groups","Avoid many pairwise t-tests","F-test, Post-hoc tests","Numeric, 3+ groups","Conversion rate across 3 ad creatives"),
+S("ANOVA (Two-way)","Tests effect of 2 categorical factors + interaction","Multiple factors influencing outcome","One-way ANOVA","Numeric, 2 factors","Effect of region AND season on sales"),
+S("Chi-square Goodness of Fit","Observed vs expected distribution","Check if data matches an expected distribution","Chi-square distribution","Categorical","Are website visits evenly split by day?"),
+S("Chi-square Test of Independence","Are two categorical variables related","Test association between categories","Chi-square distribution","Categorical","Purchase made vs device type"),
+S("Mann-Whitney U Test","Non-parametric alternative to independent t-test","Non-normal data, ordinal/skewed","Wilcoxon","Ordinal/non-normal numeric","Comparing skewed income data, 2 groups"),
+S("Wilcoxon Signed-Rank Test","Non-parametric alternative to paired t-test","Non-normal paired data","Mann-Whitney","Ordinal/non-normal numeric","Before/after with skewed data"),
+S("Kruskal-Wallis Test","Non-parametric alternative to ANOVA","Non-normal data, 3+ groups","Mann-Whitney, ANOVA","Ordinal/non-normal numeric","Comparing 3+ skewed groups"),
+S("Shapiro-Wilk Test","Tests if data follows a normal distribution","Check normality before parametric tests","QQ-plot","Numeric","Validating t-test/ANOVA assumptions"),
+S("Levene's Test","Tests equality of variances across groups","Check homogeneity-of-variance assumption","F-test, ANOVA","Numeric","Pre-check before ANOVA"),
+S("KS Test","Compares a sample to a distribution, or two samples","Test distributional fit/difference","Goodness of fit","Continuous numeric","Comparing two empirical distributions"),
+];
+const ST_CORR = [
+S("Covariance","Σ(x−x̄)(y−ȳ)/n","Direction of relationship (unscaled)","Correlation","Numeric, 2 variables","Building the covariance matrix for PCA"),
+S("Pearson Correlation","Cov(X,Y)/(σx·σy)","Linear relationship, normal-ish data","Linear Regression","Continuous numeric","Ad spend vs sales relationship"),
+S("Spearman Correlation","Pearson on ranked data","Monotonic relationship, ordinal/skewed/outliers","Pearson","Ordinal/non-normal numeric","Ranking-based relationships"),
+S("Kendall's Tau","Concordance-based rank correlation","Small samples, robust rank correlation","Spearman","Ordinal numeric","Small-sample ranking agreement"),
+S("Point-Biserial Correlation","Correlation between binary and continuous variable","One variable binary, one continuous","Pearson","Mixed (binary + continuous)","Gender vs test score relationship"),
+S("Cramér's V","Effect size for chi-square test","Strength of association between 2 categoricals","Chi-square","Categorical","How strongly are 2 categories related?"),
+S("Partial Correlation","Correlation controlling for a third variable","Remove a confound's influence","Multiple regression","Continuous numeric","True X-Y relationship, controlling for Z"),
+];
+const ST_REGRESSION = [
+S("Simple Linear Regression","y=β₀+β₁x+ε","Model relationship between 2 numeric variables","Pearson correlation","Numeric","Predicting sales from ad spend"),
+S("Multiple Linear Regression","y=β₀+β₁x₁+…+βₙxₙ+ε","Model relationship with multiple predictors","Multicollinearity, R²","Numeric","Predicting price from multiple features"),
+S("R² (Coefficient of Determination)","1−(SS_res/SS_tot)","% variance explained by the model","Adjusted R²","Numeric","Model fit evaluation"),
+S("Adjusted R²","Penalizes R² for adding useless predictors","Compare models with different feature counts","R²","Numeric","Feature selection guidance"),
+S("Residuals","y − ŷ","Check model assumptions (homoscedasticity, normality)","Residual plots","Numeric","Diagnosing regression model fit"),
+S("Homoscedasticity","Constant variance of residuals across X","Validate the linear regression assumption","Residual plot, Breusch-Pagan test","Numeric","Checking regression validity"),
+S("Multicollinearity","High correlation between predictors","Destabilizes coefficient estimates","VIF","Numeric","Diagnosing unstable regression coefficients"),
+S("VIF","1/(1−R²ᵢ) per predictor","Quantify multicollinearity severity","Multicollinearity","Numeric","Deciding which feature to drop"),
+S("Logistic Regression (stats view)","log(p/1−p)=β₀+β₁x","Model binary outcome probability","Odds Ratio","Binary outcome","Predicting churn probability"),
+S("Odds Ratio","P(event)/P(no event)","Interpret logistic regression coefficients","Logistic regression","Binary outcome","\"2x odds of churn per unit increase\""),
+];
+const ST_BAYES = [
+S("Prior Probability","P(A) before evidence","Encode existing belief before data","Bayes' Theorem","Any","Initial belief about conversion rate"),
+S("Posterior Probability","P(A|B) after evidence","Updated belief after observing data","Bayes' Theorem","Any","Updated conversion-rate estimate"),
+S("Likelihood","P(B|A) — probability of data given a parameter","Core component of the Bayes update","MLE, Bayes' Theorem","Any","How well does data fit an assumed parameter"),
+S("Bayesian Credible Interval","Range containing the parameter with X% posterior probability","Bayesian alternative to a confidence interval","Confidence Interval","Numeric","\"90% credible interval for the true rate\""),
+S("Conjugate Prior","Prior that yields a same-family posterior","Simplify Bayesian computation","Beta-Binomial, Normal-Normal","Parametric","Beta prior for a binomial likelihood"),
+];
+const ST_TIME = [
+S("Trend","Long-term increase/decrease","Identify overall direction","Moving average","Time series","Sales growing over years"),
+S("Seasonality","Repeating pattern at fixed intervals","Identify cyclic patterns","Decomposition","Time series","Holiday sales spikes"),
+S("Stationarity","Constant mean/variance over time","Required for ARIMA-type models","ADF Test, Differencing","Time series","Checking if model assumptions hold"),
+S("ADF Test","Tests for a unit root (non-stationarity)","Verify stationarity before modeling","Stationarity","Time series","Pre-modeling check"),
+S("Autocorrelation (ACF)","Correlation of a series with its own lagged values","Identify dependency structure","PACF","Time series","Choosing ARIMA(p,q) parameters"),
+S("Partial Autocorrelation (PACF)","Correlation with a lag, controlling shorter lags","Identify AR order","ACF","Time series","ARIMA model order selection"),
+S("Moving Average","Average over a rolling window","Smooth out noise, see the trend","Exponential Smoothing","Time series","Smoothing a stock price"),
+];
+const ST_GUIDE = [
+{scenario:"Compare 2 means, small sample", pick:"t-test (independent or paired)"},
+{scenario:"Compare 2 means, large sample", pick:"Z-test"},
+{scenario:"Compare 3+ means", pick:"ANOVA"},
+{scenario:"Compare variances", pick:"F-test"},
+{scenario:"Test a categorical relationship", pick:"Chi-square"},
+{scenario:"Data skewed/non-normal, comparing groups", pick:"Mann-Whitney / Wilcoxon / Kruskal-Wallis"},
+{scenario:"Measure a linear relationship", pick:"Pearson correlation"},
+{scenario:"Measure relationship, skewed/ordinal data", pick:"Spearman correlation"},
+{scenario:"Update belief with new evidence", pick:"Bayes' Theorem"},
+{scenario:"Estimate a population parameter range", pick:"Confidence Interval"},
+{scenario:"Check if data is normally distributed", pick:"Shapiro-Wilk test"},
+{scenario:"Predict a continuous outcome from features", pick:"Linear Regression"},
+{scenario:"Predict a binary outcome", pick:"Logistic Regression"},
+];
+
+// ---- math ----
+function M(c,f,w,s,e){return{c,f,w,s,e};}
+const MATH_ARITH = [
+M("BODMAS / PEMDAS","Brackets → Orders (exponents) → Division/Multiplication → Addition/Subtraction (left to right)","Any multi-operation expression","Solving any compound numeric expression","6 + 4 × 2 = 14, not 20"),
+M("Distributive Property","a(b+c) = ab+ac","Expanding/factoring expressions","Algebra simplification","3(x+4) = 3x+12"),
+M("Commutative Property","a+b=b+a; a×b=b×a","Reordering terms safely","Simplifying calculations","5+3 = 3+5"),
+M("Associative Property","(a+b)+c = a+(b+c)","Grouping terms for easier calculation","Mental math shortcuts","(2+8)+5 = 2+(8+5)"),
+M("Order of Negative Numbers","(−)×(−)=+, (−)×(+)=−","Sign management in calculations","Avoiding sign errors","−3 × −4 = 12"),
+M("LCM & HCF","HCF×LCM = Product of two numbers","Fractions, ratio problems, scheduling","Common denominators, work-rate problems","LCM of 4 and 6 = 12"),
+];
+const MATH_EXPO = [
+M("Product Rule","aᵘ × aᵛ = aᵘ⁺ᵛ","Multiplying same base","Simplifying exponential expressions","2³×2⁴ = 2⁷ = 128"),
+M("Quotient Rule","aᵘ / aᵛ = aᵘ⁻ᵛ","Dividing same base","Simplifying fractions with exponents","5⁶/5² = 5⁴ = 625"),
+M("Power of a Power","(aᵘ)ᵛ = aᵘᵛ","Nested exponents","Compound growth, simplification","(3²)³ = 3⁶ = 729"),
+M("Power of a Product","(ab)ⁿ = aⁿbⁿ","Distributing exponent over a product","Simplifying expressions","(2×3)² = 2²×3² = 36"),
+M("Zero Exponent","a⁰ = 1 (a≠0)","Any base raised to 0","Simplification, series formulas","7⁰ = 1"),
+M("Negative Exponent","a⁻ⁿ = 1/aⁿ","Converting to fraction form","Simplifying expressions, scientific notation","2⁻³ = 1/8"),
+M("Fractional Exponent","aᵘ/ᵛ = ᵛ√(aᵘ)","Converting roots to exponent form","Root simplification, calculus","8^(1/3) = ∛8 = 2"),
+M("Compound Interest","A = P(1+r/n)^(nt)","Growth over time at a compounding rate","Finance, population growth","$1000 at 5% compounded yearly, 3 years"),
+M("Exponential Growth/Decay","N(t) = N₀e^(kt)","Continuous growth/decay processes","Population, radioactive decay, bacteria growth","Bacteria doubling every hour"),
+];
+const MATH_LOG = [
+M("Definition","logₐ(x)=y ⟺ aʸ=x","Converting between exponential & log form","Solving for exponents","log₂(8)=3 since 2³=8"),
+M("Product Rule","logₐ(xy) = logₐx + logₐy","Splitting multiplication inside a log","Simplifying log expressions","log(6) = log(2)+log(3)"),
+M("Quotient Rule","logₐ(x/y) = logₐx − logₐy","Splitting division inside a log","Simplifying log expressions","log(10/2) = log(10)−log(2)"),
+M("Power Rule","logₐ(xⁿ) = n·logₐx","Exponent inside a log","Solving exponential equations","log(x²) = 2log(x)"),
+M("Change of Base","logₐ(x) = log_b(x)/log_b(a)","Converting log bases (e.g. to base 10/e)","Calculator computations","log₂(10) = log(10)/log(2)"),
+M("Natural Log (ln)","ln(x)=log_e(x), e≈2.718","Calculus, continuous growth, ML (cross-entropy)","Loss functions, exponential decay","ln(e³) = 3"),
+M("Log of 1","logₐ(1)=0 (any base)","Simplification","Sanity check in calculations","log(1) = 0"),
+M("Log undefined for ≤0","logₐ(x) undefined if x≤0","Domain restriction check","Solving log equations, validity check","log(−5) is undefined"),
+];
+const MATH_ALGEBRA = [
+M("Linear Equation","ax+b=0 → x=−b/a","Solving for one unknown","Basic word problems","2x+6=0 → x=−3"),
+M("Quadratic Formula","x = [−b±√(b²−4ac)]/2a","Solving ax²+bx+c=0","Parabola roots, optimization problems","x²−5x+6=0 → x=2,3"),
+M("Discriminant","D = b²−4ac","Determine nature of roots before solving","Checking solvability","x²+x+1=0: D=−3, no real roots"),
+M("Sum & Product of Roots","Sum=−b/a, Product=c/a","Quick root-relationship checks","Verifying solutions, constructing equations","x²−7x+12=0: sum=7, product=12"),
+M("(a+b)²","a²+2ab+b²","Expanding squared binomials","Algebra simplification, mental squares","(x+3)² = x²+6x+9"),
+M("(a−b)²","a²−2ab+b²","Expanding squared binomials","Same as above","(x−4)² = x²−8x+16"),
+M("Difference of Squares","(a+b)(a−b) = a²−b²","Factoring","Quick factoring, mental math tricks","x²−16 = (x+4)(x−4)"),
+M("(a+b)³","a³+3a²b+3ab²+b³","Expanding cubed binomials","Advanced algebra simplification","(x+1)³ = x³+3x²+3x+1"),
+M("Sum of Cubes","a³+b³=(a+b)(a²−ab+b²)","Factoring a sum of cubes","Algebraic simplification","x³+8 = (x+2)(x²−2x+4)"),
+M("Difference of Cubes","a³−b³=(a−b)(a²+ab+b²)","Factoring a difference of cubes","Algebraic simplification","x³−27 = (x−3)(x²+3x+9)"),
+M("Linear System (2 eqns)","Substitution or elimination method","Solving for 2 unknowns simultaneously","Word problems with 2 constraints","2x+y=10, x−y=2 → x=4, y=2"),
+];
+const MATH_SERIES = [
+M("Arithmetic Progression (nth term)","aₙ = a+(n−1)d","Sequences with constant difference","Salary increments, seating arrangements","1st=2, d=3 → 10th term = 29"),
+M("AP Sum","Sₙ = n/2 × [2a+(n−1)d]","Sum of an arithmetic sequence","Total savings over n months","Sum of first 10 terms of 2,5,8,…"),
+M("Geometric Progression (nth term)","aₙ = a×rⁿ⁻¹","Sequences with constant ratio","Compound interest, population doubling","1st=3, r=2 → 5th term = 48"),
+M("GP Sum (finite)","Sₙ = a(rⁿ−1)/(r−1)","Sum of a geometric sequence","Total compound growth over n periods","Sum of 1,2,4,8,…10 terms"),
+M("GP Sum (infinite, |r|<1)","S∞ = a/(1−r)","Infinite decreasing geometric series","Probability problems, recurring decimals","0.999… as an infinite series"),
+M("Sum of first n natural numbers","n(n+1)/2","Counting problems","Sum of consecutive integers","Sum 1 to 100 = 5050"),
+M("Sum of squares (1 to n)","n(n+1)(2n+1)/6","Variance-related calculations","Statistical formula derivations","Sum of squares 1 to 5"),
+M("Sum of cubes (1 to n)","[n(n+1)/2]²","Advanced series problems","Mathematical proofs / competitive math","Sum of cubes 1 to 4"),
+];
+const MATH_LIMITS = [
+M("Definition of a Limit","lim(x→a) f(x) = L","Behavior of a function as x approaches a value","Continuity checks, derivative foundation","lim(x→2) x² = 4"),
+M("Limit at Infinity","lim(x→∞) f(x)","Long-run behavior of functions","Asymptote analysis, growth comparisons","lim(x→∞) 1/x = 0"),
+M("0/0 Indeterminate Form","Needs algebraic manipulation / L'Hôpital's Rule","When direct substitution fails","Removing common factors, factoring","lim(x→2) (x²−4)/(x−2) = 4"),
+M("L'Hôpital's Rule","lim f(x)/g(x) = lim f'(x)/g'(x) (0/0 or ∞/∞)","Indeterminate forms in limits","Calculus problem-solving shortcut","lim(x→0) sin(x)/x = 1"),
+M("Limit of a Constant","lim(x→a) c = c","Trivial limit case","Sanity-check / building block","lim(x→5) 7 = 7"),
+M("Sum/Product Rule for Limits","lim(f+g)=lim f+lim g; lim(fg)=lim f × lim g","Breaking complex limits into parts","Simplifying multi-term limit expressions","lim(x→1)(x²+3x) = 4"),
+M("Squeeze Theorem","g(x)≤f(x)≤h(x), lim g=lim h=L ⟹ lim f=L","Bounding tricky oscillating functions","Proving limits of complex trig functions","lim(x→0) x·sin(1/x) = 0"),
+M("Continuity","f(a) defined, lim f(x) exists, both equal","Checking if a function has no breaks/jumps","Validity of derivative existence","Is f(x)=1/x continuous at x=0? No"),
+];
+const MATH_DERIV = [
+M("Power Rule","d/dx(xⁿ) = nxⁿ⁻¹","Differentiating polynomial terms","Slope / rate-of-change calculations","d/dx(x³) = 3x²"),
+M("Constant Rule","d/dx(c) = 0","Differentiating constants","Simplification","d/dx(7) = 0"),
+M("Sum Rule","d/dx(f+g) = f'+g'","Differentiating multi-term expressions","Breaking complex functions into parts","d/dx(x²+3x) = 2x+3"),
+M("Product Rule","d/dx(fg) = f'g+fg'","Differentiating a product of two functions","When two variable functions multiply","d/dx(x²·sinx) = 2x·sinx + x²·cosx"),
+M("Quotient Rule","d/dx(f/g) = (f'g−fg')/g²","Differentiating a ratio of two functions","Rational function derivatives","d/dx(x/(x+1))"),
+M("Chain Rule","d/dx[f(g(x))] = f'(g(x))·g'(x)","Differentiating composite/nested functions","Backpropagation in neural networks!","d/dx(sin(x²)) = cos(x²)·2x"),
+M("Derivative of eˣ","d/dx(eˣ) = eˣ","Exponential growth/decay rate","Continuous compounding, ML activation derivatives","d/dx(e^(2x)) = 2e^(2x)"),
+M("Derivative of ln(x)","d/dx(ln x) = 1/x","Logarithmic functions","Loss function derivatives in ML","d/dx(ln(3x)) = 1/x"),
+M("Second Derivative","f''(x) — derivative of the derivative","Concavity, acceleration, optimization (min/max)","Determining max/min via concavity","f''(x)>0 → local minimum"),
+];
+const MATH_INTEG = [
+M("Power Rule (Integration)","∫xⁿdx = xⁿ⁺¹/(n+1)+C (n≠−1)","Integrating polynomial terms","Area under a curve, accumulation","∫x²dx = x³/3+C"),
+M("Integral of a Constant","∫c dx = cx+C","Simplest integration case","Basic accumulation problems","∫5 dx = 5x+C"),
+M("Integral of 1/x","∫(1/x)dx = ln|x|+C","Special case where the power rule fails (n=−1)","Logarithmic growth modeling","∫(1/x)dx = ln|x|+C"),
+M("Integral of eˣ","∫eˣdx = eˣ+C","Exponential accumulation","Continuous growth total","∫e^(2x)dx = (1/2)e^(2x)+C"),
+M("Definite Integral","∫ₐᵇ f(x)dx = F(b)−F(a)","Area under a curve between two points","Probability (area under PDF), total accumulation","∫₀² x dx = 2"),
+M("Area Under a Curve","Definite integral of the function","Probability density, physics (distance from velocity)","Computing total probability = 1 check","Area under standard normal curve = 1"),
+];
+const MATH_PROB = [
+M("Classical Probability","Favorable / Total outcomes","Equally likely outcomes","Dice, cards, coins","P(rolling a 4) = 1/6"),
+M("Complement Rule","P(A') = 1−P(A)","Easier to find \"not A\" than \"A\"","\"At least one\" type problems","P(not rolling 6) = 5/6"),
+M("Addition Rule (Mutually Exclusive)","P(A∪B) = P(A)+P(B)","Events can't happen together","\"Either A or B\" problems","P(rolling 1 or 2) = 1/6+1/6"),
+M("Addition Rule (Not Mutually Exclusive)","P(A∪B) = P(A)+P(B)−P(A∩B)","Events can overlap","Card problems (face card or heart)","P(king or heart) in a deck"),
+M("Multiplication Rule (Independent)","P(A∩B) = P(A)×P(B)","Events don't affect each other","Multiple independent trials","P(2 heads in a row) = 1/2×1/2"),
+M("Conditional Probability","P(A|B) = P(A∩B)/P(B)","Probability given prior info","\"Given that…\" problems","P(2nd card king | 1st was king)"),
+M("Bayes' Theorem","P(A|B) = P(B|A)P(A)/P(B)","Reverse conditional probability","Medical testing, spam filters","P(disease | positive test)"),
+M("Permutation","nPr = n!/(n−r)!","Order matters","Arranging people/items in sequence","Ways to arrange 3 of 5 books"),
+M("Combination","nCr = n!/(r!(n−r)!)","Order doesn't matter","Selecting a committee/group","Ways to choose 3 from 10 people"),
+];
+const MATH_BASICS = [
+M("Fraction division","a/b ÷ c/d = a/b × d/c","Dividing fractions","Common mistake: forgetting to flip the second fraction","—"),
+M("Negative × Negative","Always positive","Sign management","Common mistake: sign errors in multi-step algebra","—"),
+M("√(a×b)","√a × √b (only if a,b≥0)","Splitting a square root over a product","Common false assumption: √(a+b) ≠ √a+√b","—"),
+M("Reciprocal","1/x, x≠0","Inverting a value","Common mistake: forgetting the domain restriction (x≠0)","—"),
+M("Absolute Value","|x| = x if x≥0, −x if x<0","Distance from zero","Common mistake: forgetting both +/− cases when solving |x|=a","—"),
+M("Inequality flip","Multiplying/dividing by a negative flips the inequality sign","Solving inequalities","Common mistake: forgetting to flip the sign","—"),
+M("Cross multiplication","a/b = c/d → ad = bc","Solving proportions","Only valid for equations, not inequalities directly","—"),
+];
+const MATH_MLMAP = [
+{m:"Chain Rule (Calculus)", a:"Backpropagation in neural networks"},
+{m:"Logarithms (ln)", a:"Cross-entropy loss, log-likelihood"},
+{m:"Exponents (e^x)", a:"Sigmoid/softmax activation functions"},
+{m:"Limits", a:"Foundation for derivatives → gradient descent"},
+{m:"Combinations/Permutations", a:"Probability distributions (binomial coefficient)"},
+{m:"Quadratic equations", a:"Loss function minima (parabolic loss surfaces)"},
+{m:"Series (Geometric)", a:"Compound interest, discounted cash flow, LR decay"},
+{m:"Integration", a:"Area under ROC curve, probability density (CDF from PDF)"},
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){ return (s===undefined||s===null) ? "" : String(s); }
+
+function renderMLTable(rows){
+  let head = "<tr><th>Visual</th><th>Concept</th><th>Core idea</th><th>Pros / Cons</th><th>Best for</th><th>Failure modes</th><th>Data</th></tr>";
+  let body = rows.map(r=>{
+    let pc = (r.p!=="—"||r.n!=="—") ? `<ul>${r.p!=="—"?`<li>+ ${esc(r.p)}</li>`:""}${r.n!=="—"?`<li>− ${esc(r.n)}</li>`:""}</ul>` : "—";
+    let fail = (r.fail!=="—"||r.under!=="—"||r.over!=="—") ? `<ul>${r.fail!=="—"?`<li><b>Fails:</b> ${esc(r.fail)}</li>`:""}${r.under!=="—"?`<li><b>Underfits:</b> ${esc(r.under)}</li>`:""}${r.over!=="—"?`<li><b>Overfits:</b> ${esc(r.over)}</li>`:""}</ul>` : "—";
+    return `<tr>
+      <td class="viz">${vizFor(r.c)}</td>
+      <td class="concept">${esc(r.c)}</td>
+      <td>${esc(r.i)}${r.f?`<span class="formula">${esc(r.f)}</span>`:""}</td>
+      <td>${pc}</td>
+      <td>${esc(r.u)}</td>
+      <td>${fail}</td>
+      <td><span class="tag">${esc(r.d)}</span></td>
+    </tr>`;
+  }).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderStatsTable(rows){
+  let head = "<tr><th>Visual</th><th>Concept</th><th>Formula</th><th>When / where to use</th><th>Related</th><th>Data type</th><th>Example</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="viz">${vizFor(r.c)}</td>
+      <td class="concept">${esc(r.c)}</td>
+      <td><span class="formula" style="margin-top:0">${esc(r.f)}</span></td>
+      <td>${esc(r.w)}</td>
+      <td>${esc(r.r)}</td>
+      <td><span class="tag">${esc(r.d)}</span></td>
+      <td>${esc(r.e)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderMathTable(rows){
+  let head = "<tr><th>Concept</th><th>Formula / rule</th><th>Where to apply</th><th>Situation</th><th>Example</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.c)}</td>
+      <td><span class="formula" style="margin-top:0">${esc(r.f)}</span></td>
+      <td>${esc(r.w)}</td>
+      <td>${esc(r.s)}</td>
+      <td>${esc(r.e)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderGuideTable(rows){
+  let head = "<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderSymptomTable(rows){
+  let head = "<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderEnsembleTable(rows){
+  let head = "<tr><th>Visual</th><th>Method</th><th>Core idea</th><th>Reduces</th><th>Example algorithms</th></tr>";
+  let body = rows.map(r=>`<tr><td class="viz">${vizFor(r.c)}</td><td class="concept">${esc(r.c)}</td><td>${esc(r.i)}</td><td><span class="tag">${esc(r.f)}</span></td><td>${esc(r.u)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderMapTable(rows){
+  let head = "<tr><th>Math concept</th><th>ML / stats application</th></tr>";
+  let body = rows.map(r=>`<tr><td class="concept">${esc(r.m)}</td><td>${esc(r.a)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS (inline SVG)
+   ========================================================= */
+const DIAG = {};
+
+DIAG.biasVariance = `
+<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <line x1="60" y1="250" x2="600" y2="250" stroke="#1f2424" stroke-width="1.5"/>
+  <line x1="60" y1="250" x2="60" y2="30" stroke="#1f2424" stroke-width="1.5"/>
+  <text x="320" y="285" text-anchor="middle" font-size="12" fill="#5b6260">Model complexity →</text>
+  <text x="20" y="140" font-size="12" fill="#5b6260" transform="rotate(-90 20 140)">Error</text>
+  <path d="M70 60 C 200 110, 300 220, 590 245" fill="none" stroke="#9a5b3a" stroke-width="2.2"/>
+  <path d="M70 240 C 200 130, 300 70, 590 55" fill="none" stroke="#3d5a4f" stroke-width="2.2"/>
+  <path d="M70 230 C 200 110, 300 90, 350 95 C 420 100, 500 150, 590 235" fill="none" stroke="#1f2424" stroke-width="2.4" stroke-dasharray="0"/>
+  <circle cx="350" cy="95" r="4" fill="#1f2424"/>
+  <line x1="350" y1="35" x2="350" y2="250" stroke="#c9c4b6" stroke-dasharray="4 4"/>
+  <text x="356" y="45" font-size="11" fill="#5b6260">sweet spot</text>
+  <text x="500" y="65" font-size="11" fill="#3d5a4f">Variance (overfit) ↑</text>
+  <text x="430" y="240" font-size="11" fill="#9a5b3a">Bias (underfit) ↓</text>
+  <text x="430" y="120" font-size="11" fill="#1f2424">Total error</text>
+</svg>`;
+
+DIAG.bagBoost = `
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <text x="160" y="22" text-anchor="middle" font-weight="700" fill="#3d5a4f">Bagging — parallel, reduces variance</text>
+  <rect x="20" y="40" width="280" height="36" rx="6" fill="#e7eee9" stroke="#3d5a4f"/>
+  <text x="160" y="63" text-anchor="middle" fill="#1f2424">Bootstrapped sample A → Tree A</text>
+  <rect x="20" y="86" width="280" height="36" rx="6" fill="#e7eee9" stroke="#3d5a4f"/>
+  <text x="160" y="109" text-anchor="middle" fill="#1f2424">Bootstrapped sample B → Tree B</text>
+  <rect x="20" y="132" width="280" height="36" rx="6" fill="#e7eee9" stroke="#3d5a4f"/>
+  <text x="160" y="155" text-anchor="middle" fill="#1f2424">Bootstrapped sample C → Tree C</text>
+  <line x1="300" y1="58" x2="340" y2="100" stroke="#5b6260"/>
+  <line x1="300" y1="104" x2="340" y2="100" stroke="#5b6260"/>
+  <line x1="300" y1="150" x2="340" y2="100" stroke="#5b6260"/>
+  <rect x="340" y="80" width="120" height="40" rx="6" fill="#3d5a4f"/>
+  <text x="400" y="105" text-anchor="middle" fill="#fff">Average / Vote</text>
+
+  <text x="540" y="22" text-anchor="middle" font-weight="700" fill="#9a5b3a">Boosting — sequential, reduces bias</text>
+  <rect x="400" y="170" width="100" height="36" rx="6" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="450" y="193" text-anchor="middle">Model 1</text>
+  <rect x="520" y="170" width="100" height="36" rx="6" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="570" y="193" text-anchor="middle">+ fixes errors</text>
+  <text x="510" y="193" text-anchor="middle" fill="#9a5b3a">→</text>
+  <rect x="500" y="220" width="160" height="34" rx="6" fill="#9a5b3a"/>
+  <text x="580" y="242" text-anchor="middle" fill="#fff">Final = Σ weighted models</text>
+  <line x1="450" y1="206" x2="490" y2="225" stroke="#9a5b3a"/>
+  <line x1="570" y1="206" x2="580" y2="220" stroke="#9a5b3a"/>
+</svg>`;
+
+DIAG.mlMap = `
+<svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <rect x="20" y="20" width="300" height="190" rx="8" fill="#fff" stroke="#e3e0d8"/>
+  <text x="170" y="42" text-anchor="middle" font-weight="700">Machine Learning</text>
+  <rect x="40" y="56" width="120" height="30" rx="6" fill="#e7eee9"/><text x="100" y="75" text-anchor="middle">Supervised</text>
+  <rect x="170" y="56" width="120" height="30" rx="6" fill="#e7eee9"/><text x="230" y="75" text-anchor="middle">Unsupervised</text>
+  <rect x="40" y="96" width="120" height="30" rx="6" fill="#fff" stroke="#c9c4b6"/><text x="100" y="115" text-anchor="middle" font-size="11">Regression</text>
+  <rect x="40" y="132" width="120" height="30" rx="6" fill="#fff" stroke="#c9c4b6"/><text x="100" y="151" text-anchor="middle" font-size="11">Classification</text>
+  <rect x="170" y="96" width="120" height="30" rx="6" fill="#fff" stroke="#c9c4b6"/><text x="230" y="115" text-anchor="middle" font-size="11">Clustering</text>
+  <rect x="170" y="132" width="120" height="30" rx="6" fill="#fff" stroke="#c9c4b6"/><text x="230" y="151" text-anchor="middle" font-size="11">Dim. reduction</text>
+  <rect x="100" y="172" width="120" height="28" rx="6" fill="#3d5a4f"/><text x="160" y="191" text-anchor="middle" fill="#fff" font-size="11">Ensembles wrap both</text>
+
+  <rect x="360" y="20" width="300" height="190" rx="8" fill="#fff" stroke="#e3e0d8"/>
+  <text x="510" y="42" text-anchor="middle" font-weight="700">Deep Learning</text>
+  <rect x="380" y="56" width="120" height="30" rx="6" fill="#f3e7df"/><text x="440" y="75" text-anchor="middle" font-size="11">CNN → images</text>
+  <rect x="510" y="56" width="120" height="30" rx="6" fill="#f3e7df"/><text x="570" y="75" text-anchor="middle" font-size="11">RNN/LSTM → sequences</text>
+  <rect x="380" y="96" width="120" height="30" rx="6" fill="#f3e7df"/><text x="440" y="115" text-anchor="middle" font-size="11">Transformer → text/vision</text>
+  <rect x="510" y="96" width="120" height="30" rx="6" fill="#f3e7df"/><text x="570" y="115" text-anchor="middle" font-size="11">Autoencoder/VAE/GAN</text>
+  <rect x="380" y="132" width="250" height="30" rx="6" fill="#fff" stroke="#c9c4b6"/><text x="505" y="151" text-anchor="middle" font-size="11">Backprop + optimizer trains all of them</text>
+  <rect x="440" y="172" width="130" height="28" rx="6" fill="#9a5b3a"/><text x="505" y="191" text-anchor="middle" fill="#fff" font-size="11">Regularization (dropout, etc.)</text>
+</svg>`;
+
+DIAG.normal = `
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <line x1="40" y1="220" x2="600" y2="220" stroke="#1f2424"/>
+  <path d="M40 218 C 140 218, 180 30, 320 30 C 460 30, 500 218, 600 218" fill="none" stroke="#3d5a4f" stroke-width="2.2"/>
+  <g stroke="#c9c4b6" stroke-dasharray="3 3">
+    <line x1="320" y1="30" x2="320" y2="220"/>
+    <line x1="245" y1="80" x2="245" y2="220"/>
+    <line x1="395" y1="80" x2="395" y2="220"/>
+    <line x1="180" y1="150" x2="180" y2="220"/>
+    <line x1="460" y1="150" x2="460" y2="220"/>
+  </g>
+  <text x="320" y="236" text-anchor="middle" fill="#1f2424">μ</text>
+  <text x="245" y="236" text-anchor="middle" fill="#5b6260">−1σ</text>
+  <text x="395" y="236" text-anchor="middle" fill="#5b6260">+1σ</text>
+  <text x="180" y="236" text-anchor="middle" fill="#5b6260">−2σ</text>
+  <text x="460" y="236" text-anchor="middle" fill="#5b6260">+2σ</text>
+  <text x="320" y="60" text-anchor="middle" fill="#3d5a4f" font-size="12">~68% within ±1σ</text>
+  <text x="320" y="252" text-anchor="middle" fill="#5b6260" font-size="11">~95% within ±2σ, ~99.7% within ±3σ</text>
+</svg>`;
+
+DIAG.pvalue = `
+<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <line x1="40" y1="210" x2="600" y2="210" stroke="#1f2424"/>
+  <path d="M40 208 C 140 208, 190 30, 320 30 C 450 30, 500 208, 600 208" fill="none" stroke="#5b6260" stroke-width="2"/>
+  <path d="M460 208 L 460 130 C 480 145, 500 175, 520 208 Z" fill="#9a5b3a" opacity="0.55"/>
+  <line x1="460" y1="30" x2="460" y2="210" stroke="#9a5b3a" stroke-dasharray="3 3"/>
+  <text x="460" y="225" text-anchor="middle" fill="#9a5b3a">critical value</text>
+  <text x="500" y="195" fill="#9a5b3a" font-size="11">rejection region (α)</text>
+  <text x="320" y="225" text-anchor="middle" fill="#5b6260">H₀ sampling distribution</text>
+  <text x="540" y="60" fill="#1f2424" font-size="11">observed</text>
+  <text x="540" y="74" fill="#1f2424" font-size="11">statistic →</text>
+  <line x1="565" y1="80" x2="585" y2="95" stroke="#1f2424" marker-end="url(#arrow)"/>
+</svg>`;
+
+DIAG.distFamily = `
+<svg viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="10.5">
+  <g transform="translate(10,10)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Normal</text>
+    <path d="M10 70 C 50 70, 60 10, 70 10 C 80 10, 90 70, 130 70" fill="none" stroke="#3d5a4f" stroke-width="2"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">symmetric</text>
+  </g>
+  <g transform="translate(170,10)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Exponential</text>
+    <path d="M10 70 C 20 20, 40 10, 70 10 C 100 10, 115 50, 130 70" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">memoryless decay</text>
+  </g>
+  <g transform="translate(330,10)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Log-Normal</text>
+    <path d="M10 70 C 30 70, 35 15, 55 12 C 80 8, 100 40, 130 70" fill="none" stroke="#3d5a4f" stroke-width="2"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">right-skewed</text>
+  </g>
+  <g transform="translate(490,10)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Uniform</text>
+    <path d="M10 70 L 30 70 L 30 25 L 110 25 L 110 70 L 130 70" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">equal probability</text>
+  </g>
+  <g transform="translate(10,120)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Binomial (discrete)</text>
+    <rect x="20" y="60" width="10" height="10" fill="#3d5a4f"/><rect x="35" y="40" width="10" height="30" fill="#3d5a4f"/>
+    <rect x="50" y="20" width="10" height="50" fill="#3d5a4f"/><rect x="65" y="15" width="10" height="55" fill="#3d5a4f"/>
+    <rect x="80" y="30" width="10" height="40" fill="#3d5a4f"/><rect x="95" y="55" width="10" height="15" fill="#3d5a4f"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">bars = counts</text>
+  </g>
+  <g transform="translate(170,120)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Poisson (discrete)</text>
+    <rect x="20" y="60" width="10" height="10" fill="#9a5b3a"/><rect x="35" y="35" width="10" height="35" fill="#9a5b3a"/>
+    <rect x="50" y="20" width="10" height="50" fill="#9a5b3a"/><rect x="65" y="25" width="10" height="45" fill="#9a5b3a"/>
+    <rect x="80" y="45" width="10" height="25" fill="#9a5b3a"/><rect x="95" y="62" width="10" height="8" fill="#9a5b3a"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">rare-event counts</text>
+  </g>
+  <g transform="translate(330,120)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Student's t</text>
+    <path d="M10 65 C 40 65, 55 15, 70 15 C 85 15, 100 65, 130 65" fill="none" stroke="#3d5a4f" stroke-width="2"/>
+    <path d="M10 70 C 40 70, 60 10, 70 10 C 80 10, 100 70, 130 70" fill="none" stroke="#c9c4b6" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">fatter tails than normal</text>
+  </g>
+  <g transform="translate(490,120)">
+    <text x="70" y="12" text-anchor="middle" font-weight="700">Chi-square</text>
+    <path d="M10 70 C 25 70, 30 20, 50 18 C 80 15, 100 45, 130 68" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+    <text x="70" y="90" text-anchor="middle" fill="#5b6260">right-skewed, ≥0</text>
+  </g>
+</svg>`;
+
+DIAG.derivIntegral = `
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <line x1="40" y1="170" x2="600" y2="170" stroke="#1f2424"/>
+  <line x1="40" y1="170" x2="40" y2="20" stroke="#1f2424"/>
+  <path d="M40 150 C 150 150, 200 30, 320 30 C 440 30, 490 150, 600 150" fill="none" stroke="#3d5a4f" stroke-width="2.2"/>
+  <text x="320" y="20" text-anchor="middle" fill="#3d5a4f">f(x)</text>
+  <path d="M200 150 L 200 60 L 440 60 L 440 150 Z" fill="#9a5b3a" opacity="0.25"/>
+  <text x="320" y="115" text-anchor="middle" fill="#9a5b3a">∫ₐᵇ f(x)dx = area</text>
+  <text x="200" y="185" text-anchor="middle" fill="#5b6260">a</text>
+  <text x="440" y="185" text-anchor="middle" fill="#5b6260">b</text>
+  <text x="510" y="60" fill="#1f2424" font-size="11">slope at a point = f'(x)</text>
+  <line x1="480" y1="68" x2="560" y2="48" stroke="#1f2424" stroke-width="1.5"/>
+</svg>`;
+
+/* =========================================================
+   MICRO-ICONS — one small inline diagram per table row
+   ========================================================= */
+const MC1="#3d5a4f", MC2="#9a5b3a", MC3="#5b6260", MC4="#c9c4b6", MF1="#e7eee9", MF2="#f3e7df";
+function mwrap(inner){ return `<svg viewBox="0 0 120 70" class="microviz" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`; }
+function mAxis(){ return `<line x1="6" y1="58" x2="114" y2="58" stroke="${MC3}" stroke-width="1"/>`; }
+const BELL="M8 56 C28 56,38 12,60 12 C82 12,92 56,112 56";
+const BELL_N="M22 56 C36 56,44 10,60 10 C76 10,84 56,98 56";
+const BELL_F="M6 50 C24 54,40 14,60 14 C80 14,96 54,114 50";
+const BELL_SHIFT="M30 56 C46 56,54 16,74 16 C92 16,102 40,112 56";
+const SKEW_R="M8 56 C20 56,24 14,44 12 C68 8,96 36,112 56";
+const FLAT="M8 56 L26 56 L26 18 L94 18 L94 56 L112 56";
+const DECAY="M8 14 C22 14,32 38,46 48 C66 57,90 56,112 56";
+const BOUNDED="M8 56 C20 30,35 16,60 16 C85 16,100 30,112 56";
+
+function mShade(which){
+  if(which==='right') return `<path d="M86 58 L86 30 C95 38,104 48,112 58 Z" fill="${MC2}" opacity="0.35"/>`;
+  if(which==='left') return `<path d="M34 58 L34 30 C25 38,16 48,8 58 Z" fill="${MC2}" opacity="0.35"/>`;
+  if(which==='both') return mShade('right')+mShade('left');
+  if(which==='center') return `<path d="M44 58 L44 26 L76 26 L76 58 Z" fill="${MC1}" opacity="0.22"/>`;
+  return "";
+}
+function mCurve(path, opts={}){
+  let s=mAxis();
+  if(opts.shade) s+=mShade(opts.shade);
+  if(opts.second) s+=`<path d="${opts.second}" fill="none" stroke="${MC2}" stroke-width="2"/>`;
+  s+=`<path d="${path}" fill="none" stroke="${opts.color||MC1}" stroke-width="2"/>`;
+  if(opts.marker!=null) s+=`<line x1="${opts.marker}" y1="10" x2="${opts.marker}" y2="58" stroke="${MC2}" stroke-dasharray="2 2"/>`;
+  return mwrap(s);
+}
+function mBars(h, opts={}){
+  opts=Object.assign({color:MC1, highlight:-1, color2:null},opts);
+  let n=h.length, w=96/n-4, x0=10, s=mAxis();
+  h.forEach((v,i)=>{ let x=x0+i*(w+4), y=58-v, col=(i===opts.highlight)?MC2:opts.color;
+    s+=`<rect x="${x}" y="${y}" width="${w}" height="${v}" fill="${col}"/>`; });
+  return mwrap(s);
+}
+function mObsExp(){
+  let s=mAxis(); const obs=[30,45,20,38], exp=[34,34,34,34];
+  obs.forEach((v,i)=>{ let x=10+i*26; s+=`<rect x="${x}" y="${58-v}" width="10" height="${v}" fill="${MC1}"/><rect x="${x+11}" y="${58-exp[i]}" width="10" height="${exp[i]}" fill="${MC4}"/>`; });
+  return mwrap(s);
+}
+function mBox(n=1, opts={}){
+  let s=mAxis(), slot=108/n;
+  for(let i=0;i<n;i++){ let cx=10+slot*i+slot/2, top=20+(i%2)*6, bot=46-(i%2)*4;
+    s+=`<line x1="${cx}" y1="${top-10}" x2="${cx}" y2="${top}" stroke="${MC3}"/>`;
+    s+=`<rect x="${cx-10}" y="${top}" width="20" height="${bot-top}" fill="${MF1}" stroke="${MC1}"/>`;
+    s+=`<line x1="${cx-10}" y1="${(top+bot)/2}" x2="${cx+10}" y2="${(top+bot)/2}" stroke="${MC1}"/>`;
+    s+=`<line x1="${cx}" y1="${bot}" x2="${cx}" y2="${bot+10}" stroke="${MC3}"/>`; }
+  if(opts.outlier) s+=`<circle cx="${10+slot*(n-1)+slot/2+14}" cy="14" r="2.5" fill="${MC2}"/>`;
+  return mwrap(s);
+}
+function mScatter(trend){
+  let dots,line;
+  if(trend==='pos'){ dots=[[14,50],[30,46],[40,40],[55,34],[65,30],[80,22],[95,16],[105,10]]; line=`<line x1="10" y1="54" x2="110" y2="10" stroke="${MC1}" stroke-width="1.5"/>`; }
+  else if(trend==='neg'){ dots=[[14,12],[30,18],[45,24],[58,30],[70,36],[85,44],[100,50],[108,54]]; line=`<line x1="10" y1="12" x2="110" y2="54" stroke="${MC2}" stroke-width="1.5"/>`; }
+  else { dots=[[16,30],[28,46],[40,18],[55,38],[62,24],[78,42],[90,20],[102,36]]; line=`<line x1="10" y1="34" x2="110" y2="34" stroke="${MC4}" stroke-width="1.5" stroke-dasharray="3 2"/>`; }
+  let s=mAxis()+line; dots.forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${MC1}"/>`);
+  return mwrap(s);
+}
+function mCurveFit(){
+  let s=mAxis()+`<path d="M8 50 C22 20,34 52,48 28 C62 10,78 50,94 22 C102 12,108 18,112 14" fill="none" stroke="${MC2}" stroke-width="2"/>`;
+  [[10,48],[26,30],[44,34],[60,18],[80,40],[100,16]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="${MC1}"/>`);
+  return mwrap(s);
+}
+function mClusters(n=3){
+  const palette=[MC1,MC2,"#6b7d8f"], centers=[[28,40],[65,22],[92,46]]; let s="";
+  for(let i=0;i<n;i++){ let [cx,cy]=centers[i%3]; s+=`<circle cx="${cx}" cy="${cy}" r="14" fill="${palette[i%3]}" opacity="0.18"/>`;
+    for(let j=0;j<5;j++){ let dx=Math.sin(i*9+j*3)*9, dy=Math.cos(i*7+j*5)*9;
+      s+=`<circle cx="${(cx+dx).toFixed(1)}" cy="${(cy+dy).toFixed(1)}" r="2.2" fill="${palette[i%3]}"/>`; } }
+  return mwrap(s);
+}
+function mTree(){
+  return mwrap(`<circle cx="60" cy="14" r="5" fill="${MC1}"/>
+  <line x1="60" y1="19" x2="38" y2="36" stroke="${MC3}"/><line x1="60" y1="19" x2="82" y2="36" stroke="${MC3}"/>
+  <circle cx="38" cy="36" r="4" fill="${MC1}"/><circle cx="82" cy="36" r="4" fill="${MC1}"/>
+  <line x1="38" y1="40" x2="26" y2="56" stroke="${MC3}"/><line x1="38" y1="40" x2="50" y2="56" stroke="${MC3}"/>
+  <line x1="82" y1="40" x2="70" y2="56" stroke="${MC3}"/><line x1="82" y1="40" x2="94" y2="56" stroke="${MC3}"/>
+  <circle cx="26" cy="56" r="3" fill="${MC2}"/><circle cx="50" cy="56" r="3" fill="${MC2}"/>
+  <circle cx="70" cy="56" r="3" fill="${MC2}"/><circle cx="94" cy="56" r="3" fill="${MC2}"/>`);
+}
+function mForest(){
+  function mini(ox){ return `<circle cx="${ox}" cy="12" r="3.5" fill="${MC1}"/><line x1="${ox}" y1="15" x2="${ox-8}" y2="30" stroke="${MC3}"/><line x1="${ox}" y1="15" x2="${ox+8}" y2="30" stroke="${MC3}"/><circle cx="${ox-8}" cy="32" r="2.5" fill="${MC2}"/><circle cx="${ox+8}" cy="32" r="2.5" fill="${MC2}"/>`; }
+  return mwrap(mAxis()+mini(25)+mini(60)+mini(95));
+}
+function mBoostSeq(){
+  return mwrap(`<rect x="6" y="24" width="26" height="20" rx="3" fill="${MF2}" stroke="${MC2}"/><text x="19" y="37" font-size="9" text-anchor="middle">1</text>
+  <rect x="46" y="24" width="26" height="20" rx="3" fill="${MF2}" stroke="${MC2}"/><text x="59" y="37" font-size="9" text-anchor="middle">2</text>
+  <rect x="86" y="24" width="26" height="20" rx="3" fill="${MF2}" stroke="${MC2}"/><text x="99" y="37" font-size="9" text-anchor="middle">3</text>
+  <line x1="32" y1="34" x2="46" y2="34" stroke="${MC2}"/><line x1="72" y1="34" x2="86" y2="34" stroke="${MC2}"/>
+  <rect x="10" y="50" width="14" height="8" fill="${MC2}" opacity="0.7"/><rect x="50" y="54" width="14" height="4" fill="${MC2}" opacity="0.7"/><rect x="90" y="56" width="14" height="2" fill="${MC2}" opacity="0.7"/>`);
+}
+function mBagPar(){
+  return mwrap(`<rect x="6" y="8" width="40" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="6" y="28" width="40" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="6" y="48" width="40" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <line x1="46" y1="15" x2="80" y2="34" stroke="${MC1}"/><line x1="46" y1="35" x2="80" y2="34" stroke="${MC1}"/><line x1="46" y1="55" x2="80" y2="34" stroke="${MC1}"/>
+  <rect x="80" y="24" width="34" height="20" rx="3" fill="${MC1}"/>`);
+}
+function mStack(){
+  return mwrap(`<rect x="10" y="44" width="30" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="45" y="44" width="30" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="80" y="44" width="30" height="14" rx="3" fill="${MF1}" stroke="${MC1}"/>
+  <line x1="25" y1="44" x2="55" y2="20" stroke="${MC3}"/><line x1="60" y1="44" x2="58" y2="20" stroke="${MC3}"/><line x1="95" y1="44" x2="62" y2="20" stroke="${MC3}"/>
+  <rect x="40" y="8" width="38" height="14" rx="3" fill="${MC2}"/>`);
+}
+function mVote(){
+  return mwrap(`<rect x="8" y="10" width="20" height="14" rx="2" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="8" y="30" width="20" height="14" rx="2" fill="${MF1}" stroke="${MC1}"/>
+  <rect x="8" y="50" width="20" height="14" rx="2" fill="${MF1}" stroke="${MC1}"/>
+  <line x1="28" y1="17" x2="60" y2="34" stroke="${MC3}"/><line x1="28" y1="37" x2="60" y2="34" stroke="${MC3}"/><line x1="28" y1="57" x2="60" y2="34" stroke="${MC3}"/>
+  <circle cx="80" cy="34" r="14" fill="none" stroke="${MC2}" stroke-width="2"/><path d="M73 34 L78 40 L88 26" fill="none" stroke="${MC2}" stroke-width="2.5"/>`);
+}
+function mKnn(){
+  let s=`<circle cx="60" cy="34" r="22" fill="none" stroke="${MC4}" stroke-dasharray="3 2"/><circle cx="60" cy="34" r="4" fill="${MC2}"/>`;
+  [[48,22],[70,20],[78,38],[58,48],[42,42]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="3" fill="${MC1}"/>`);
+  s+=`<circle cx="92" cy="14" r="3" fill="${MC4}"/><circle cx="20" cy="50" r="3" fill="${MC4}"/>`;
+  return mwrap(s);
+}
+function mBayesFlow(){
+  return mwrap(`<rect x="6" y="30" width="24" height="24" fill="${MF1}" stroke="${MC1}"/><text x="18" y="22" font-size="8" text-anchor="middle" fill="${MC3}">prior</text>
+  <line x1="34" y1="42" x2="56" y2="42" stroke="${MC3}" stroke-width="1.5"/><path d="M52 38 L58 42 L52 46" fill="none" stroke="${MC3}"/>
+  <rect x="62" y="18" width="24" height="36" fill="${MF2}" stroke="${MC2}"/><text x="74" y="12" font-size="8" text-anchor="middle" fill="${MC3}">posterior</text>
+  <text x="100" y="42" font-size="9" fill="${MC3}">data</text>`);
+}
+function mDendro(){
+  return mwrap(`<line x1="14" y1="58" x2="14" y2="40" stroke="${MC1}"/><line x1="30" y1="58" x2="30" y2="40" stroke="${MC1}"/>
+  <line x1="14" y1="40" x2="30" y2="40" stroke="${MC1}"/><line x1="22" y1="40" x2="22" y2="26" stroke="${MC1}"/>
+  <line x1="50" y1="58" x2="50" y2="30" stroke="${MC1}"/><line x1="66" y1="58" x2="66" y2="30" stroke="${MC1}"/>
+  <line x1="50" y1="30" x2="66" y2="30" stroke="${MC1}"/><line x1="58" y1="30" x2="58" y2="26" stroke="${MC1}"/>
+  <line x1="22" y1="26" x2="58" y2="26" stroke="${MC1}"/><line x1="40" y1="26" x2="40" y2="14" stroke="${MC1}"/>
+  <line x1="90" y1="58" x2="90" y2="14" stroke="${MC1}"/><line x1="40" y1="14" x2="90" y2="14" stroke="${MC1}"/>`);
+}
+function mDbscan(){
+  let s="";
+  [[40,30],[48,26],[44,38],[54,34],[36,40],[50,44],[42,22]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="3" fill="${MC1}"/>`);
+  [[12,14],[100,16],[96,52],[14,52],[78,10]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2" fill="${MC4}"/>`);
+  return mwrap(s);
+}
+function mGmm(){
+  return mwrap(`<ellipse cx="42" cy="32" rx="22" ry="14" fill="${MC1}" opacity="0.18" stroke="${MC1}"/><ellipse cx="74" cy="36" rx="22" ry="14" fill="${MC2}" opacity="0.18" stroke="${MC2}"/>`);
+}
+function mAxisProj(twoClass){
+  let s=mAxis();
+  [[20,46],[30,40],[26,52],[38,44]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${MC1}"/>`);
+  [[70,20],[80,16],[86,26],[92,18]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${twoClass?MC2:MC1}"/>`);
+  s+=`<line x1="8" y1="55" x2="110" y2="14" stroke="${MC3}" stroke-width="1.5" stroke-dasharray="${twoClass?'0':'4 2'}"/>`;
+  return mwrap(s);
+}
+function mFunnel(){
+  return mwrap(`<path d="M8 10 L40 10 L60 34 L40 58 L8 58 Z" fill="${MF1}" stroke="${MC1}"/>
+  <path d="M112 10 L80 10 L60 34 L80 58 L112 58 Z" fill="${MF1}" stroke="${MC1}"/><circle cx="60" cy="34" r="3" fill="${MC2}"/>`);
+}
+function mMargin(){
+  let s=`<line x1="20" y1="58" x2="100" y2="8" stroke="${MC1}" stroke-width="2"/>
+  <line x1="10" y1="58" x2="90" y2="8" stroke="${MC4}" stroke-dasharray="3 2"/><line x1="30" y1="58" x2="110" y2="8" stroke="${MC4}" stroke-dasharray="3 2"/>`;
+  [[18,50],[14,40],[26,56]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="3" fill="${MC2}"/>`);
+  [[98,18],[92,28],[104,14]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="3" fill="${MC1}"/>`);
+  return mwrap(s);
+}
+function mShrink(){
+  return mwrap(mAxis()+`<line x1="60" y1="58" x2="60" y2="14" stroke="${MC4}" stroke-dasharray="2 2"/>
+  <line x1="20" y1="40" x2="55" y2="40" stroke="${MC1}" stroke-width="2"/><path d="M50 36 L58 40 L50 44" fill="none" stroke="${MC1}"/>
+  <line x1="100" y1="24" x2="65" y2="24" stroke="${MC2}" stroke-width="2"/><path d="M70 20 L62 24 L70 28" fill="none" stroke="${MC2}"/>`);
+}
+function mAxisMarks(marks, opts={}){
+  let s=mAxis();
+  marks.forEach(m=> s+=`<circle cx="${m.x}" cy="56" r="${m.r||4}" fill="${m.color||MC1}"/>`);
+  if(opts.bracket) s+=`<path d="M${opts.bracket[0]} 50 L${opts.bracket[0]} 58 M${opts.bracket[0]} 50 L${opts.bracket[1]} 50 M${opts.bracket[1]} 50 L${opts.bracket[1]} 58" fill="none" stroke="${MC2}" stroke-width="1.5"/>`;
+  if(opts.dots) opts.dots.forEach(d=> s+=`<circle cx="${d}" cy="56" r="2" fill="${MC4}"/>`);
+  return mwrap(s);
+}
+function mDeviation(){
+  let s=mAxis()+`<line x1="60" y1="58" x2="60" y2="20" stroke="${MC1}" stroke-dasharray="2 2"/>`;
+  [20,35,80,95].forEach(x=> s+=`<circle cx="${x}" cy="56" r="3" fill="${MC2}"/><line x1="${x}" y1="50" x2="60" y2="50" stroke="${MC4}" stroke-width="1"/>`);
+  return mwrap(s);
+}
+function mQuartile(){
+  let s=mAxis();
+  [20,45,60,80,100].forEach((x,i)=> s+=`<line x1="${x}" y1="50" x2="${x}" y2="58" stroke="${i===2?MC2:MC3}" stroke-width="${i===2?2:1}"/>`);
+  s+=`<rect x="45" y="40" width="35" height="14" fill="${MF1}" stroke="${MC1}"/>`;
+  return mwrap(s);
+}
+function mPercentile(){
+  return mwrap(mAxis()+`<rect x="6" y="50" width="70" height="8" fill="${MC1}" opacity="0.3"/><line x1="76" y1="40" x2="76" y2="58" stroke="${MC2}" stroke-width="2"/>`);
+}
+function mPie(n=6){
+  let s="", cx=60, cy=34, r=24, ang=-90;
+  for(let i=0;i<n;i++){ let a0=ang*Math.PI/180, a1=(ang+360/n)*Math.PI/180;
+    let x0=(cx+r*Math.cos(a0)).toFixed(1), y0=(cy+r*Math.sin(a0)).toFixed(1);
+    let x1=(cx+r*Math.cos(a1)).toFixed(1), y1=(cy+r*Math.sin(a1)).toFixed(1);
+    s+=`<path d="M${cx} ${cy} L${x0} ${y0} A${r} ${r} 0 0 1 ${x1} ${y1} Z" fill="none" stroke="${MC1}"/>`; ang+=360/n; }
+  return mwrap(s);
+}
+function mVenn(overlap){
+  let dx=overlap?16:30;
+  return mwrap(`<circle cx="${60-dx}" cy="34" r="20" fill="${MC1}" opacity="0.18" stroke="${MC1}"/><circle cx="${60+dx}" cy="34" r="20" fill="${MC2}" opacity="0.18" stroke="${MC2}"/>`);
+}
+function mProbTree(){
+  return mwrap(`<circle cx="20" cy="34" r="4" fill="${MC1}"/>
+  <line x1="24" y1="32" x2="60" y2="14" stroke="${MC3}"/><line x1="24" y1="36" x2="60" y2="54" stroke="${MC3}"/>
+  <circle cx="60" cy="14" r="3" fill="${MC2}"/><circle cx="60" cy="54" r="3" fill="${MC2}"/>
+  <line x1="63" y1="12" x2="100" y2="6" stroke="${MC4}"/><line x1="63" y1="16" x2="100" y2="22" stroke="${MC4}"/>
+  <line x1="63" y1="52" x2="100" y2="46" stroke="${MC4}"/><line x1="63" y1="56" x2="100" y2="62" stroke="${MC4}"/>`);
+}
+function mEv(){
+  let s=mAxis();
+  [[20,3],[40,5],[70,4],[90,6]].forEach(([x,r])=> s+=`<circle cx="${x}" cy="56" r="${r}" fill="${MC1}" opacity="0.6"/>`);
+  s+=`<line x1="55" y1="20" x2="55" y2="50" stroke="${MC2}" stroke-dasharray="2 2"/><circle cx="55" cy="56" r="5" fill="${MC2}"/>`;
+  return mwrap(s);
+}
+function mLln(){
+  return mwrap(mAxis()+`<line x1="60" y1="14" x2="114" y2="14" stroke="${MC4}" stroke-dasharray="2 2"/>
+  <path d="M8 50 C20 30,30 10,42 14 C54 18,48 30,60 16 C72 6,80 18,90 15 C98 13,104 14,112 14" fill="none" stroke="${MC1}" stroke-width="2"/>`);
+}
+function mPopSample(){
+  let s=`<circle cx="55" cy="34" r="28" fill="${MF1}" stroke="${MC4}"/><circle cx="55" cy="34" r="13" fill="${MC1}" opacity="0.25" stroke="${MC1}"/>`;
+  [[30,20],[40,50],[75,18],[80,46],[50,15],[60,52],[35,40],[70,30]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2" fill="${MC3}"/>`);
+  return mwrap(s);
+}
+function mClt(){
+  let s=mAxis();
+  [10,22,40,50,38,20,9].forEach((v,i)=>{ let x=10+i*14; s+=`<rect x="${x}" y="${58-v}" width="10" height="${v}" fill="${MC1}" opacity="0.5"/>`; });
+  s+=`<path d="${BELL}" fill="none" stroke="${MC2}" stroke-width="1.5"/>`;
+  return mwrap(s);
+}
+function mTarget(centered){
+  let s=`<circle cx="60" cy="34" r="26" fill="none" stroke="${MC4}"/><circle cx="60" cy="34" r="17" fill="none" stroke="${MC4}"/><circle cx="60" cy="34" r="8" fill="none" stroke="${MC4}"/>`;
+  let pts=centered?[[58,32],[62,30],[60,36],[63,33]]:[[85,18],[90,22],[82,14],[88,26]];
+  pts.forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="${MC2}"/>`);
+  return mwrap(s);
+}
+function mConsistency(){
+  let s="", steps=[[20,34,16],[45,30,10],[70,32,6],[95,33,3]];
+  steps.forEach(([x,y,r],i)=> s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${MC1}" opacity="${0.4+i*0.15}"/>`);
+  s+=`<circle cx="95" cy="33" r="2" fill="${MC2}"/>`;
+  return mwrap(s);
+}
+function mBootstrap(){
+  let s=`<circle cx="60" cy="34" r="22" fill="none" stroke="${MC4}" stroke-dasharray="3 2"/>
+  <path d="M40 16 A 22 22 0 0 1 80 16" fill="none" stroke="${MC1}" stroke-width="2"/>`;
+  [[45,40],[60,50],[75,40],[55,25],[70,28]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="${MC2}"/>`);
+  return mwrap(s);
+}
+function mTwoBells(){
+  return mwrap(`<path d="${BELL}" fill="none" stroke="${MC1}" stroke-width="2"/><path d="${BELL_SHIFT}" fill="none" stroke="${MC2}" stroke-width="2"/>`);
+}
+function mOverlapShade(side){
+  return mwrap(`<path d="${BELL}" fill="none" stroke="${MC1}" stroke-width="1.5"/><path d="${BELL_SHIFT}" fill="none" stroke="${MC2}" stroke-width="2"/>`+mShade(side));
+}
+function mEffectSize(){
+  return mwrap(`<path d="M8 56 C20 56,26 24,38 24 C50 24,56 56,68 56" fill="none" stroke="${MC1}" stroke-width="2"/>
+  <path d="M55 56 C67 56,73 18,85 18 C97 18,103 56,112 56" fill="none" stroke="${MC2}" stroke-width="2"/>
+  <line x1="38" y1="40" x2="85" y2="40" stroke="${MC3}" stroke-width="1"/><path d="M42 36 L38 40 L42 44 M81 36 L85 40 L81 44" fill="none" stroke="${MC3}"/>`);
+}
+function mDf(){
+  return mwrap(`<path d="${BELL_F}" fill="none" stroke="${MC4}" stroke-width="1.5"/><path d="${BELL}" fill="none" stroke="${MC2}" stroke-width="1.5"/><path d="${BELL_N}" fill="none" stroke="${MC1}" stroke-width="2"/>`);
+}
+function mPaired(){
+  let s=mAxis(), pairs=[[30,46,30,20],[55,50,55,16],[80,40,80,24],[100,48,100,18]];
+  pairs.forEach(([x,y1,x2,y2])=> s+=`<line x1="${x}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${MC4}"/><circle cx="${x}" cy="${y1}" r="2.4" fill="${MC2}"/><circle cx="${x2}" cy="${y2}" r="2.4" fill="${MC1}"/>`);
+  return mwrap(s);
+}
+function mRank(){
+  let s=mAxis(); [14,26,50,70].forEach(x=> s+=`<circle cx="${x}" cy="50" r="3" fill="${MC1}"/>`); [34,46,86,100].forEach(x=> s+=`<circle cx="${x}" cy="50" r="3" fill="${MC2}"/>`);
+  return mwrap(s);
+}
+function mQq(){
+  let s=`<line x1="10" y1="58" x2="110" y2="8" stroke="${MC4}" stroke-dasharray="3 2"/>`;
+  [[16,52],[30,38],[45,34],[60,24],[75,22],[90,12],[100,9]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="${MC1}"/>`);
+  return mwrap(s);
+}
+function mKs(){
+  return mwrap(`<path d="M8 56 L8 50 L30 50 L30 38 L55 38 L55 22 L80 22 L80 12 L112 12" fill="none" stroke="${MC1}" stroke-width="2"/>
+  <path d="M8 56 L8 52 L25 52 L25 42 L50 42 L50 28 L85 28 L85 14 L112 14" fill="none" stroke="${MC2}" stroke-width="2" stroke-dasharray="4 2"/>`);
+}
+function mBiserial(){
+  let s=mAxis(); [16,22,28,34].forEach(y=> s+=`<circle cx="30" cy="${y+10}" r="2.4" fill="${MC1}"/>`);
+  [16,24,32,40,48].forEach(y=> s+=`<circle cx="90" cy="${y+8}" r="2.4" fill="${MC2}"/>`);
+  return mwrap(s);
+}
+function mGrid(){
+  let opac=[0.8,0.2,0.3,0.7], positions=[[10,10],[64,10],[10,38],[64,38]], s="";
+  positions.forEach(([x,y],i)=> s+=`<rect x="${x}" y="${y}" width="46" height="20" fill="${MC1}" opacity="${opac[i]}"/>`);
+  return mwrap(s);
+}
+function mPartial(){
+  let s=mAxis()+`<line x1="10" y1="54" x2="110" y2="10" stroke="${MC1}" stroke-width="1.5"/>`;
+  [[14,50],[30,46],[55,34],[80,22],[105,10]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${MC1}"/>`);
+  s+=`<line x1="60" y1="60" x2="60" y2="40" stroke="${MC2}" stroke-dasharray="2 2"/>`;
+  return mwrap(s);
+}
+function mMultiReg(){
+  let s=mAxis()+`<line x1="10" y1="50" x2="110" y2="14" stroke="${MC1}" stroke-width="1.5"/><line x1="10" y1="20" x2="110" y2="50" stroke="${MC4}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  [[20,44],[40,36],[60,28],[80,22],[100,16]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="${MC2}"/>`);
+  return mwrap(s);
+}
+function mR2(){
+  return mwrap(`<circle cx="60" cy="34" r="24" fill="none" stroke="${MC4}"/><path d="M60 34 L60 10 A24 24 0 0 1 81 46 Z" fill="${MC1}" opacity="0.6"/>`);
+}
+function mResidual(){
+  let s=mAxis()+`<line x1="10" y1="50" x2="110" y2="14" stroke="${MC1}" stroke-width="1.5"/>`;
+  [[20,40],[60,20],[100,12]].forEach(([x,y])=> s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${MC2}"/>`);
+  s+=`<line x1="20" y1="40" x2="20" y2="46" stroke="${MC4}"/><line x1="60" y1="20" x2="60" y2="26" stroke="${MC4}"/><line x1="100" y1="12" x2="100" y2="18" stroke="${MC4}"/>`;
+  return mwrap(s);
+}
+function mBand(even){
+  let s=mAxis();
+  if(even) s+=`<path d="M10 44 L110 44 L110 28 L10 28 Z" fill="${MC1}" opacity="0.15"/>`;
+  else s+=`<path d="M10 40 L110 50 L110 18 L10 32 Z" fill="${MC2}" opacity="0.15"/>`;
+  return mwrap(s);
+}
+function mCollinear(){
+  return mwrap(`<rect x="14" y="20" width="20" height="34" fill="${MC1}"/><rect x="84" y="14" width="20" height="40" fill="${MC2}"/>
+  <line x1="36" y1="34" x2="82" y2="30" stroke="${MC3}"/><path d="M40 30 L36 34 L40 38 M78 26 L82 30 L78 34" fill="none" stroke="${MC3}"/>`);
+}
+function mVif(){
+  return mwrap(mAxis()+`<rect x="50" y="14" width="20" height="44" fill="${MC2}"/><line x1="10" y1="30" x2="110" y2="30" stroke="${MC1}" stroke-dasharray="3 2"/>`);
+}
+function mSigmoid(){
+  return mwrap(mAxis()+`<path d="M8 52 C25 52,35 40,45 30 C55 20,65 16,75 14 C90 11,100 10,112 9" fill="none" stroke="${MC1}" stroke-width="2"/>`);
+}
+function mOdds(){
+  return mwrap(`<rect x="20" y="30" width="20" height="24" fill="${MC1}"/><rect x="80" y="14" width="20" height="40" fill="${MC2}"/><text x="60" y="36" font-size="11" text-anchor="middle" fill="${MC3}">÷</text>`);
+}
+function mTrend(){ return mwrap(mAxis()+`<path d="M8 52 L30 44 L50 40 L70 26 L90 18 L112 8" fill="none" stroke="${MC1}" stroke-width="2"/>`); }
+function mWave(){ return mwrap(mAxis()+`<path d="M8 34 C18 14,28 14,38 34 C48 54,58 54,68 34 C78 14,88 14,98 34 C104 44,108 44,112 34" fill="none" stroke="${MC1}" stroke-width="2"/>`); }
+function mFlatBand(){ return mwrap(mAxis()+`<path d="M8 38 L112 38" stroke="${MC1}" stroke-width="2"/><path d="M8 26 L112 26 M8 50 L112 50" stroke="${MC4}" stroke-dasharray="3 2"/>`); }
+function mAdf(){ return mwrap(mAxis()+`<path d="M8 50 L30 46 L50 42 L70 40 L90 39 L112 38" fill="none" stroke="${MC1}" stroke-width="2"/><line x1="70" y1="20" x2="70" y2="58" stroke="${MC2}" stroke-dasharray="2 2"/>`); }
+function mCorrelogram(cutoff){
+  let heights=cutoff?[44,6,4,5,3,4]:[44,34,26,18,12,7], s=mAxis();
+  heights.forEach((v,i)=>{ let x=14+i*16; s+=`<rect x="${x}" y="${58-v}" width="8" height="${v}" fill="${MC1}"/>`; });
+  return mwrap(s);
+}
+function mSmooth(){
+  return mwrap(mAxis()+`<path d="M8 30 L20 46 L32 22 L44 40 L56 18 L68 36 L80 20 L92 38 L104 24 L112 30" fill="none" stroke="${MC4}" stroke-width="1.2"/>
+  <path d="M8 34 C30 30,40 30,56 28 C76 26,90 28,112 26" fill="none" stroke="${MC1}" stroke-width="2"/>`);
+}
+function mFallback(){ return mwrap(mAxis()+`<circle cx="60" cy="34" r="3" fill="${MC4}"/>`); }
+
+const VIZ = {
+  // ML — regression
+  "Linear Regression": mScatter('pos'),
+  "Polynomial Regression": mCurveFit(),
+  "Ridge Regression (L2)": mShrink(),
+  "Lasso Regression (L1)": mShrink(),
+  "Elastic Net": mShrink(),
+  "Support Vector Regression": mMargin(),
+  "Decision Tree Regression": mTree(),
+  "Random Forest Regression": mForest(),
+  "Gradient Boosting Regression": mBoostSeq(),
+  // ML — classification
+  "Logistic Regression": mSigmoid(),
+  "K-Nearest Neighbors": mKnn(),
+  "Naive Bayes": mBayesFlow(),
+  "Decision Tree": mTree(),
+  "Random Forest": mForest(),
+  "Support Vector Machine": mMargin(),
+  "AdaBoost": mBoostSeq(),
+  "Gradient Boosting (GBM)": mBoostSeq(),
+  "XGBoost": mBoostSeq(),
+  "LightGBM": mBoostSeq(),
+  "CatBoost": mBoostSeq(),
+  // ensemble
+  "Bagging": mBagPar(),
+  "Boosting": mBoostSeq(),
+  "Stacking": mStack(),
+  "Voting": mVote(),
+  // clustering
+  "K-Means": mClusters(3),
+  "K-Means++": mClusters(3),
+  "Hierarchical (Agglomerative)": mDendro(),
+  "DBSCAN": mDbscan(),
+  "Gaussian Mixture Model": mGmm(),
+  // dim reduction
+  "PCA": mAxisProj(false),
+  "LDA": mAxisProj(true),
+  "t-SNE": mClusters(3),
+  "UMAP": mClusters(3),
+  "Autoencoders": mFunnel(),
+
+  // Statistics — central tendency
+  "Mean": mAxisMarks([{x:60,r:5}],{dots:[20,35,50,75,90,100]}),
+  "Median": mAxisMarks([{x:55,r:5,color:MC2}],{dots:[15,30,45,70,90,105]}),
+  "Mode": mBars([20,30,55,30,15],{highlight:2}),
+  "Weighted Mean": mAxisMarks([{x:30,r:3},{x:55,r:7},{x:65,r:9,color:MC2},{x:80,r:5}]),
+  "Trimmed Mean": mAxisMarks([{x:60,r:5}],{dots:[40,50,70,80],bracket:[15,105]}),
+  "Geometric Mean": mLln(),
+  "Harmonic Mean": mCurve(DECAY),
+  // spread
+  "Range": mAxisMarks([{x:15,r:3,color:MC2},{x:105,r:3,color:MC2}],{bracket:[15,105]}),
+  "Variance": mDeviation(),
+  "Standard Deviation": mCurve(BELL),
+  "Coefficient of Variation": mTwoBells(),
+  "IQR": mBox(1),
+  "Mean Absolute Deviation": mDeviation(),
+  "Skewness": mCurve(SKEW_R),
+  "Kurtosis": mDf(),
+  // position
+  "Percentile": mPercentile(),
+  "Quartiles": mQuartile(),
+  "Z-score": mCurve(BELL,{shade:'right',marker:86}),
+  "Outlier Detection (IQR)": mBox(1,{outlier:true}),
+  // probability foundations
+  "Classical Probability": mPie(6),
+  "Conditional Probability": mVenn(true),
+  "Bayes' Theorem": mBayesFlow(),
+  "Law of Total Probability": mProbTree(),
+  "Independence": mVenn(false),
+  "Expected Value": mEv(),
+  "Law of Large Numbers": mLln(),
+  // discrete distributions
+  "Bernoulli": mBars([22,46]),
+  "Binomial": mBars([8,22,42,48,38,18,7]),
+  "Poisson": mBars([44,50,34,20,10,4]),
+  "Geometric": mBars([50,33,22,14,9,5]),
+  "Negative Binomial": mBars([38,46,36,24,14,7]),
+  "Hypergeometric": mBars([12,36,48,36,12]),
+  "Multinomial": mBars([30,48,18,40,24]),
+  // continuous distributions
+  "Normal / Gaussian": mCurve(BELL),
+  "Standard Normal": mCurve(BELL_N),
+  "Uniform": mCurve(FLAT),
+  "Exponential": mCurve(DECAY),
+  "Log-Normal": mCurve(SKEW_R),
+  "Gamma": mCurve(SKEW_R,{color:MC2}),
+  "Beta": mCurve(BOUNDED),
+  "Chi-square": mCurve(SKEW_R,{color:MC2}),
+  "Student's t": mDf(),
+  "F-distribution": mCurve(SKEW_R,{color:MC1}),
+  // sampling & estimation
+  "Population vs Sample": mPopSample(),
+  "Sampling Distribution": mClt(),
+  "Central Limit Theorem": mClt(),
+  "Standard Error": mTwoBells(),
+  "Point Estimate": mAxisMarks([{x:60,r:5}]),
+  "Confidence Interval": mAxisMarks([{x:60,r:5,color:MC2}],{bracket:[38,82]}),
+  "Margin of Error": mAxisMarks([{x:60,r:5,color:MC2}],{bracket:[30,90]}),
+  "Bias (Estimator)": mTarget(false),
+  "Consistency": mConsistency(),
+  "MLE": mCurve(BELL,{marker:60}),
+  "Method of Moments": mCurve(BELL,{marker:45}),
+  "Bootstrap": mBootstrap(),
+  // hypothesis testing
+  "Null Hypothesis (H₀)": mCurve(BELL),
+  "Alternative Hypothesis (H₁)": mTwoBells(),
+  "P-value": mCurve(BELL,{shade:'right'}),
+  "Significance Level (α)": mCurve(BELL,{shade:'right'}),
+  "Type I Error": mCurve(BELL,{shade:'right',color:MC2}),
+  "Type II Error": mOverlapShade('left'),
+  "Statistical Power": mOverlapShade('right'),
+  "Effect Size": mEffectSize(),
+  "One- vs Two-tailed Test": mCurve(BELL,{shade:'both'}),
+  "Degrees of Freedom": mDf(),
+  // tests
+  "One-sample t-test": mBox(1),
+  "Independent t-test": mBox(2),
+  "Paired t-test": mPaired(),
+  "Z-test": mCurve(BELL,{shade:'right'}),
+  "F-test": mBox(2),
+  "ANOVA (One-way)": mBox(3),
+  "ANOVA (Two-way)": mBox(4),
+  "Chi-square Goodness of Fit": mObsExp(),
+  "Chi-square Test of Independence": mGrid(),
+  "Mann-Whitney U Test": mRank(),
+  "Wilcoxon Signed-Rank Test": mPaired(),
+  "Kruskal-Wallis Test": mRank(),
+  "Shapiro-Wilk Test": mQq(),
+  "Levene's Test": mBox(2),
+  "KS Test": mKs(),
+  // correlation
+  "Covariance": mScatter('pos'),
+  "Pearson Correlation": mScatter('pos'),
+  "Spearman Correlation": mScatter('pos'),
+  "Kendall's Tau": mRank(),
+  "Point-Biserial Correlation": mBiserial(),
+  "Cramér's V": mGrid(),
+  "Partial Correlation": mPartial(),
+  // regression stats
+  "Simple Linear Regression": mScatter('pos'),
+  "Multiple Linear Regression": mMultiReg(),
+  "R² (Coefficient of Determination)": mR2(),
+  "Adjusted R²": mR2(),
+  "Residuals": mResidual(),
+  "Homoscedasticity": mBand(true),
+  "Multicollinearity": mCollinear(),
+  "VIF": mVif(),
+  "Logistic Regression (stats view)": mSigmoid(),
+  "Odds Ratio": mOdds(),
+  // bayesian
+  "Prior Probability": mBayesFlow(),
+  "Posterior Probability": mBayesFlow(),
+  "Likelihood": mCurve(BELL,{marker:60}),
+  "Bayesian Credible Interval": mCurve(BELL,{shade:'center'}),
+  "Conjugate Prior": mBayesFlow(),
+  // time series
+  "Trend": mTrend(),
+  "Seasonality": mWave(),
+  "Stationarity": mFlatBand(),
+  "ADF Test": mAdf(),
+  "Autocorrelation (ACF)": mCorrelogram(false),
+  "Partial Autocorrelation (PACF)": mCorrelogram(true),
+  "Moving Average": mSmooth(),
+};
+function vizFor(name){ return VIZ[name] || mFallback(); }
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS = [
+{
+  id:"ml", title:"1 · Machine Learning", lede:"Classical algorithms grouped by task. Each row covers the core idea, trade-offs, and — beyond the usual cheat sheet — where it actually breaks in practice.",
+  subs:[
+    {id:"ml-bv", title:"Bias–variance, at a glance", note:"The single chart underneath almost every \"why is my model failing\" question.", diagram:"biasVariance", cap:"Underfitting (high bias) sits on the left; overfitting (high variance) sits on the right. Every regularization knob — λ, max depth, k, dropout — is a way of sliding along this curve."},
+    {id:"ml-reg", title:"Supervised Learning — Regression", table:ML_REG},
+    {id:"ml-cls", title:"Supervised Learning — Classification", table:ML_CLS},
+    {id:"ml-ens", title:"Ensemble methods", note:"How bagging and boosting actually differ, structurally.", diagram:"bagBoost", cap:"Bagging trains independently and averages (reduces variance). Boosting trains in sequence, each model fixing the last one's mistakes (reduces bias).", table2:ML_ENSEMBLE},
+    {id:"ml-clust", title:"Unsupervised Learning — Clustering", table:ML_CLUST},
+    {id:"ml-dim", title:"Unsupervised Learning — Dimensionality Reduction", table:ML_DIM},
+    {id:"ml-map", title:"How it all fits together", diagram:"mlMap", cap:"A rough map of where each family of techniques sits — useful for orienting before picking a specific algorithm."},
+    {id:"ml-guide", title:"Quick decision guide", table3:ML_GUIDE},
+    {id:"ml-sym", title:"Symptom → likely cause", table4:ML_SYMPTOMS},
+  ],
+  callout:"<b>Bagging vs. Boosting:</b> Random Forest trains trees independently in parallel and averages them to reduce variance. XGBoost/AdaBoost train trees sequentially, each fixing the previous one's errors, to reduce bias. This exact contrast is one of the most frequently tested ML concept questions."
+},
+{
+  id:"dl", title:"2 · Deep Learning", lede:"Architectures and the training machinery around them — activations, regularization, and optimizers.",
+  subs:[
+    {id:"dl-arch", title:"Core architectures", table:DL_ARCH},
+    {id:"dl-train", title:"Training components & techniques", table:DL_TRAIN},
+    {id:"dl-sym", title:"Symptom → likely cause", table4:DL_SYMPTOMS},
+  ],
+  callout:"<b>RNNs vs. Transformers:</b> RNNs/LSTMs process sequences step-by-step and can't parallelize across time. Transformers process the whole sequence at once via self-attention — slower per layer, but far faster to train on modern hardware. This is the core reason Transformers displaced RNNs."
+},
+{
+  id:"stats", title:"3 · Statistics", lede:"From descriptive statistics through hypothesis testing to Bayesian inference and time series.",
+  subs:[
+    {id:"st-central", title:"Descriptive Statistics — Central Tendency", table5:ST_CENTRAL},
+    {id:"st-spread", title:"Descriptive Statistics — Spread / Dispersion", table5:ST_SPREAD},
+    {id:"st-pos", title:"Position Measures", table5:ST_POSITION},
+    {id:"st-normal", title:"The normal distribution, visually", diagram:"normal", cap:"The empirical rule (68–95–99.7) underlies Z-scores, confidence intervals, and most parametric hypothesis tests."},
+    {id:"st-prob", title:"Probability Foundations", table5:ST_PROB},
+    {id:"st-disc", title:"Probability Distributions — Discrete", table5:ST_DISC},
+    {id:"st-cont", title:"Probability Distributions — Continuous", table5:ST_CONT},
+    {id:"st-distfam", title:"Distribution shapes compared", diagram:"distFamily", cap:"Shape tells you what process generated the data — symmetric vs. skewed vs. bounded vs. count-based."},
+    {id:"st-sampling", title:"Sampling & Estimation", table5:ST_SAMPLING},
+    {id:"st-hypo", title:"Hypothesis Testing", table5:ST_HYPO},
+    {id:"st-pval", title:"p-values and the rejection region", diagram:"pvalue", cap:"If the observed statistic falls in the shaded rejection region, the result is judged \"too extreme to be explained by chance alone\" at significance level α."},
+    {id:"st-tests", title:"Statistical Tests", table5:ST_TESTS},
+    {id:"st-corr", title:"Correlation & Relationships", table5:ST_CORR},
+    {id:"st-reg", title:"Regression-Related Statistics", table5:ST_REGRESSION},
+    {id:"st-bayes", title:"Bayesian Statistics", table5:ST_BAYES},
+    {id:"st-time", title:"Time Series Statistics", table5:ST_TIME},
+    {id:"st-guide", title:"Which test / concept do I use?", table3:ST_GUIDE},
+  ],
+  callout:"<b>The single most common stats trap:</b> a p-value tells you P(data | H₀ is true). It does <i>not</i> tell you P(H₀ is true | data) — those are not the same quantity, and confusing them is the most frequently tested misconception in analyst/ML assessments."
+},
+{
+  id:"math", title:"4 · Foundational Math", lede:"Arithmetic, algebra, exponents, logs, series, limits, derivatives, integrals, and basic probability — with where each one shows up in ML.",
+  subs:[
+    {id:"m-arith", title:"Basic Arithmetic Rules", table6:MATH_ARITH},
+    {id:"m-expo", title:"Exponents & Powers", table6:MATH_EXPO},
+    {id:"m-log", title:"Logarithms", table6:MATH_LOG},
+    {id:"m-algebra", title:"Algebra — Equations & Identities", table6:MATH_ALGEBRA},
+    {id:"m-series", title:"Sequences & Series", table6:MATH_SERIES},
+    {id:"m-limits", title:"Limits (Calculus Foundation)", table6:MATH_LIMITS},
+    {id:"m-deriv", title:"Differentiation Basics", table6:MATH_DERIV},
+    {id:"m-integ", title:"Integration Basics", table6:MATH_INTEG},
+    {id:"m-calc-visual", title:"Derivative & integral, in one picture", diagram:"derivIntegral", cap:"A derivative is the slope at a point; a definite integral is the area under the curve between two points — the two core operations of calculus, side by side."},
+    {id:"m-prob", title:"Basic Probability", table6:MATH_PROB},
+    {id:"m-basics", title:"Most-forgotten basics", table6:MATH_BASICS},
+    {id:"m-map", title:"Where this shows up in ML / data", table7:MATH_MLMAP},
+  ],
+  callout:"<b>Watch this one:</b> √(a+b) ≠ √a + √b, and similarly (a+b)² ≠ a²+b². \"Distributing across addition\" errors like these are the single most common silly mistakes under time pressure."
+},
+];
+
+function buildDiagram(key, cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+
+function buildSub(sub){
+  let html = `<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html += `<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html += buildDiagram(sub.diagram, sub.cap);
+  if(sub.table) html += renderMLTable(sub.table);
+  if(sub.table2) html += renderEnsembleTable(sub.table2);
+  if(sub.table3) html += renderGuideTable(sub.table3);
+  if(sub.table4) html += renderSymptomTable(sub.table4);
+  if(sub.table5) html += renderStatsTable(sub.table5);
+  if(sub.table6) html += renderMathTable(sub.table6);
+  if(sub.table7) html += renderMapTable(sub.table7);
+  html += `</div>`;
+  return html;
+}
+
+function buildGroup(g){
+  let html = `<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=> html += buildSub(s));
+  if(g.callout) html += `<div class="callout">${g.callout}</div>`;
+  html += `</section>`;
+  return html;
+}
+
+document.getElementById("content").innerHTML = SECTIONS.map(buildGroup).join("");
+
+// sidebar nav
+let navHtml = "";
+SECTIONS.forEach(g=>{
+  navHtml += `<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=> navHtml += `<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML = navHtml;
+
+// global filter — hides rows across all tables that don't match
+document.getElementById("globalFilter").addEventListener("input", function(e){
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){ tr.classList.remove("row-hidden"); return; }
+    const txt = tr.textContent.toLowerCase();
+    tr.classList.toggle("row-hidden", !txt.includes(q));
+  });
+});
+</script>
+</body>
+</html>
