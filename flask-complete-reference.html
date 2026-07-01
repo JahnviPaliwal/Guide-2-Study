@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flask — Complete Reference</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#ffffff; --ink:#1f2424; --ink-soft:#5b6260; --line:#e3e0d8;
+    --accent:#4a4a6a; --accent-soft:#eceaf4; --warn:#9a5b3a;
+    --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex; min-height:100vh;}
+  a{color:var(--accent);}
+  code{font-family:var(--mono); font-size:11.6px; background:#f1efe9; padding:1px 5px; border-radius:4px; color:#2b3b35;}
+
+  #sidebar{ width:250px; flex:0 0 250px; border-right:1px solid var(--line); background:var(--panel);
+    position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 14px; }
+  #sidebar h1{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{ display:block; padding:7px 8px; border-radius:6px; font-size:13.2px; color:var(--ink); text-decoration:none; font-weight:600; margin-top:6px; }
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{ display:block; padding:4px 8px 4px 18px; border-radius:6px; font-size:12.2px; color:var(--ink-soft); text-decoration:none; }
+  #sidebar nav a.sublink:hover{background:var(--accent-soft); color:var(--ink);}
+  #sidebar input{ width:100%; padding:7px 9px; margin-bottom:14px; border:1px solid var(--line); border-radius:6px; font-size:12.5px; font-family:var(--sans); background:#fff; }
+
+  #main{flex:1; min-width:0; padding:38px 44px 80px; max-width:1220px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px; margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft); font-size:14px; margin:0; max-width:700px; line-height:1.5;}
+
+  section.group{margin-bottom:56px;}
+  section.group > h2{font-size:21px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px;}
+  section.group > .lede{color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; max-width:800px; line-height:1.5;}
+
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{font-size:15px; margin:0 0 4px; color:var(--accent); letter-spacing:.01em;}
+  .subsection .note{color:var(--ink-soft); font-size:12.5px; margin:0 0 12px;}
+
+  .twrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.6px; min-width:760px;}
+  thead th{ text-align:left; background:#f1efe9; color:var(--ink-soft); font-size:11px; text-transform:uppercase;
+    letter-spacing:.04em; padding:9px 12px; border-bottom:1px solid var(--line); position:sticky; top:0; }
+  tbody td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700; white-space:nowrap;}
+  td .codeline{display:block; font-family:var(--mono); font-size:11.5px; color:var(--warn); margin-top:3px;}
+  td ul{margin:0; padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:10px; background:var(--accent-soft); color:var(--accent); margin-right:4px; white-space:nowrap;}
+
+  .callout{ background:var(--accent-soft); border-left:3px solid var(--accent); padding:12px 16px; font-size:13px;
+    border-radius:0 6px 6px 0; margin:18px 0 8px; line-height:1.55; }
+  .callout b{color:var(--accent);}
+
+  .diagram{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:18px; margin:18px 0 28px; text-align:center; }
+  .diagram .cap{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:left;}
+  .diagram svg{max-width:100%; height:auto;}
+
+  mark.row-hidden{display:none;}
+
+  @media (max-width: 880px){
+    #sidebar{display:none;}
+    #main{padding:24px 16px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <h1>Flask Reference</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. blueprint)">
+  <nav id="navTree"></nav>
+</aside>
+
+<main id="main">
+  <div class="pagehead">
+    <h1>Flask — Complete Reference</h1>
+    <p>Basics through production internals — routing, the request/application context, Jinja2 templating, forms, blueprints, extensions, auth, testing, and deployment. Diagrams cover the genuinely spatial parts (the context stack, the app factory pattern, the request lifecycle); everything else is a scannable table.</p>
+  </div>
+  <div id="content"></div>
+</main>
+
+<script>
+function T(c,i,ex,u,g){ return {c,i,ex,u,g}; }
+function Md(m,sig,desc,ex){ return {m,sig,desc,ex}; }
+function G(scenario,pick){ return {scenario,pick}; }
+function Sy(s,cause){ return {s,cause}; }
+
+/* =========================================================
+   GROUP 1 — FUNDAMENTALS
+   ========================================================= */
+const F_CORE = [
+T("Flask app instance", "The central WSGI application object that routes, config, and extensions all attach to.", "app = Flask(__name__)", "Every Flask project starts with this single line", "Flask(__name__) uses the module name to locate templates/static files relative to it — passing the wrong name (e.g. always '__main__') can break resource lookup in larger projects"),
+T("WSGI", "Web Server Gateway Interface — the long-standing synchronous standard Python web apps and servers speak to each other.", "Flask is a WSGI application by default (sync, not async-native)", "Understanding why Flask route handlers are plain `def`, not `async def`, by default", "Flask added limited async view support later, but it still runs each async view in an event loop per-call rather than being natively async end-to-end like an ASGI framework — it's a bridge, not a redesign"),
+T("Development server", "Flask's built-in server for local development, started via flask run or app.run().", "flask run --debug", "Local development only", "Flask's own docs explicitly warn against using the built-in dev server in production — it's not designed for production traffic, security, or performance"),
+T("debug mode", "Enables the interactive debugger and auto-reload on code changes.", "app.run(debug=True)  or  FLASK_DEBUG=1 flask run", "Local development, to get readable tracebacks and auto-restart on save", "NEVER enable debug mode in production — the interactive debugger can allow arbitrary code execution if it's ever exposed to the internet"),
+T("Routes as the API surface", "Flask is intentionally minimal — routing, request/response, and templating are built in; everything else (ORM, forms, auth, admin) is a separate extension you choose.", "from flask import Flask, request, jsonify", "Understanding Flask's 'micro-framework' philosophy vs. a batteries-included framework like Django", "This minimalism means more decisions are left to you — a 'basic Flask app' for a real production service typically pulls in several extensions (SQLAlchemy, Migrate, Login, WTF) rather than using bare Flask alone"),
+];
+const F_RUN = [
+Md("flask run", "FLASK_APP=app.py flask run --debug --port 5000", "The standard CLI way to start the dev server", "Flask needs to know which file defines `app` — via FLASK_APP env var or a discoverable app.py/wsgi.py"),
+Md("app.run()", "app.run(host='0.0.0.0', port=5000, debug=True)", "Run the dev server programmatically from within a script", "Common in if __name__=='__main__': blocks for simple, single-file apps"),
+Md("Production WSGI servers", "gunicorn -w 4 'app:create_app()'", "Gunicorn (or uWSGI) handling real production traffic, instead of Flask's own dev server", "-w 4 runs 4 worker processes — each is a separate process with its own memory, same caveat as FastAPI/uvicorn workers"),
+Md("Reverse proxy in front", "nginx forwarding to gunicorn, handling TLS/static files/load balancing", "The standard production topology: client → nginx → gunicorn → Flask app", "Flask trusts X-Forwarded-* headers only if explicitly configured to (e.g. via ProxyFix middleware) — otherwise it may see the proxy's IP/scheme instead of the real client's"),
+];
+
+/* =========================================================
+   GROUP 2 — ROUTING
+   ========================================================= */
+const R_BASICS = [
+T("@app.route()", "Registers a function (a 'view') to handle requests to a specific URL.", "@app.route('/hello')\\ndef hello(): return 'Hi'", "Defining every endpoint in a Flask app", "By default, a route only matches GET (and HEAD/OPTIONS implicitly) — you must explicitly list other methods to accept them"),
+T("methods=[...]", "Specifies which HTTP methods a route accepts.", "@app.route('/items', methods=['GET','POST'])", "Endpoints that need to handle more than just GET, or only POST", "Inside the view function, check request.method to branch behavior when a route accepts multiple methods"),
+T("Dynamic URL segments", "Variables embedded in the route path, captured as function arguments.", "@app.route('/users/&lt;int:user_id&gt;')\\ndef get_user(user_id): ...", "Identifying a specific resource by ID/slug in the URL", "Without a converter (just &lt;user_id&gt;), the segment is captured as a plain string — explicitly use &lt;int:...&gt;, &lt;float:...&gt;, &lt;path:...&gt; etc. for typed conversion"),
+T("URL converters", "Built-in types for dynamic segments: string (default), int, float, path, uuid.", "&lt;path:subpath&gt; captures slashes too, unlike the default string converter", "Matching exactly the shape of data expected in a URL segment", "&lt;path:...&gt; is the equivalent of FastAPI's :path converter — without it, a default string segment matching stops at the first slash"),
+T("url_for()", "Generates a URL for a given view function name, instead of hardcoding paths as strings.", "url_for('get_user', user_id=42) → '/users/42'", "Generating links in templates and redirects without hardcoding URL strings everywhere", "If you rename or move a route, every url_for() call referencing it by name automatically still works — hardcoded path strings would all silently break"),
+T("Route matching & trailing slashes", "A route defined WITH a trailing slash auto-redirects a request without one to the slashed version; the reverse does not happen.", "@app.route('/items/') matches /items/ and redirects /items → /items/", "Understanding Flask's specific (and slightly surprising) trailing-slash behavior", "Defining a route WITHOUT a trailing slash means a request WITH one returns a 404, not a redirect — the behavior isn't symmetric"),
+];
+const R_REQUEST = [
+T("The request object", "A global-feeling proxy object giving access to the current request's data — but it's actually thread/context-local, not a literal global.", "from flask import request; request.args, request.form, request.json", "Reading query params, form data, JSON body, headers, etc. inside any view function", "request is usable anywhere during an active request because of Flask's context system (see Group 8) — using it outside a request context raises a RuntimeError"),
+T("request.args", "Query string parameters, as an immutable multi-dict.", "request.args.get('page', 1, type=int)", "Reading ?key=value query parameters", ".get() with a missing key returns None by default — always provide a default value if the param might be absent"),
+T("request.form", "Form-encoded POST data (application/x-www-form-urlencoded or multipart).", "request.form.get('username')", "Reading traditional HTML form submissions", "Doesn't contain JSON body data — use request.json or request.get_json() for that instead"),
+T("request.json / get_json()", "Parsed JSON request body.", "data = request.get_json()", "Reading a JSON API request body", "get_json() returns None (not an error) for a non-JSON body by default unless you pass force=True or silent=False — silent failures here are a common bug source"),
+T("request.files", "Uploaded files from a multipart form.", "file = request.files['upload']", "File upload endpoints", "Always validate/sanitize the filename (werkzeug.utils.secure_filename) before saving an uploaded file to disk — never trust the client-provided filename directly"),
+T("request.headers / request.cookies", "Access incoming headers and cookies.", "request.headers.get('User-Agent')", "Reading custom headers, auth tokens, cookie values", "Header/cookie names are case-insensitive on read via these accessors, matching HTTP's own case-insensitivity for headers"),
+];
+
+/* =========================================================
+   GROUP 3 — RESPONSES
+   ========================================================= */
+const RESP_BASICS = [
+T("Returning a string", "The simplest possible Flask response — a returned string becomes the response body with a 200 status and text/html content type.", "@app.route('/')\\ndef index(): return 'Hello'", "The absolute minimum viable Flask endpoint", "Content-Type defaults to text/html, not text/plain or application/json — for an API, you generally want jsonify() instead"),
+T("jsonify()", "Converts a dict/list into a proper JSON response with the correct Content-Type header.", "return jsonify({'status': 'ok'})", "Building JSON API endpoints", "Always prefer jsonify() over manually returning json.dumps(...) — jsonify sets the correct mimetype and handles a few edge cases (like top-level list serialization across Flask versions) that manual dumping doesn't"),
+T("Returning a tuple", "Return (body, status_code) or (body, status_code, headers) to control more than just the body.", "return jsonify({'error':'not found'}), 404", "Setting a non-200 status code without constructing a full Response object", "Order matters and is fixed: (body, status, headers) — getting the tuple order wrong fails confusingly rather than erroring clearly"),
+T("make_response()", "Explicitly construct a Response object for full control (custom headers, cookies, status).", "resp = make_response(html); resp.headers['X-Custom']='value'", "Cases needing more control than the simple string/tuple/dict-return shortcuts allow", "Useful specifically when you need to set cookies or custom headers on a response that started as a simple string/template render"),
+T("redirect() / url_for()", "Send the client a redirect response, typically generated from a route name rather than a hardcoded path.", "return redirect(url_for('login'))", "Post-form-submission redirects (the Post/Redirect/Get pattern), login redirects", "Combining redirect() with url_for() (not a raw string) is the idiomatic Flask pattern — it stays correct if the target route's URL changes later"),
+T("abort()", "Immediately stop request handling and return an HTTP error response.", "abort(404)", "Short-circuiting a view function when a precondition fails (resource not found, forbidden, etc.)", "abort() raises an HTTPException internally — code after the abort() call in the same function never runs, just like any other raised exception"),
+];
+
+/* =========================================================
+   GROUP 4 — TEMPLATES (JINJA2)
+   ========================================================= */
+const TPL_BASICS = [
+T("render_template()", "Renders a Jinja2 template file (from the templates/ folder) with given context variables.", "return render_template('index.html', name=user.name)", "Generating HTML pages from server-side templates", "Looks specifically in a templates/ directory next to your app module by default — a common early mistake is putting .html files in the wrong folder"),
+T("Jinja2 variables", "Insert a Python value into the rendered HTML, with automatic HTML-escaping by default.", "&lt;p&gt;Hello, {{ name }}!&lt;/p&gt;", "Displaying dynamic data inside a template", "Auto-escaping is a real XSS protection — use the | safe filter to disable it only when you're certain the content is trusted HTML, never on raw user input"),
+T("Control structures", "{% if %}, {% for %}, etc. — Jinja2's template-level logic syntax.", "{% for item in items %}&lt;li&gt;{{ item.name }}&lt;/li&gt;{% endfor %}", "Loops and conditionals directly inside templates", "Jinja2 logic is intentionally limited compared to full Python — complex logic belongs in the view function, not sprawled across a template"),
+T("Template inheritance", "A base.html layout template that child templates extend and override specific blocks of.", "{% extends 'base.html' %}\\n{% block content %}...{% endblock %}", "DRY page structure — header/nav/footer defined once, content varies per page", "A child template's content outside any {% block %} is simply ignored — easy to lose content silently if you forget to wrap it in a block"),
+T("Filters", "Transform a variable's display value inline.", "{{ price | round(2) }}, {{ name | upper }}, {{ items | length }}", "Common formatting/transformation needs without writing a helper function", "Filters chain left to right: {{ value | filter1 | filter2 }} applies filter1 first, then filter2 to its result"),
+T("Includes & macros", "{% include %} pulls in another template file; {% macro %} defines a reusable template snippet (like a template-level function).", "{% macro input(name, value='') %}&lt;input name='{{name}}' value='{{value}}'&gt;{% endmacro %}", "Reusable UI components across many templates without server-side templating logic duplication", "Macros need to be imported with {% from 'file.html' import macro_name %} into any template that uses them — they aren't automatically global"),
+T("Static files", "CSS, JS, images served from a static/ folder, referenced via the special 'static' endpoint.", "&lt;link href=\\\"{{ url_for('static', filename='style.css') }}\\\"&gt;", "Serving any non-template asset", "Using url_for('static', ...) instead of a hardcoded /static/... path keeps links correct even if the static URL prefix is customized"),
+];
+
+/* =========================================================
+   GROUP 5 — FORMS & FILE UPLOADS
+   ========================================================= */
+const FORM_BASICS = [
+T("Raw form handling", "Reading request.form directly without any extra library.", "username = request.form.get('username')", "Very simple forms where a full forms library is overkill", "No automatic validation or CSRF protection this way — you're responsible for both manually"),
+T("Flask-WTF", "The standard extension integrating WTForms (a form library) with Flask, adding CSRF protection by default.", "class LoginForm(FlaskForm): username = StringField('Username', validators=[DataRequired()])", "Any real form needing validation and CSRF protection", "FlaskForm's CSRF token is automatically included when you render the form with {{ form.hidden_tag() }} in the template — forgetting that tag breaks form submission with a CSRF error"),
+T("Form validation", "Field-level validators (required, length, email format, custom) run automatically on submission.", "form.validate_on_submit()", "Rejecting bad input before it reaches your business logic", "validate_on_submit() checks BOTH that it's a POST request AND that validation passed — calling form.validate() alone doesn't check the request method"),
+T("CSRF protection", "A hidden token verifying that a form submission actually came from your own site, not a malicious cross-site request.", "Flask-WTF enables this automatically for any FlaskForm", "Every state-changing form in a real application — this isn't optional for production security", "An API consumed by JS/mobile clients (not browser form posts) typically needs a different CSRF strategy or may exempt those specific routes — CSRF protection is designed around the browser form-submission threat model specifically"),
+T("File uploads", "Reading and saving an uploaded file from request.files.", "file = request.files['photo']; file.save(path)", "Any endpoint accepting file uploads", "Always run the filename through werkzeug.utils.secure_filename() before using it in a filesystem path — an unsanitized filename is a path-traversal risk"),
+T("File size/type limits", "Restricting upload size and validating file type/extension server-side.", "app.config['MAX_CONTENT_LENGTH'] = 16*1024*1024", "Preventing abuse via oversized uploads or disallowed file types", "Checking only the file extension client-side or even server-side isn't true content validation — a malicious file can have a fake extension; for serious security needs, validate actual file content/magic bytes too"),
+];
+
+/* =========================================================
+   GROUP 6 — SESSIONS & COOKIES
+   ========================================================= */
+const SESSION_BASICS = [
+T("session object", "A dict-like object storing data across requests for a single user, stored client-side in a signed cookie by default.", "session['user_id'] = user.id", "Tracking logged-in state, flash messages, small per-user state across requests", "Flask's default session is stored in the cookie itself (signed, not encrypted) — never put sensitive data directly in it, since the user can technically read (though not forge) its contents"),
+T("SECRET_KEY", "The key used to cryptographically sign session cookies (and other signed data).", "app.config['SECRET_KEY'] = os.environ['SECRET_KEY']", "Required for sessions, flash messages, and CSRF tokens to work at all", "A hardcoded or weak SECRET_KEY (or one accidentally committed to version control) lets an attacker forge valid session cookies — treat it as seriously as a database password"),
+T("Flash messages", "One-time messages stored in the session, displayed once on the next request then cleared.", "flash('Logged in successfully!')", "Showing a confirmation/error message after a redirect (the Post/Redirect/Get pattern)", "Flash messages need to actually be retrieved and displayed in a template via get_flashed_messages() — they don't appear automatically"),
+T("Server-side sessions", "Storing session data on the server (DB, Redis) instead of in the cookie itself, with just a session ID in the cookie.", "Flask-Session extension, backed by Redis/filesystem/SQLAlchemy", "Larger session payloads, or wanting to invalidate sessions server-side (e.g. force logout)", "The default client-side cookie session can't be invalidated server-side — once issued, it's valid until it expires or the SECRET_KEY changes; server-side sessions fix this"),
+T("Cookies directly", "Setting/reading cookies outside the session abstraction.", "resp.set_cookie('theme', 'dark', max_age=...)", "Simple, non-sensitive client preferences not needing the signed-session mechanism", "Cookies set via set_cookie() are NOT signed/protected the way session data is by default — don't store anything security-sensitive in a plain cookie"),
+];
+
+/* =========================================================
+   GROUP 7 — BLUEPRINTS
+   ========================================================= */
+const BP_BASICS = [
+T("Blueprint", "A way to organize a group of related routes/templates/static files as a reusable component, registered onto the main app.", "bp = Blueprint('auth', __name__, url_prefix='/auth')", "Splitting a larger application into logical modules: auth, admin, api, etc.", "A Blueprint is NOT a mini-application that can run standalone — it must be registered onto a real Flask app via app.register_blueprint() to do anything"),
+T("register_blueprint()", "Attaches a Blueprint's routes (and optional url_prefix) onto the main app.", "app.register_blueprint(auth_bp, url_prefix='/auth')", "The step that actually makes a Blueprint's routes live", "Forgetting this call means the Blueprint's @bp.route()-decorated views simply never get registered — routes silently don't exist, exactly like FastAPI's include_router() omission"),
+T("Blueprint-specific templates/static", "A Blueprint can have its own templates/ and static/ folders, scoped to itself.", "Blueprint('admin', __name__, template_folder='templates', static_folder='static')", "Self-contained, genuinely reusable modules (e.g. a packaged admin panel)", "Flask searches the app's template folder first, then falls back to blueprint folders — naming collisions between app-level and blueprint-level templates can shadow each other unexpectedly"),
+T("url_for with blueprints", "Blueprint routes are referenced with a 'blueprintname.viewname' dotted name.", "url_for('auth.login')", "Generating correct URLs for routes defined inside a Blueprint", "Forgetting the blueprint prefix in url_for() (just 'login' instead of 'auth.login') raises a BuildError — a very common refactoring mistake when moving routes into a Blueprint"),
+T("Blueprint-level before_request/error handlers", "Hooks and error handlers that apply only to routes within a specific Blueprint, not the whole app.", "@bp.before_request\\ndef check_auth(): ...", "Auth checks or setup logic scoped to one module (e.g. every /admin/* route) without affecting the rest of the app", "App-level @app.errorhandler still applies app-wide even alongside blueprint-level handlers — blueprint handlers take precedence for that blueprint's own routes specifically"),
+];
+
+/* =========================================================
+   GROUP 8 — APPLICATION & REQUEST CONTEXT
+   ========================================================= */
+const CTX_BASICS = [
+T("Application context", "Makes current_app and g available — exists whenever the app is 'active', even outside an actual HTTP request (e.g. in a CLI command or shell).", "with app.app_context(): db.create_all()", "Running code (CLI scripts, background jobs, shell) that needs access to app config/extensions outside a real request", "Code outside a request OR an explicitly pushed app context raises 'Working outside of application context' — a very common error when running standalone scripts that import from your Flask app"),
+T("Request context", "Makes request and session available — exists only during an actual HTTP request (or a manually pushed test context).", "with app.test_request_context('/'): ...", "Everything that reads request data — the vast majority of view function code", "A request context automatically also pushes an application context — but the reverse isn't true, an app context alone doesn't give you `request`"),
+T("current_app", "A proxy to the currently active Flask app instance, usable without importing the actual `app` variable directly.", "from flask import current_app; current_app.config['DEBUG']", "Avoiding circular imports between modules that need access to app config/extensions", "current_app only works inside an active application context — same restriction as `request`, `g`, and `session`"),
+T("g object", "A per-request, per-application-context namespace for stashing arbitrary data during a single request's lifecycle.", "g.db = get_db_connection()", "Sharing data between before_request hooks, the view function, and after_request hooks within ONE request", "g is reset for every new request — it's not a place for caching data across multiple requests, despite occasionally being misused that way"),
+T("Context locals (how this actually works)", "Flask's 'global-looking' objects (request, session, g, current_app) are actually thread-local/context-local proxies managed via a stack.", "Implemented using Python's contextvars under the hood (werkzeug/Flask internals)", "Understanding why these objects behave correctly under concurrent requests despite looking like plain global variables", "This is exactly why a sync WSGI worker handling one request at a time per thread 'just works' with these objects — but it's also why naive use of threading or sharing these objects across async tasks can break the illusion of them being simple globals"),
+];
+
+/* =========================================================
+   GROUP 9 — ERROR HANDLING
+   ========================================================= */
+const ERR_BASICS = [
+T("abort()", "Raises an HTTPException with a given status code, immediately stopping the current view.", "abort(403)", "Short-circuiting a view when a precondition fails", "abort() can also take a Response object or use abort(404, description='Custom message') for more detail"),
+T("@app.errorhandler()", "Registers a custom handler for a specific HTTP status code or exception type, app-wide.", "@app.errorhandler(404)\\ndef not_found(e): return render_template('404.html'), 404", "Custom error pages, consistent JSON error responses for an API", "The handler itself must still return a valid response (and usually the matching status code) — Flask doesn't automatically set the status for you in this case the way HTTPException's default behavior would"),
+T("Custom exceptions", "Define your own exception classes for domain-specific error conditions.", "class InsufficientStockError(Exception): pass", "Decoupling business logic from HTTP-specific error handling concerns", "Pairs with @app.errorhandler(InsufficientStockError) to convert it into a proper HTTP response centrally, exactly like FastAPI's exception_handler pattern"),
+T("Propagation in debug vs production", "In debug mode, unhandled exceptions show the interactive debugger; in production, they should show a generic error page.", "app.config['PROPAGATE_EXCEPTIONS'] = False  for production-style handling even with debug-adjacent settings", "Making sure real users never see a raw traceback or the interactive debugger", "Never leave debug=True (or an equivalent misconfiguration) active in a real production deployment — it's both an information leak and a remote-code-execution risk via the interactive debugger"),
+];
+
+/* =========================================================
+   GROUP 10 — DATABASE INTEGRATION
+   ========================================================= */
+const DB_BASICS = [
+T("Flask-SQLAlchemy", "The standard extension wrapping SQLAlchemy with Flask-specific conveniences (session management tied to the app/request lifecycle).", "db = SQLAlchemy(app); class User(db.Model): id = db.Column(db.Integer, primary_key=True)", "The most common ORM choice for Flask apps", "Flask-SQLAlchemy automatically manages session scoping per-request — you generally don't need to manually open/close sessions the way you would with plain SQLAlchemy in FastAPI"),
+T("db.session", "The SQLAlchemy session, scoped automatically to the current request by Flask-SQLAlchemy.", "db.session.add(user); db.session.commit()", "Every database write operation", "Forgetting db.session.commit() means changes are added to the session but never actually persisted to the database — a very common beginner mistake"),
+T("Flask-Migrate", "Wraps Alembic to provide database migration commands integrated with the Flask CLI.", "flask db init; flask db migrate -m 'add users'; flask db upgrade", "Managing schema changes safely across environments", "Same caveat as Alembic directly: always review autogenerated migrations before applying them, especially for renames"),
+T("Query patterns", "SQLAlchemy's query interface for fetching data.", "User.query.filter_by(email=email).first()", "Reading data from the database in views", "User.query is the legacy/implicit query style; modern SQLAlchemy 2.0-style code increasingly favors db.session.execute(select(User)...) — both work, but mixing styles inconsistently across a codebase gets confusing"),
+T("Relationships", "Defining foreign-key-backed relationships between models for convenient object-level access.", "posts = db.relationship('Post', backref='author')", "Modeling one-to-many/many-to-many relationships between tables", "Lazy loading (the default) means accessing user.posts triggers a separate query at that moment — N+1 query problems are a very common Flask-SQLAlchemy performance issue in list views"),
+];
+
+/* =========================================================
+   GROUP 11 — AUTHENTICATION
+   ========================================================= */
+const AUTH_BASICS = [
+T("Flask-Login", "The standard extension managing logged-in user sessions for traditional server-rendered apps.", "login_user(user); current_user.is_authenticated", "Session-based (cookie) authentication for a typical web app with login forms", "Requires implementing a user_loader callback that reconstructs a user object from the ID stored in the session — easy to forget and get confusing 'current_user is always anonymous' bugs from"),
+T("@login_required", "A decorator restricting a view to authenticated users only.", "@login_required\\ndef dashboard(): ...", "Protecting any view that needs a logged-in user", "Redirects to the configured login view by default for unauthenticated access — make sure LOGIN_VIEW is actually configured, or this fails confusingly"),
+T("Password hashing", "Same principle as everywhere else — never store plaintext passwords.", "werkzeug.security.generate_password_hash() / check_password_hash()", "Any system storing user passwords", "Werkzeug's built-in helpers are a fine, simple default for many apps; for more control over the hashing algorithm/parameters, passlib is also commonly used, same as in FastAPI"),
+T("JWT-based auth (Flask-JWT-Extended)", "Token-based stateless auth, more common for Flask apps serving as a pure JSON API rather than server-rendered pages.", "Flask-JWT-Extended provides @jwt_required() and token creation helpers", "A Flask API consumed by a separate frontend/mobile app rather than traditional server-rendered forms", "Mixing session-based (Flask-Login) and token-based (JWT) auth in the same app is possible but adds real complexity — pick the model matching your actual client type where you can"),
+T("OAuth / social login", "Authenticating via a third-party provider (Google, GitHub, etc.) instead of your own password system.", "Authlib or Flask-Dance handle the OAuth flow", "Reducing password-management burden, letting users log in with an existing account", "You're still responsible for what happens after the OAuth callback — creating/linking a local user record, managing the resulting session, etc."),
+];
+
+/* =========================================================
+   GROUP 12 — EXTENSIONS ECOSYSTEM
+   ========================================================= */
+const EXT_TABLE = [
+Md("Flask-SQLAlchemy", "db = SQLAlchemy(app)", "ORM integration", "The default choice for relational DB access in Flask"),
+Md("Flask-Migrate", "Migrate(app, db)", "Alembic-backed schema migrations", "Pairs directly with Flask-SQLAlchemy"),
+Md("Flask-WTF", "FlaskForm subclasses", "Forms + CSRF protection", "The standard forms library for Flask"),
+Md("Flask-Login", "LoginManager(app)", "Session-based user authentication", "For traditional server-rendered apps with login forms"),
+Md("Flask-JWT-Extended", "JWTManager(app)", "Token-based stateless authentication", "For Flask apps acting as a pure JSON API"),
+Md("Flask-RESTful / Flask-Smorest", "Resource-based class views for APIs", "Structuring a JSON API more declaratively than bare routes", "Adds some FastAPI-like structure (and in Smorest's case, OpenAPI docs) on top of Flask"),
+Md("Flask-CORS", "CORS(app)", "Cross-Origin Resource Sharing headers, same purpose as FastAPI's CORSMiddleware", "Needed for any API consumed by a browser frontend on a different origin"),
+Md("Flask-Caching", "Cache(app)", "Response/value caching backed by Redis, memcached, or simple in-memory", "Reducing load for expensive or frequently-repeated computations"),
+Md("Flask-Limiter", "Limiter(app)", "Rate limiting requests per client", "Same purpose and same multi-worker caveat as FastAPI's slowapi"),
+Md("Flask-Mail", "Mail(app)", "Sending email from within views", "Common for password resets, notifications, confirmations"),
+Md("Flask-Session", "Session(app)", "Server-side session storage (Redis, filesystem, SQLAlchemy)", "Replaces the default client-side cookie session"),
+];
+
+/* =========================================================
+   GROUP 13 — APPLICATION FACTORY & CONFIG
+   ========================================================= */
+const FACTORY_BASICS = [
+T("Application factory pattern", "A function that creates and configures the Flask app, instead of a single module-level app object.", "def create_app(config=None): app=Flask(__name__); app.config.from_object(config); return app", "Testing (each test gets a fresh app), multiple instances with different config, avoiding import-order issues with extensions", "Extensions need to be initialized OUTSIDE the factory (e.g. db = SQLAlchemy() at module level) and then connected INSIDE it (db.init_app(app)) — this two-step pattern is unintuitive at first but necessary to avoid circular imports"),
+T("init_app() pattern", "The two-step extension initialization that makes the factory pattern work cleanly.", "db = SQLAlchemy()  # module level, no app yet\\n... \\ndb.init_app(app)  # inside create_app()", "Letting an extension instance be imported and used across multiple files before the actual app exists yet", "Forgetting init_app() and only doing the module-level SQLAlchemy() leaves the extension unconfigured — it won't actually know about your app's config"),
+T("Config objects/classes", "Organizing configuration as Python classes (often one per environment) rather than scattered variables.", "class ProductionConfig: DEBUG=False\\nclass DevConfig: DEBUG=True", "Clean, typed, environment-specific configuration", "app.config.from_object() only picks up UPPERCASE attributes from the class — a common silent bug is defining config in lowercase and wondering why it's not applied"),
+T("Environment variables for secrets", "Loading sensitive config (DB URLs, secret keys, API keys) from the environment rather than hardcoding them.", "app.config['SECRET_KEY'] = os.environ['SECRET_KEY']", "Keeping secrets out of source control, varying config safely per deployment", "python-dotenv (often auto-loaded by `flask run`) is commonly used in development to load a local .env file — never commit that .env file with real secrets"),
+T("Testing config", "A distinct config profile for the test suite — typically an in-memory or separate test database, TESTING=True.", "app.config.update(TESTING=True, SQLALCHEMY_DATABASE_URI='sqlite:///:memory:')", "Running the test suite without touching real data, faster test execution", "TESTING=True also disables some error-catching behavior (so exceptions propagate to the test runner instead of becoming a generic 500 response) — useful for debugging failing tests"),
+];
+
+/* =========================================================
+   GROUP 14 — TESTING
+   ========================================================= */
+const TEST_BASICS = [
+Md("test_client()", "client = app.test_client()", "A requests-like client for testing views without running a real server", "response = client.get('/items/1')"),
+Md("test_request_context()", "with app.test_request_context('/'): ...", "Manually pushing a request context for testing code that needs `request`/`session` outside an actual client call", "Useful for unit-testing helper functions that read from `request` directly"),
+Md("pytest fixtures for Flask", "@pytest.fixture\\ndef client(): app=create_app(TestConfig); return app.test_client()", "Reusable test setup, especially combined with the app factory pattern", "The application factory pattern makes this fixture pattern much cleaner than a single global app object would"),
+Md("Testing with a test database", "Point SQLALCHEMY_DATABASE_URI at a separate/in-memory DB in the test config", "Isolating tests from real/dev data entirely", "db.create_all() / db.drop_all() inside fixture setup/teardown keeps each test run starting from a known clean schema"),
+Md("response assertions", "assert response.status_code == 200; assert b'Welcome' in response.data", "Verifying both status code and response body content", "response.data is raw bytes — decode it or use `in` against a bytes literal (b'...') as shown, a common gotcha for newcomers expecting a plain string"),
+];
+
+/* =========================================================
+   GROUP 15 — PRODUCTION & DEPLOYMENT
+   ========================================================= */
+const PROD_BASICS = [
+T("Don't use the dev server in production", "Flask's built-in server is explicitly documented as unsuitable for production use.", "flask run is for local development only", "Every real deployment, without exception", "This is the single most important production rule for Flask specifically — the dev server isn't hardened, isn't performant under real concurrent load, and isn't meant to be exposed publicly"),
+T("Gunicorn / uWSGI", "Production-grade WSGI servers that run multiple worker processes to handle real concurrent traffic.", "gunicorn -w 4 -b 0.0.0.0:8000 'app:create_app()'", "Actually serving a Flask app to real users", "Worker count is typically tuned around (2 × CPU cores) + 1 as a starting heuristic, then adjusted based on actual load testing"),
+T("Reverse proxy (nginx)", "Sits in front of gunicorn/uWSGI, handling TLS termination, static file serving, and load balancing.", "nginx → gunicorn → Flask app is the classic production topology", "TLS, serving static files efficiently (faster than having Flask do it), and basic request filtering before it reaches the app", "Flask needs ProxyFix middleware configured to correctly see the real client IP/scheme when sitting behind a reverse proxy — otherwise request.remote_addr and url_for's scheme can be wrong"),
+T("ProxyFix middleware", "Adjusts request data (IP, scheme, host) based on X-Forwarded-* headers set by a trusted reverse proxy.", "app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)", "Any deployment with a reverse proxy in front of the Flask app — i.e. nearly every production deployment", "Only trust X-Forwarded-* headers from a proxy you actually control — blindly trusting them from arbitrary clients is a spoofing risk if there's no real trusted proxy in front"),
+T("Static file serving in production", "Flask CAN serve static files itself, but it's inefficient compared to a dedicated web server/CDN doing it.", "Let nginx or a CDN serve /static/* directly, bypassing the Flask app entirely for those requests", "Any production deployment with meaningful static asset traffic", "Routing static file requests through the full WSGI app stack (vs. nginx serving them directly) is a needless performance cost at any real scale"),
+T("Logging in production", "Configuring Flask's logger (and your app's own logging) for structured, persisted output instead of console prints.", "app.logger.setLevel(logging.INFO); add a handler writing to a file or log aggregator", "Any real production app needing actual diagnostics after deployment", "Flask's default logging configuration is reasonable for development but typically needs explicit setup (handlers, formatters, log level) for production — don't assume it 'just works' the same way out of the box"),
+];
+const FLASK_GUIDE = [
+G("Building a traditional server-rendered web app (HTML pages, forms)", "Flask + Jinja2 templates + Flask-WTF for forms + Flask-Login for auth"),
+G("Building a JSON API for a separate frontend/mobile app", "Flask + jsonify() + Flask-JWT-Extended for auth + Flask-CORS, or consider Flask-Smorest for more structure"),
+G("App is growing beyond a single file", "Switch to the application factory pattern + Blueprints to split it into modules early, before it gets painful"),
+G("Need database access", "Flask-SQLAlchemy + Flask-Migrate, following the init_app() pattern if also using the application factory"),
+G("Need to share data across a request's before/after hooks and the view itself", "The `g` object — but remember it resets every request, it's not a cache across requests"),
+G("Testing views that touch the database", "test_client() + application factory with a TESTING config pointed at a separate/in-memory database"),
+G("Deploying to real users", "gunicorn/uWSGI behind nginx, with ProxyFix configured, debug mode OFF, and SECRET_KEY from environment, never hardcoded"),
+];
+const FLASK_SYMPTOMS = [
+Sy("'Working outside of application context' error", "Code that uses current_app, g, or session is running outside an active app/request context — e.g. in a standalone script; wrap it in `with app.app_context():`"),
+Sy("current_user is always anonymous even after login_user() was called", "Flask-Login's user_loader callback isn't implemented or isn't correctly reconstructing the user from the stored session ID"),
+Sy("Blueprint routes return 404 even though they look correctly defined", "Forgot app.register_blueprint(bp) — exactly the same class of bug as FastAPI's missing include_router()"),
+Sy("url_for() raises a BuildError for a blueprint route", "Forgot the 'blueprintname.viewname' dotted format — url_for('login') instead of url_for('auth.login')"),
+Sy("Database changes don't seem to be saved", "Forgot db.session.commit() after db.session.add() — changes were staged in the session but never persisted"),
+Sy("A list view is mysteriously slow as data grows", "Likely an N+1 query problem from lazily-loaded relationships — each related object access triggers its own query; consider eager loading (joinedload/selectinload)"),
+Sy("CSRF token errors on form submission", "The template is missing {{ form.hidden_tag() }} (or the equivalent CSRF token field), so Flask-WTF can't find/validate the token"),
+Sy("App works fine locally but breaks behind the production reverse proxy (wrong URLs, wrong scheme)", "Missing ProxyFix middleware — Flask doesn't automatically trust X-Forwarded-* headers from the proxy without it"),
+Sy("Static files don't update after editing them, even outside debug mode", "Browser or proxy caching of static assets — usually solved with cache-busting (a version/hash in the filename or query string), not a Flask bug per se"),
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){ return (s===undefined||s===null) ? "" : String(s); }
+function renderConceptTable(rows){
+  let head = "<tr><th>Concept</th><th>What it means</th><th>Example</th><th>When to use</th><th>Gotcha</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.c)}</td>
+      <td>${esc(r.i)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+      <td>${esc(r.u)}</td>
+      <td>${esc(r.g)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderMethodTable(rows){
+  let head = "<tr><th>Name</th><th>Signature</th><th>What it does</th><th>Example / note</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.m)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.sig)}</span></td>
+      <td>${esc(r.desc)}</td>
+      <td>${esc(r.ex)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderGuideTable(rows){
+  let head = "<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderSymptomTable(rows){
+  let head = "<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const DIAG = {};
+
+DIAG.contextStack = `
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="40" y="20" width="280" height="190" rx="10" fill="none" stroke="#4a4a6a" stroke-width="1.5"/>
+  <text x="180" y="44" text-anchor="middle" font-weight="700" fill="#4a4a6a">Application context</text>
+  <text x="180" y="62" text-anchor="middle" font-size="10.5" fill="#5b6260">exists whenever the app is "active"</text>
+  <rect x="60" y="78" width="240" height="36" rx="6" fill="#eceaf4"/><text x="180" y="100" text-anchor="middle">current_app</text>
+  <rect x="60" y="122" width="240" height="36" rx="6" fill="#eceaf4"/><text x="180" y="144" text-anchor="middle">g</text>
+
+  <rect x="380" y="20" width="280" height="190" rx="10" fill="#f3e7df" stroke="#9a5b3a" stroke-width="1.5"/>
+  <text x="520" y="44" text-anchor="middle" font-weight="700" fill="#9a5b3a">Request context</text>
+  <text x="520" y="62" text-anchor="middle" font-size="10.5" fill="#5b6260">exists only during an HTTP request</text>
+  <rect x="400" y="78" width="240" height="36" rx="6" fill="#fff" stroke="#9a5b3a"/><text x="520" y="100" text-anchor="middle">request</text>
+  <rect x="400" y="122" width="240" height="36" rx="6" fill="#fff" stroke="#9a5b3a"/><text x="520" y="144" text-anchor="middle">session</text>
+  <text x="520" y="180" text-anchor="middle" font-size="10.5" fill="#5b6260">(pushing a request context</text>
+  <text x="520" y="195" text-anchor="middle" font-size="10.5" fill="#5b6260">also pushes an app context)</text>
+
+  <text x="350" y="230" text-anchor="middle" fill="#5b6260">Outside BOTH contexts, all four of these raise "Working outside of context" errors</text>
+</svg>`;
+
+DIAG.factoryPattern = `
+<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="20" y="20" width="160" height="40" rx="6" fill="#eceaf4" stroke="#4a4a6a"/><text x="100" y="44" text-anchor="middle">db = SQLAlchemy()</text>
+  <text x="100" y="14" text-anchor="middle" font-size="10" fill="#5b6260">module level — no app yet</text>
+  <rect x="220" y="80" width="220" height="100" rx="8" fill="#4a4a6a"/>
+  <text x="330" y="104" text-anchor="middle" fill="#fff" font-weight="700">def create_app():</text>
+  <text x="330" y="126" text-anchor="middle" fill="#fff" font-size="10.5">app = Flask(__name__)</text>
+  <text x="330" y="144" text-anchor="middle" fill="#fff" font-size="10.5">app.config.from_object(...)</text>
+  <text x="330" y="162" text-anchor="middle" fill="#fff" font-size="10.5">db.init_app(app)</text>
+  <line x1="100" y1="60" x2="220" y2="120" stroke="#5b6260"/>
+  <rect x="500" y="80" width="180" height="100" rx="8" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="590" y="110" text-anchor="middle">create_app()</text>
+  <text x="590" y="130" text-anchor="middle" font-size="10.5">called once per:</text>
+  <text x="590" y="148" text-anchor="middle" font-size="10.5">— real run</text>
+  <text x="590" y="164" text-anchor="middle" font-size="10.5">— each test</text>
+  <line x1="440" y1="130" x2="500" y2="130" stroke="#5b6260"/>
+  <text x="350" y="205" text-anchor="middle" fill="#5b6260">db exists before any app does, so other modules can import db safely without circular imports</text>
+</svg>`;
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS = [
+{
+  id:"fund", title:"1 · Fundamentals", lede:"The app instance, WSGI, the dev server, and Flask's deliberately minimal 'micro-framework' philosophy.",
+  subs:[
+    {id:"f-core", title:"Core concepts", table:F_CORE},
+    {id:"f-run", title:"Running the app", table2:F_RUN},
+  ],
+  callout:"<b>Flask is a micro-framework on purpose.</b> Routing, request/response handling, and Jinja2 templating are built in — everything else (ORM, forms, auth, admin, API structure) is a deliberate choice of extension. A 'basic' production Flask app is rarely just bare Flask."
+},
+{
+  id:"routing", title:"2 · Routing", lede:"@app.route(), dynamic URL segments, converters, and the specific (sometimes surprising) trailing-slash behavior.",
+  subs:[
+    {id:"r-basics", title:"Routes & URL building", table:R_BASICS},
+    {id:"r-request", title:"The request object", table:R_REQUEST},
+  ],
+  callout:"<b>Trailing slashes aren't symmetric in Flask.</b> A route defined WITH a trailing slash auto-redirects a no-slash request to the slashed version; a route defined WITHOUT one returns a flat 404 for a slashed request instead of redirecting back. Pick one convention and apply it consistently."
+},
+{
+  id:"responses", title:"3 · Responses", lede:"Returning strings, JSON, tuples, and full Response objects — plus redirect() and abort() for control flow.",
+  subs:[
+    {id:"resp-basics", title:"Response patterns", table:RESP_BASICS},
+  ],
+  callout:"<b>Always reach for jsonify(), not json.dumps(), for API responses.</b> jsonify() sets the correct Content-Type and handles serialization edge cases that manual dumping doesn't — a tiny habit that avoids a whole class of subtle client-side parsing bugs."
+},
+{
+  id:"templates", title:"4 · Templates (Jinja2)", lede:"Server-side HTML rendering — variables, control structures, inheritance, filters, and the auto-escaping that protects against XSS by default.",
+  subs:[
+    {id:"tpl-basics", title:"Jinja2 essentials", table:TPL_BASICS},
+  ],
+  callout:"<b>Jinja2's auto-escaping is real, load-bearing XSS protection</b> — every {{ variable }} is HTML-escaped by default. The | safe filter disables that protection for a specific value; only use it on content you control, never on raw user input."
+},
+{
+  id:"forms", title:"5 · Forms & File Uploads", lede:"Flask-WTF for validated, CSRF-protected forms, and the security basics of handling uploaded files.",
+  subs:[
+    {id:"form-basics", title:"Forms, validation & uploads", table:FORM_BASICS},
+  ],
+  callout:"<b>Never trust a client-provided filename.</b> Always pass an uploaded file's filename through werkzeug.utils.secure_filename() before using it in any filesystem path — an unsanitized filename (e.g. containing ../) is a path-traversal vulnerability."
+},
+{
+  id:"sessions", title:"6 · Sessions & Cookies", lede:"Flask's default signed-cookie session, flash messages, and when to switch to server-side session storage.",
+  subs:[
+    {id:"session-basics", title:"Sessions, flash messages & cookies", table:SESSION_BASICS},
+  ],
+  callout:"<b>Flask's default session is signed, not encrypted.</b> The user can read its contents (just not forge a valid signature without your SECRET_KEY) — never store sensitive data directly in the session unless you've switched to server-side session storage."
+},
+{
+  id:"blueprints", title:"7 · Blueprints", lede:"Organizing a growing Flask app into modular, reusable pieces — Flask's answer to FastAPI's APIRouter.",
+  subs:[
+    {id:"bp-basics", title:"Blueprint fundamentals", table:BP_BASICS},
+  ],
+  callout:"<b>A Blueprint registered nowhere is a Blueprint that does nothing.</b> Exactly like forgetting include_router() in FastAPI, forgetting app.register_blueprint() means your nicely organized routes simply never come alive — a very common 'why is this 404ing' moment."
+},
+{
+  id:"context", title:"8 · Application & Request Context", lede:"The mechanism behind Flask's 'global-looking' request/session/g/current_app objects — and why they sometimes raise confusing context errors.",
+  subs:[
+    {id:"ctx-basics", title:"Context fundamentals", note:"Two separate, nested contexts exist — and most confusing errors come from code running outside both.", diagram:"contextStack", cap:"Application context (current_app, g) exists whenever the app is active. Request context (request, session) exists only during an actual HTTP request, and pushing one also pushes an application context with it.", table:CTX_BASICS},
+  ],
+  callout:"<b>'Working outside of application context' is one of Flask's most common errors</b> — it almost always means a script, CLI command, or background job is trying to use current_app/g/request/session without first running inside `with app.app_context():` (or an active request)."
+},
+{
+  id:"errors", title:"9 · Error Handling", lede:"abort(), centralized error handlers, and making sure real users never see debug mode's interactive traceback.",
+  subs:[
+    {id:"err-basics", title:"Errors & handlers", table:ERR_BASICS},
+  ],
+  callout:"<b>Debug mode is a real security risk in production, not just a style preference.</b> The interactive debugger that makes local development pleasant can allow arbitrary code execution if it's ever accidentally exposed — confirm debug is off before any real deployment, every time."
+},
+{
+  id:"db", title:"10 · Database Integration", lede:"Flask-SQLAlchemy, Flask-Migrate, and the query/relationship patterns that drive most Flask data access.",
+  subs:[
+    {id:"db-basics", title:"ORM, migrations & relationships", table:DB_BASICS},
+  ],
+  callout:"<b>db.session.add() alone doesn't save anything.</b> Without a following db.session.commit(), changes are staged in the session but never actually written to the database — a classic 'why isn't my data being saved' bug."
+},
+{
+  id:"auth", title:"11 · Authentication", lede:"Flask-Login for traditional session-based auth, JWT for API-style stateless auth, and password hashing basics.",
+  subs:[
+    {id:"auth-basics", title:"Auth approaches", table:AUTH_BASICS},
+  ],
+  callout:"<b>Pick the auth model that matches your client, not the one that's most familiar.</b> Server-rendered apps with login forms want Flask-Login's session-based model; a JSON API serving a separate frontend/mobile client usually wants JWT-based auth instead — mixing both without a clear reason adds real complexity."
+},
+{
+  id:"ext", title:"12 · Extensions Ecosystem", lede:"The most common Flask extensions and what each one is actually for — Flask's 'batteries not included, but easy to add' philosophy in practice.",
+  subs:[
+    {id:"ext-table", title:"Common extensions", table2:EXT_TABLE},
+  ],
+  callout:"<b>Most extensions follow the same init pattern:</b> ExtensionName(app) for a simple single-app setup, or ExtensionName() at module level + extension.init_app(app) inside a factory function — recognizing this pattern makes new extensions much faster to pick up."
+},
+{
+  id:"factory", title:"13 · Application Factory & Config", lede:"The create_app() pattern that makes testing, multiple environments, and avoiding circular imports actually manageable as an app grows.",
+  subs:[
+    {id:"factory-basics", title:"Factory pattern & configuration", note:"Extensions are created before the app exists, then connected to it inside the factory.", diagram:"factoryPattern", cap:"db = SQLAlchemy() at module level has no app yet — other files can safely import it. Inside create_app(), db.init_app(app) connects it to a specific app instance, created fresh for each real run or each test.", table:FACTORY_BASICS},
+  ],
+  callout:"<b>Start with the application factory pattern earlier than feels necessary.</b> Retrofitting it onto a Flask app that grew up as a single global `app = Flask(__name__)` is more painful than building with it from day one, especially once tests and multiple environments enter the picture."
+},
+{
+  id:"testing", title:"14 · Testing", lede:"test_client(), test_request_context(), and combining the application factory pattern with pytest fixtures for clean, isolated tests.",
+  subs:[
+    {id:"test-basics", title:"Testing tools", table2:TEST_BASICS},
+  ],
+  callout:"<b>The application factory pattern and clean testing go hand in hand.</b> create_app(TestConfig) gives every test (or test session) a fresh, isolated app instance pointed at a test database — far cleaner than trying to reset global state on a single module-level app object between tests."
+},
+{
+  id:"prod", title:"15 · Production & Deployment", lede:"Why the dev server isn't enough, the gunicorn/nginx topology, ProxyFix, and the decision guide tying the whole page together.",
+  subs:[
+    {id:"prod-basics", title:"Production deployment", table:PROD_BASICS},
+    {id:"flask-guide", title:"Quick decision guide", table2:FLASK_GUIDE},
+    {id:"flask-symptoms", title:"Symptom → likely cause", table3:FLASK_SYMPTOMS},
+  ],
+  callout:"<b>The production checklist, distilled:</b> debug mode OFF, SECRET_KEY from environment (never hardcoded), a real WSGI server (gunicorn/uWSGI) behind a reverse proxy (not the Flask dev server), ProxyFix configured if behind that proxy, and static assets served by the proxy/CDN rather than by Flask itself."
+},
+];
+
+function buildDiagram(key, cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+function buildSub(sub){
+  let html = `<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html += `<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html += buildDiagram(sub.diagram, sub.cap);
+  if(sub.table) html += renderConceptTable(sub.table);
+  if(sub.table2) html += renderMethodTable(sub.table2);
+  if(sub.table3) html += renderSymptomTable(sub.table3);
+  html += `</div>`;
+  return html;
+}
+function buildGroup(g){
+  let html = `<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=> html += buildSub(s));
+  if(g.callout) html += `<div class="callout">${g.callout}</div>`;
+  html += `</section>`;
+  return html;
+}
+document.getElementById("content").innerHTML = SECTIONS.map(buildGroup).join("");
+
+let navHtml = "";
+SECTIONS.forEach(g=>{
+  navHtml += `<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=> navHtml += `<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML = navHtml;
+
+document.getElementById("globalFilter").addEventListener("input", function(e){
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){ tr.classList.remove("row-hidden"); return; }
+    const txt = tr.textContent.toLowerCase();
+    tr.classList.toggle("row-hidden", !txt.includes(q));
+  });
+});
+</script>
+</body>
+</html>
