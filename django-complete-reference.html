@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Django — Complete Reference</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#ffffff; --ink:#1f2424; --ink-soft:#5b6260; --line:#e3e0d8;
+    --accent:#1a5276; --accent-soft:#e8f0f8; --warn:#9a5b3a;
+    --mono:"SF Mono","Cascadia Code",Consolas,monospace;
+    --sans:-apple-system,"Segoe UI",Inter,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex;min-height:100vh;}
+  a{color:var(--accent);}
+  code{font-family:var(--mono);font-size:11.6px;background:#f1efe9;padding:1px 5px;border-radius:4px;color:#2b3b35;}
+  #sidebar{width:250px;flex:0 0 250px;border-right:1px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 14px;}
+  #sidebar h1{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{display:block;padding:7px 8px;border-radius:6px;font-size:13.2px;color:var(--ink);text-decoration:none;font-weight:600;margin-top:6px;}
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{display:block;padding:4px 8px 4px 18px;border-radius:6px;font-size:12.2px;color:var(--ink-soft);text-decoration:none;}
+  #sidebar nav a.sublink:hover{background:var(--accent-soft);color:var(--ink);}
+  #sidebar input{width:100%;padding:7px 9px;margin-bottom:14px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;font-family:var(--sans);background:#fff;}
+  #main{flex:1;min-width:0;padding:38px 44px 80px;max-width:1220px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px;margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft);font-size:14px;margin:0;max-width:700px;line-height:1.5;}
+  section.group{margin-bottom:56px;}
+  section.group>h2{font-size:21px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:6px;}
+  section.group>.lede{color:var(--ink-soft);font-size:13.5px;margin:0 0 22px;max-width:800px;line-height:1.5;}
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{font-size:15px;margin:0 0 4px;color:var(--accent);letter-spacing:.01em;}
+  .subsection .note{color:var(--ink-soft);font-size:12.5px;margin:0 0 12px;}
+  .twrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;}
+  table{width:100%;border-collapse:collapse;font-size:12.6px;min-width:760px;}
+  thead th{text-align:left;background:#f1efe9;color:var(--ink-soft);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:9px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700;white-space:nowrap;}
+  td .codeline{display:block;font-family:var(--mono);font-size:11.5px;color:var(--warn);margin-top:3px;}
+  td ul{margin:0;padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:10px;background:var(--accent-soft);color:var(--accent);margin-right:4px;white-space:nowrap;}
+  .callout{background:var(--accent-soft);border-left:3px solid var(--accent);padding:12px 16px;font-size:13px;border-radius:0 6px 6px 0;margin:18px 0 8px;line-height:1.55;}
+  .callout b{color:var(--accent);}
+  .diagram{border:1px solid var(--line);border-radius:8px;background:#fff;padding:18px;margin:18px 0 28px;text-align:center;}
+  .diagram .cap{font-size:12px;color:var(--ink-soft);margin-top:10px;text-align:left;}
+  .diagram svg{max-width:100%;height:auto;}
+  mark.row-hidden{display:none;}
+  @media(max-width:880px){#sidebar{display:none;}#main{padding:24px 16px 60px;}}
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <h1>Django Reference</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. queryset)">
+  <nav id="navTree"></nav>
+</aside>
+<main id="main">
+  <div class="pagehead">
+    <h1>Django — Complete Reference</h1>
+    <p>Models, ORM, views, templates, forms, URL routing, authentication, the admin, middleware, testing, security, REST APIs, and deployment — everything from a fresh startproject to a production-hardened application. Diagrams cover the MTV architecture, the ORM query lifecycle, the middleware stack, and the request/response flow.</p>
+  </div>
+  <div id="content"></div>
+</main>
+<script>
+function T(c,i,ex,u,g){return{c,i,ex,u,g};}
+function Md(m,sig,desc,ex){return{m,sig,desc,ex};}
+function G(scenario,pick){return{scenario,pick};}
+function Sy(s,cause){return{s,cause};}
+
+/* =========================================================
+   GROUP 1 — FUNDAMENTALS & PROJECT STRUCTURE
+   ========================================================= */
+const F_CORE=[
+T("Django philosophy","Batteries-included, opinionated, full-stack web framework built around the DRY (Don't Repeat Yourself) principle.","One framework ships: ORM, templates, forms, auth, admin, migrations, test runner, cache, i18n...","Large, content-driven web applications where having conventions already decided saves time","The same conventions that speed things up early can feel constraining later if your domain doesn't fit Django's assumptions well"),
+T("Project vs App","A Django project is the entire site; apps are self-contained, reusable modules inside it.","startproject mysite / startapp blog","Organizing code by feature domain (blog, shop, users) rather than by technical layer","An app that imports from another app's models is no longer truly reusable — keep inter-app dependencies intentional and minimal"),
+T("MTV pattern","Model-Template-View — Django's equivalent of MVC, where 'View' means the business logic and 'Template' is the presentation layer.","Model = ORM; Template = HTML layer; View = Python function/class handling requests","Understanding Django's layering compared to other frameworks","What Django calls a 'View' is what most other frameworks call a 'Controller' — a common point of confusion when reading non-Django material"),
+T("settings.py","Central configuration file — database URLs, installed apps, middleware, static files, templates, caching, etc.","INSTALLED_APPS, DATABASES, SECRET_KEY, DEBUG, ALLOWED_HOSTS...","The single source of truth for the project's configuration","NEVER leave DEBUG=True or a weak SECRET_KEY in production — these are both security vulnerabilities with real consequences"),
+T("manage.py","A CLI wrapper for running Django management commands against a specific settings file.","python manage.py runserver / migrate / createsuperuser / shell","Every developer interaction with a Django project — running, migrating, creating data, opening a shell","manage.py is generated per-project and just calls django-admin with your settings pre-configured"),
+T("WSGI vs ASGI","Django supports both the sync WSGI server interface and the async ASGI interface (since Django 3.0).","wsgi.py vs asgi.py — both generated at project creation","WSGI for traditional sync deployments (gunicorn); ASGI for async views, WebSockets, or event-driven features (via Daphne/uvicorn)","Django's ORM is still synchronous — even in an ASGI deployment, database queries block unless you use sync_to_async() or third-party async ORM alternatives"),
+];
+const F_COMMANDS=[
+Md("startproject","django-admin startproject mysite .","Create a new Django project in the current directory","The trailing dot puts manage.py in the current directory instead of a subdirectory"),
+Md("startapp","python manage.py startapp blog","Create a new app inside the project","New apps must be added to INSTALLED_APPS before Django knows about their models/templates"),
+Md("runserver","python manage.py runserver 0.0.0.0:8000","Start the development server with auto-reload","Never use in production — single-threaded, not hardened, not performant"),
+Md("shell / shell_plus","python manage.py shell","Open a Python shell with Django already configured","shell_plus (from django-extensions) auto-imports all models — a huge productivity boost"),
+Md("check","python manage.py check","Run Django's system checks for common configuration errors","Run before deploy — catches missing migrations, bad settings, deprecations"),
+Md("dbshell","python manage.py dbshell","Open a direct database CLI session using your configured DB credentials","Useful for raw SQL debugging; dangerous in production if run carelessly"),
+];
+
+/* =========================================================
+   GROUP 2 — MODELS & ORM BASICS
+   ========================================================= */
+const M_BASICS=[
+T("Model class","A Python class inheriting from django.db.models.Model, where each attribute maps to a database column.","class Article(models.Model): title = models.CharField(max_length=200)","Defining every table in your database schema, in Python","Django creates an automatic integer primary key `id` unless you explicitly define your own — this is silent and often forgotten when building APIs"),
+T("Field types","Different column types for different data: CharField, TextField, IntegerField, FloatField, BooleanField, DateField, DateTimeField, JSONField, etc.","pub_date = models.DateTimeField(auto_now_add=True)","Choosing the correct database column type and adding automatic validation","TextField has no max_length limit; CharField requires one — use TextField for potentially-long content rather than an arbitrarily large CharField"),
+T("null vs blank","null=True means the DB column allows NULL; blank=True means form validation allows an empty value — two separate concepts that work independently.","nullable: null=True, blank=True / optional form field only: blank=True / required everywhere: neither","Controlling both database-level nullability and form-level validation independently","For string-based fields, Django convention is to NOT use null=True (leaving the DB column NOT NULL) and instead store empty strings — mixing None and '' for 'no value' on one field is confusing"),
+T("default","A default value for the field when no value is provided on creation.","status = models.CharField(max_length=10, default='draft')","Fields that have a sensible fallback that doesn't need to be explicitly set every time","A callable default (e.g. default=list) is evaluated fresh per instance — a non-callable mutable default (default=[]) is shared across all instances, exactly like Python's mutable default argument bug"),
+T("verbose_name / help_text","Human-readable labels and descriptions used by the admin and forms.","title = models.CharField(verbose_name='Article title', help_text='Keep it under 200 chars')","Making admin panels and auto-generated forms readable to non-developers","If verbose_name is not set, Django auto-generates it from the field name by replacing underscores with spaces — usually fine but occasionally awkward"),
+T("Meta class","Inner class configuring model-level behavior: ordering, unique_together, db_table name, indexes, abstract models.","class Meta: ordering=['-created_at']; db_table='my_articles'","Custom table names, default sort order, database indexes for performance","Default Meta ordering applies to every queryset from that model unless explicitly overridden — easy to forget and get surprised sorting elsewhere"),
+T("__str__","A method that controls how an object instance is represented as a string.","def __str__(self): return self.title","Admin lists, logs, shell debugging, anywhere an object is displayed as text","Always define __str__ on every model — the default representation (Article object (1)) is nearly useless for debugging"),
+T("abstract=True","Marks a model as abstract — it defines fields/methods other models inherit, but has no database table of its own.","class TimestampMixin(models.Model): created_at=...; class Meta: abstract=True","Reusable field sets shared across many models (timestamps, soft-delete, ownership)","Abstract models can't be queried directly since they have no table — only their concrete subclasses do"),
+];
+const M_RELATIONS=[
+T("ForeignKey","A many-to-one relationship — many child objects can reference one parent.","comment = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')","The most common relationship type: comments belong to articles, orders belong to users","on_delete is required and affects what happens when the referenced object is deleted — CASCADE deletes children, PROTECT prevents deletion, SET_NULL nullifies the FK (requires null=True)"),
+T("OneToOneField","One object maps to exactly one other object — like FK but with a unique constraint.","profile = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')","Extending the built-in User model with a separate Profile object","Accessing the reverse relation on an object that doesn't have one yet raises a RelatedObjectDoesNotExist exception, not None — must be guarded with hasattr() or try/except"),
+T("ManyToManyField","Objects on both sides can reference many objects on the other side — Django creates a junction table automatically.","tags = models.ManyToManyField(Tag, blank=True)","Tags, categories, user groups, permissions — any true many-to-many relationship","By default Django creates an opaque auto-named junction table — use through= to define it explicitly when you need extra fields on the relationship itself"),
+T("related_name","The name used to access the reverse side of a relationship from the related object.","article.comments.all()  # via related_name='comments'","Accessing related objects from the 'parent' side without a raw filter query","If two ForeignKeys from the same model point to the same target, at least one MUST have a custom related_name or Django raises a clash error at system check time"),
+T("on_delete behaviors","What happens to child records when the parent is deleted.","CASCADE / PROTECT / SET_NULL / SET_DEFAULT / DO_NOTHING / SET(value)","Enforcing correct referential integrity based on your domain's actual business rules","DO_NOTHING is almost never the right choice in production — it bypasses Django-level protection and may violate DB constraints, causing integrity errors at the database level"),
+T("select_related","Eagerly load ForeignKey / OneToOne related objects in a single SQL JOIN, preventing N+1 queries.","Article.objects.select_related('author')","Any queryset where you know you'll access a FK/OneToOne field on every result","Only works on single-valued relationships (FK, OneToOneField) — for ManyToMany or reverse FK, use prefetch_related instead"),
+T("prefetch_related","Eagerly load many-to-many or reverse FK related objects using a second query (not a JOIN), avoiding N+1.","Article.objects.prefetch_related('tags', 'comments')","Reverse FK and ManyToMany relationships where select_related can't work","Prefetch uses a separate query per relation, not a JOIN — still far better than N+1, but don't assume it's free at very large scale"),
+];
+
+/* =========================================================
+   GROUP 3 — MIGRATIONS
+   ========================================================= */
+const MIG_BASICS=[
+T("makemigrations","Generates new migration files by detecting changes to model definitions.","python manage.py makemigrations blog","After every change to a model's fields, relationships, or Meta options","Always generate migrations in the same environment they'll be applied in — Django includes the current app's migration history in each file, and mismatches cause confusing dependency errors"),
+T("migrate","Applies pending migrations to the database.","python manage.py migrate","After generating new migrations or pulling code that contains new migration files","'migrate' with no args applies ALL pending migrations for ALL apps — use --app_label to limit scope if needed"),
+T("Migration file anatomy","A Python file declaring dependencies, operations (CreateModel, AddField, etc.), and the resulting schema state.","class Migration: dependencies=[...]; operations=[migrations.CreateModel(...)]","Reading and manually editing migration files when autogenerate gets it wrong","Always read autogenerated migration files before committing them — autogenerate misses some changes (custom DB types, manual SQL) and occasionally misgenerates destructive operations"),
+T("squashmigrations","Collapses many individual migration files into a single, equivalent file.","python manage.py squashmigrations blog 0001 0040","Speeding up fresh database setup after accumulated many small migrations","Squashed migrations must be kept alongside originals until every deployment has applied them and you remove the old ones — the transition period requires care"),
+T("Data migrations","A migration that changes existing data, not just schema — written using RunPython.","migrations.RunPython(add_default_slugs, reverse_func)","Backfilling data when adding a new required field, transforming existing data to a new format","Always write and test the reverse function too, even if you're confident you'll never roll back — debugging a broken migration chain without reversal capability is painful"),
+T("showmigrations","Lists all migrations and their applied status.","python manage.py showmigrations blog","Diagnosing which migrations have been applied to a given database","A [X] means applied, [ ] means pending — useful to compare dev vs. staging vs. production migration state"),
+T("Migration conflicts","Two developers create migrations from the same parent independently — their generated files both claim to be the next migration.","python manage.py makemigrations --merge","Resolving migration conflicts after parallel branches are merged","Merge migrations are valid but add noise — minimize conflicts by keeping model changes on focused feature branches and communicating within the team about model changes"),
+];
+
+/* =========================================================
+   GROUP 4 — ORM QUERYSETS
+   ========================================================= */
+const ORM_BASICS=[
+T("QuerySet","A lazy, chainable representation of a database query — not evaluated until actual data is needed.","qs = Article.objects.filter(published=True)  # no DB hit yet","Building complex queries incrementally, reusing filtered querysets as base sets","A queryset is evaluated (hits the database) when: iterated, sliced, converted with list()/len(), or printed — calling filter() multiple times does not hit the database each time"),
+T("all()","Returns a queryset of all objects from a model.","Article.objects.all()","Retrieving the complete set of a model's objects, often as a starting point for further filtering","all() is lazy — it doesn't actually run SELECT * immediately; the query runs when the result is consumed"),
+T("filter() / exclude()","Returns a queryset of objects matching (or not matching) given conditions.","Article.objects.filter(status='published', author=user)","The primary tool for narrowing a queryset based on conditions","Multiple filter() calls chain as AND by default — for OR conditions, use Q objects"),
+T("get()","Returns exactly one object matching the condition — raises DoesNotExist if none found, MultipleObjectsReturned if more than one.","Article.objects.get(pk=1)","Fetching a single specific object when you're certain exactly one exists","get() is one of the most common sources of uncaught exceptions — always wrap in try/except unless you have absolute certainty the object exists and is unique"),
+T("get_or_create()","Returns (object, created_bool) — gets if it exists, creates it if not, atomically.","obj, created = Article.objects.get_or_create(slug='about', defaults={'title':'About'})","Idempotent 'ensure this object exists' operations","Not truly atomic on all databases — a race condition between the GET and CREATE can cause IntegrityError under high concurrency; handle the exception and retry"),
+T("update_or_create()","Like get_or_create but also updates specified fields if the object already exists.","obj, created = Profile.objects.update_or_create(user=user, defaults={'bio': new_bio})","Sync/import operations where you want to set the latest value regardless","Same concurrency caveat as get_or_create"),
+T("first() / last()","Returns the first or last object from a queryset, or None if empty.","Article.objects.order_by('-created').first()","Safely getting 'the latest' or 'oldest' without IndexError on empty results","Returns None (not DoesNotExist) when nothing matches — unlike get(), it never raises an exception on an empty result"),
+T("count()","Returns the number of matching objects as an integer.","Article.objects.filter(published=True).count()","Pagination totals, conditional checks on quantities","count() hits the DB with a COUNT(*) query — it's more efficient than len(queryset) which fetches all rows just to count them"),
+T("exists()","Returns True/False — much more efficient than checking if a queryset is non-empty.","if Article.objects.filter(author=user).exists(): ...","Checking whether any matching object exists, especially in conditional guards","if queryset: evaluates the entire queryset; exists() runs a much cheaper SELECT 1 LIMIT 1 — always prefer exists() for pure boolean checks"),
+T("Q objects","Allows complex AND / OR / NOT query conditions that can't be expressed as simple keyword arguments.","from django.db.models import Q\\nArticle.objects.filter(Q(status='published') | Q(author=user))","OR conditions, negations, complex multi-condition filters","Q objects must come before keyword arguments in a filter() call, or Django raises a SyntaxError"),
+T("F expressions","Reference a model field's database value inside a query without fetching it to Python first.","Article.objects.update(views=F('views') + 1)","Atomic increments, comparing two fields, database-side calculations","F() avoids the read-then-write race condition that makes `obj.views += 1; obj.save()` incorrect under concurrent access — the increment happens atomically in the database"),
+T("values() / values_list()","Returns dicts (values) or tuples (values_list) instead of full model instances.","Article.objects.values('id','title')","Queries where you only need specific columns — much faster than loading full model instances","values() and values_list() return QuerySets of dicts/tuples, not model instances — calling model methods or accessing related objects doesn't work on these results the way it would on real instances"),
+T("annotate()","Adds a computed value to each object in a queryset, calculated by the database.","Article.objects.annotate(comment_count=Count('comments'))","Adding aggregated or computed per-object values in a single efficient query","annotate() adds to each row; aggregate() (below) collapses the whole queryset to one summary value — they are different operations"),
+T("aggregate()","Computes a summary value across the entire queryset (Sum, Count, Avg, Min, Max).","Article.objects.aggregate(total=Count('id'), avg_views=Avg('views'))","Overall totals and averages — revenue sums, average ratings, total users","aggregate() returns a plain dict, not a queryset — you can't chain further filter/annotate calls on its result"),
+T("order_by()","Sorts the queryset by one or more fields; prefix with '-' for descending.","Article.objects.order_by('-published_at', 'title')","Any situation requiring sorted results","If a model's Meta defines ordering, it applies everywhere by default — call .order_by() explicitly (even .order_by() with no args to clear sorting) when you need unsorted results for aggregation performance"),
+T("distinct()","Removes duplicate rows from the queryset result.","Article.objects.filter(tags__name='django').distinct()","Queries involving joins that can produce duplicate rows (especially through M2M relationships)","Using distinct() with order_by() on a field not in distinct()'s column set can cause unexpected behavior on PostgreSQL — test carefully"),
+T("defer() / only()","Defer loading of specified fields (defer) or load ONLY specified fields (only), to reduce memory usage on wide tables.","Article.objects.only('id','title')","Optimizing queries on models with many columns or large text/binary fields you don't always need","Accessing a deferred field later still works, but triggers an additional database query per object — useful only when the field access is genuinely rare"),
+T("select_for_update()","Locks selected rows for the duration of the current transaction — equivalent to SELECT ... FOR UPDATE.","with transaction.atomic(): obj = Model.objects.select_for_update().get(pk=id)","Preventing lost-update race conditions in concurrent editing scenarios","Must be inside an atomic() transaction block, or Django raises a TransactionManagementError"),
+T("raw() / RawSQL","Execute a raw SQL query, mapping results back to model instances or arbitrary values.","Article.objects.raw('SELECT * FROM blog_article WHERE id=%s', [id])","Queries too complex for the ORM, performance-critical custom SQL, database-specific features","Raw queries bypass Django's parameterization if you use string formatting instead of parameters — always use the parameter list, never f-strings or % formatting in raw SQL (SQL injection)"),
+];
+
+/* =========================================================
+   GROUP 5 — VIEWS
+   ========================================================= */
+const V_BASICS=[
+T("Function-based view (FBV)","A plain Python function taking a request object and returning a response.","def article_list(request): articles=Article.objects.all(); return render(request,'list.html',{'articles':articles})","Simple, one-off views; views with unusual conditional logic that doesn't fit CBV patterns","No automatic method dispatch — you must manually check request.method inside the function for GET vs. POST etc."),
+T("Class-based view (CBV)","A class where each HTTP method (get, post, put, etc.) is its own method — inherits from Django's built-in View or a more specific generic view.","class ArticleListView(ListView): model=Article; template_name='list.html'","Reusable view logic, generic CRUD operations, views with many HTTP method variants","CBVs can be harder to debug and trace than FBVs because of Django's deep method-resolution-order (MRO) and multiple dispatch layers — use python manage.py shell to inspect view.as_view() when in doubt"),
+T("Generic views","Pre-built CBVs for common patterns: listing, detail, creation, update, deletion.","ListView, DetailView, CreateView, UpdateView, DeleteView","Standard CRUD operations that fit Django's conventions — saves writing boilerplate view code","Generic views make many assumptions (model, template naming, success_url) — when your logic departs from those assumptions, fighting the generic view can take more effort than writing an FBV"),
+T("render()","Shortcut that renders a template with a context dict and returns an HttpResponse.","return render(request, 'article.html', {'article': article})","The standard way to return an HTML response from any view function","render() always returns a 200 — pass status= explicitly for non-200 responses"),
+T("HttpResponse / JsonResponse","The base response class; JsonResponse is a subclass that serializes a dict to JSON automatically.","return JsonResponse({'status': 'ok'}, status=201)","HttpResponse for anything you're manually building; JsonResponse for simple API responses","JsonResponse only serializes dicts by default — set safe=False to serialize a list"),
+T("redirect()","Returns an HttpResponseRedirect to a URL or a named URL pattern.","return redirect('article-detail', pk=article.pk)","Post/Redirect/Get pattern, login redirects, any navigation away from the current URL","redirect() with a view name and args builds the URL via url_for — safer than hardcoding a path string that could change"),
+T("get_object_or_404()","Calls get() and returns the object, or raises Http404 (triggering a 404 response) if not found.","article = get_object_or_404(Article, pk=pk, status='published')","The standard, concise pattern for fetching a single object in a view","Cleaner than try/except Article.DoesNotExist in view code — that's exactly what this shortcut replaces"),
+T("Decorators for views","Function decorators controlling access, caching, and HTTP method requirements.","@login_required / @permission_required / @require_http_methods(['GET','POST'])","Restricting views to authenticated or permissioned users, restricting accepted HTTP methods","For CBVs, use method_decorator(decorator, dispatch/get/post) on the class, not directly on its methods — the dispatch is where Django's method routing happens"),
+];
+const V_TEMPLATE=[
+T("TemplateDoesNotExist","Django's common error when it can't find a template in any of the configured DIRS or installed apps.","Usually means template is in the wrong directory or the app isn't in INSTALLED_APPS","Diagnosing missing-template errors — not a gotcha, just the most common new-developer error","Django searches templates/ inside each app (in INSTALLED_APPS order) and then DIRS — the order matters if multiple apps have a template with the same name"),
+T("Template context processors","Functions that add extra variables to every template's context automatically.","TEMPLATES[...]['OPTIONS']['context_processors']","Adding the request object, user, messages, or custom global data to all templates","context_processors run on every request — keep them cheap; no expensive DB queries inside"),
+T("Template tags & filters","Built-in and custom template helpers for logic, formatting, and transformations in templates.","{% for %} {% if %} {% url %} {% csrf_token %} {{ value|date:'Y-m-d' }} {{ value|truncatewords:20 }}","Template-side rendering logic and data formatting","Complex logic in templates is a code smell — if you find yourself writing a custom tag for something business-logic-y, that logic probably belongs in the view or model instead"),
+T("Template inheritance","{% block %} / {% extends %} — the standard mechanism for DRY template layouts.","{% extends 'base.html' %} {% block content %}...{% endblock %}","Every multi-page site — define the layout once in base.html, override content per page","Same as Flask/Jinja2 (Django's engine is the reference Jinja2 was inspired by) — content outside a block in a child template is silently ignored"),
+T("Custom template tags","Python functions registered as template tags, callable from templates.","@register.simple_tag / @register.inclusion_tag","Reusable, testable rendering logic that's genuinely template-specific","Load custom tag libraries in templates with {% load my_tags %} — unlike built-in tags, custom tags are not auto-available"),
+];
+
+/* =========================================================
+   GROUP 6 — URL ROUTING
+   ========================================================= */
+const URL_BASICS=[
+T("urlpatterns","A list of path() or re_path() calls in urls.py mapping URL patterns to views.","urlpatterns = [path('articles/', views.article_list, name='article-list')]","Defining every URL the project responds to","Missing a trailing slash where one is expected (or vice versa) is the most common 'why is this URL 404ing' mistake after routing itself"),
+T("path()","A URL pattern function using simple, readable path converters instead of raw regex.","path('articles/<int:pk>/', views.article_detail, name='article-detail')","The modern, recommended way to define URL patterns (Django 2.0+)","Path converters: str (default), int, slug, uuid, path — use the right one for validation and type coercion to happen automatically"),
+T("re_path()","A URL pattern function using a raw regular expression for complex URL patterns that path() can't express.","re_path(r'^articles/(?P&lt;year&gt;[0-9]{4})/$', views.year_archive)","Complex URL shapes path() converters can't express — unusual patterns, legacy URLs","Raw regex in URLs is hard to read and maintain — only use re_path() when path() genuinely can't express the pattern you need"),
+T("include()","Includes another urls.py file, typically at a namespace prefix.","path('blog/', include('blog.urls'))","Splitting URL definitions across apps — each app owns its own urls.py","Always include() an app's own urls.py from the project-level urls.py rather than importing and merging them — it preserves the app's namespace and organization"),
+T("Namespaces (app_name)","Scoping URL names to an app to avoid collisions when multiple apps have similarly-named URL patterns.","app_name = 'blog'; {% url 'blog:article-list' %}","Any project with more than one app having URL patterns","Without namespacing, url_for-equivalent calls can silently resolve to the wrong view if two apps have the same URL name — always namespace in multi-app projects"),
+T("URL parameters & converters","Captured URL segments passed to the view as keyword arguments, automatically type-converted.","path('articles/<int:pk>/', ...) → view receives pk as an int","Type-safe, concise URL parameter extraction without manual int() casting in the view","The converter also validates — a path like /articles/abc/ won't match <int:pk> and returns 404 automatically"),
+];
+
+/* =========================================================
+   GROUP 7 — FORMS
+   ========================================================= */
+const FORM_BASICS=[
+T("Form class","A Python class where each field defines validation logic and HTML widget rendering.","class ContactForm(forms.Form): email=forms.EmailField(); message=forms.CharField(widget=forms.Textarea)","Any HTML form that needs validation on the server side","Django forms validate and render fields but don't inherently do anything with the data — handling submission, saving data, and redirecting after success is all your view code's responsibility"),
+T("ModelForm","A form auto-generated from a model's fields, eliminating most boilerplate.","class ArticleForm(forms.ModelForm): class Meta: model=Article; fields=['title','body','tags']","CRUD forms for a specific model — the most common form use case in Django","Exclude sensitive fields explicitly with exclude=[] or use fields=[] (whitelist) — never use fields='__all__' in production, it's a mass-assignment vulnerability waiting to happen"),
+T("form.is_valid()","Runs all field-level and form-level validation; populates form.cleaned_data on success, form.errors on failure.","if form.is_valid(): do_stuff(form.cleaned_data)","After receiving a POST submission — the required check before touching form data","form.cleaned_data only exists AFTER is_valid() returns True — accessing it before calling is_valid() raises AttributeError"),
+T("form.save()","Saves a ModelForm's cleaned data to the database (creates or updates the model instance).","article = form.save(commit=False); article.author=request.user; article.save()","Persisting a validated ModelForm — including save(commit=False) for adding extra fields before saving","save(commit=False) gives you the instance without writing to the DB, so you can set extra fields (like the author) before the actual INSERT/UPDATE"),
+T("CSRF protection","Django automatically includes a CSRF token in forms rendered via the template tag — POST requests without a valid token are rejected.","{% csrf_token %} in every POST form template","Every state-changing HTML form — Django enforces this by default on all POST/PUT/DELETE requests","Forgetting {% csrf_token %} in a form template results in a 403 on submission — one of the most common new-Django-developer errors"),
+T("Form validation flow","Field-level clean_fieldname() methods → cross-field clean() method → form.errors if anything raised.","def clean_email(self): ... def clean(self): validate across fields","Custom per-field validation and cross-field validation (password confirmation, date range checks)","ValidationError raised in clean() goes to form.non_field_errors(), not a specific field — distinguish these in templates if you want precise error display"),
+T("Form rendering","Built-in rendering shortcuts for generating form HTML quickly.","{{ form.as_p }} / {{ form.as_table }} / {{ form }} for quick rendering; manual field-by-field for full control","Rapid prototyping (as_p/as_table) vs. custom styled forms (manual)","Built-in rendering produces minimal, often unstyled HTML — real projects typically render fields manually or use a form rendering library (crispy-forms) for CSS framework integration"),
+T("formsets","A collection of multiple instances of the same form processed together — built on top of BaseFormSet.","ArticleFormSet = formset_factory(ArticleForm, extra=2)","Editing multiple objects of the same type in one page submit (inline editing, bulk uploads)","Management form fields (TOTAL_FORM_COUNT etc.) must be present in the submitted formset data or the formset raises a ValidationError — render {{ formset.management_form }} in every formset template"),
+];
+
+/* =========================================================
+   GROUP 8 — AUTHENTICATION & AUTHORIZATION
+   ========================================================= */
+const AUTH_BASICS=[
+T("Django's built-in User","The default User model with username, email, password (hashed), is_staff, is_superuser, groups, permissions.","from django.contrib.auth.models import User","Projects using the default auth model with no customization needed","Switching from the default User model after running migrations is very painful — always configure AUTH_USER_MODEL before the first migration"),
+T("Custom User model","Replacing the default User by pointing AUTH_USER_MODEL at your own model.","AUTH_USER_MODEL='accounts.User'; class User(AbstractUser): phone=...","Literally every real project — adding fields, changing the username field to email, etc.","Set AUTH_USER_MODEL in settings.py BEFORE the first migrate — retrospectively changing it requires dropping and recreating your entire database or a complex, error-prone migration"),
+T("AbstractUser vs AbstractBaseUser","AbstractUser: inherits all default User fields/behavior, add fields on top. AbstractBaseUser: minimum skeleton, you define everything from scratch.","AbstractUser for 'default User plus custom fields'; AbstractBaseUser only if the default User shape doesn't fit at all","Choosing how much of Django's User machinery to inherit","AbstractBaseUser requires implementing more methods (get_full_name, etc.) and providing a custom UserManager — more work, but complete control"),
+T("login() / logout() / authenticate()","Core auth functions for logging a user in/out of a session, and verifying credentials.","user=authenticate(request,username=u,password=p); login(request,user)","Session-based authentication flows","authenticate() checks credentials against all configured authentication backends — it returns None (not raising an exception) if no backend accepts the credentials"),
+T("@login_required","Decorator/mixin redirecting unauthenticated users to the login page.","@login_required(login_url='/login/')","Every view that requires a logged-in user","The redirect URL defaults to settings.LOGIN_URL — always configure that setting rather than passing login_url to every decorator"),
+T("LoginRequiredMixin","The CBV equivalent of @login_required — inherit it as the first parent class in a CBV.","class DashboardView(LoginRequiredMixin, TemplateView): ...","Protecting a class-based view — same effect as @login_required on an FBV","Must be the LEFTMOST mixin in the inheritance list, before the view class, so its dispatch() method runs first"),
+T("Permissions","Fine-grained per-model permissions (add, change, delete, view) and custom permissions.","user.has_perm('blog.change_article')","Restricting specific actions beyond simply 'is logged in'","Permissions are checked against the database on each call unless cached — for high-frequency checks in views, consider caching the permission set"),
+T("Groups","A named set of permissions that can be bulk-assigned to users.","Group.objects.create(name='Editors'); user.groups.add(editors_group)","Role-based access control — editors can change, reviewers can view, admins can delete","Groups are additive — a user gets the union of all permissions from all their groups, plus any individual permissions"),
+T("Password management","Django stores passwords using PBKDF2 by default, with automatic algorithm upgrading.","make_password() / check_password() / set_password()","Never storing plaintext passwords, implementing password reset flows","set_password() takes a plaintext string and hashes it — assigning directly to user.password a plaintext string doesn't hash it and breaks authentication completely"),
+];
+
+/* =========================================================
+   GROUP 9 — DJANGO ADMIN
+   ========================================================= */
+const ADMIN_BASICS=[
+T("Admin registration","Register a model with the admin to get a full CRUD interface automatically.","@admin.register(Article)","Instant management UI for any model — staff-only, automatically protected by is_staff","The auto-generated admin works without any customization but is generic — customize it for a genuinely usable staff tool"),
+T("ModelAdmin","Customize the admin interface for a model by providing a ModelAdmin class.","class ArticleAdmin(admin.ModelAdmin): list_display=['title','author','status']; list_filter=['status']","Defining which fields are shown in the list, which are filterable, which are searchable","list_display columns should be fast to compute — triggering N+1 queries via related field access in list_display on large datasets noticeably slows the admin list view"),
+T("list_display","Controls which fields appear as columns in the admin changelist (list view).","list_display=['title','published_at','is_published']","Making the admin list useful at a glance — status, dates, key identifiers","You can include methods (defined on ModelAdmin or the model) as list_display items, but they won't be sortable unless you set the method's admin_order_field attribute"),
+T("list_filter","Adds sidebar filters to the admin changelist.","list_filter=['status','published_at']","Quickly filtering large lists by category, date, boolean status","Date filters (DateField) generate 'This week', 'This month' etc. automatically — a small but useful built-in feature"),
+T("search_fields","Enables a search box in the admin that queries specified fields.","search_fields=['title','body','author__username']","Letting staff find specific records by text in a large dataset","search_fields uses ILIKE / CONTAINS queries — on large datasets without a full-text search index, this can be slow and should be limited to indexed or short fields"),
+T("inlines","Show and edit related objects inline within a parent model's admin page.","class CommentInline(admin.TabularInline): model=Comment\\nclass ArticleAdmin: inlines=[CommentInline]","Editing parent + children on one page: article with its comments, order with its items","StackedInline displays each related object as a vertical block; TabularInline as a compact horizontal table row"),
+T("actions","Custom bulk operations on selected objects in the changelist.","def publish_selected(modeladmin, request, queryset): queryset.update(status='published')","Bulk operations staff need: approve, publish, export, send email to selected users","Actions receive a QuerySet of selected objects — they can and should use queryset.update() for bulk DB efficiency rather than looping and saving individual instances"),
+T("Admin sites","Multiple separate admin site instances, for e.g. a public-facing staff site and an internal superadmin site.","admin.AdminSite() creates a separate admin instance","Projects needing different admin interfaces for different staff roles","A rare pattern in most projects but occasionally the right tool for strongly separated admin concerns"),
+];
+
+/* =========================================================
+   GROUP 10 — MIDDLEWARE
+   ========================================================= */
+const MW_BASICS=[
+T("Middleware","A layer in the request/response cycle — each piece of middleware processes the request on the way in and the response on the way out.","MIDDLEWARE = ['...SecurityMiddleware','...SessionMiddleware','...AuthenticationMiddleware',...]","Cross-cutting concerns: security headers, session management, auth, CSRF, click-jacking protection","Order in the MIDDLEWARE list matters — SessionMiddleware must come before AuthenticationMiddleware because auth depends on the session already being loaded"),
+T("Built-in middleware","The default stack Django installs: Security, Sessions, Common, CSRF, Auth, Messages, XFrameOptions.","Every middleware in the default MIDDLEWARE list is there for a reason — don't remove any without understanding what it does","The production-required security baseline — removing middleware to 'simplify' things often silently removes real security protections","SecurityMiddleware is the first middleware deliberately — it sets security headers on EVERY response before anything else can tamper with them"),
+T("Custom middleware","A class with __call__ (and optionally process_view, process_exception, process_template_response) methods.","class TimingMiddleware: def __call__(self,request): start=time.time(); response=self.get_response(request); ...","Logging request timing, adding headers, per-request setup not tied to a specific view","The get_response(request) call is what passes the request further down the middleware stack to the view — forgetting to call it and return its result makes all requests dead-end inside your middleware"),
+T("Middleware order","Request flows DOWN the MIDDLEWARE list (top to bottom); response flows UP (bottom to top).","First middleware in list is the outermost wrapper on request in, last on response out","Debugging unexpected behavior caused by one middleware affecting another","This means SecurityMiddleware's response headers are added LAST (because it's first in the list, on the way out it wraps outermost) — which is exactly right for security headers"),
+];
+
+/* =========================================================
+   GROUP 11 — DJANGO REST FRAMEWORK (DRF)
+   ========================================================= */
+const DRF_BASICS=[
+T("Serializer","DRF's equivalent of Django Form + Model transformation: converts between Python objects/querysets and JSON (or other formats).","class ArticleSerializer(serializers.ModelSerializer): class Meta: model=Article; fields='__all__'","Any DRF API endpoint that returns or accepts structured data","Unlike forms, serializers are bidirectional — they both validate incoming data (like a form) AND serialize outgoing data (like a template). Keep input and output serializers separate for complex APIs"),
+T("ModelSerializer","Auto-generates serializer fields from a model, same DRY benefit as ModelForm.","class ArticleSerializer(serializers.ModelSerializer): class Meta: model=Article; fields=['id','title']","The vast majority of serializers for straightforward model-to-JSON mapping","fields='__all__' is convenient but exposes ALL current and future fields — always use an explicit list in production to prevent accidental data exposure"),
+T("APIView","DRF's base view class — like Django's View but automatically handles content negotiation, authentication, and permission checks.","class ArticleListAPIView(APIView): def get(self, request): ...","API views needing custom logic that GenericAPIView doesn't cover","APIView handles authentication/permission dispatch automatically — you don't write the auth check yourself, the framework calls the configured authentication/permission classes before your method runs"),
+T("GenericAPIView + mixins","Combines APIView with pre-built mixins (ListModelMixin, CreateModelMixin, etc.) for standard CRUD operations.","class ArticleListView(ListModelMixin, GenericAPIView): queryset=Article.objects.all(); serializer_class=ArticleSerializer","Any standard list/create/retrieve/update/destroy operation","The mixin methods (list(), create(), retrieve(), etc.) are the actual implementations — override these, not get()/post(), if you want to customize standard behavior"),
+T("ViewSet","A class combining related views (list/create/retrieve/update/destroy) into one logical group, registered with a Router.","class ArticleViewSet(viewsets.ModelViewSet): queryset=Article.objects.all(); serializer_class=ArticleSerializer","Full CRUD APIs where standard router-generated URL patterns fit your needs","ViewSets work best with DRF's Router — using them without a router means manually mapping each action to a URL, which defeats their main benefit"),
+T("Router","Automatically generates URL patterns from a ViewSet's defined actions.","router = DefaultRouter(); router.register('articles', ArticleViewSet)","Standard REST resource URLs without manually writing every path()","DefaultRouter generates an API root browsable view; SimpleRouter doesn't — use SimpleRouter if you want cleaner URL patterns without the extra endpoints"),
+T("Authentication classes","Pluggable authentication backends: SessionAuthentication, TokenAuthentication, JWTAuthentication (via third party), BasicAuthentication.","DEFAULT_AUTHENTICATION_CLASSES = ['rest_framework.authentication.TokenAuthentication']","Choosing how API clients prove their identity — different clients (browser, mobile, service-to-service) may need different schemes","Authentication in DRF only identifies WHO the user is — it doesn't control access. Permission classes (next) control WHAT they can do"),
+T("Permission classes","Control what an authenticated (or anonymous) user is allowed to do with a given view/object.","DEFAULT_PERMISSION_CLASSES = ['rest_framework.permissions.IsAuthenticated']","Protecting API endpoints from unauthorized access","IsAuthenticated rejects anonymous users; IsAdminUser requires staff; AllowAny is fully open — combine with object-level permissions (has_object_permission) for row-level access control"),
+T("Throttling","Rate-limiting API requests per user or per IP.","DEFAULT_THROTTLE_CLASSES = ['rest_framework.throttling.UserRateThrottle']","Protecting public APIs from abuse and controlling burst traffic","Same multi-worker caveat as other frameworks: in-memory throttle backends don't share state across workers; configure a Redis-backed throttle for accurate limits at scale"),
+T("Pagination","Breaking large list results into pages.","DEFAULT_PAGINATION_CLASS = 'rest_framework.pagination.PageNumberPagination'; PAGE_SIZE = 20","Any list endpoint returning more results than fits comfortably in one response","DRF's pagination returns the total count, next/previous page URLs in the response body — clients depend on this structure, so don't change the pagination class mid-project without a versioned API transition"),
+T("Filtering (django-filter)","Filtering list endpoints by model fields via query parameters.","filterset_class = ArticleFilter  (using django-filter library)","Search and filter capabilities on list endpoints without building manual query-param parsing","django-filter integrates cleanly with DRF via DjangoFilterBackend but requires a separate pip install"),
+];
+
+/* =========================================================
+   GROUP 12 — SIGNALS
+   ========================================================= */
+const SIG_BASICS=[
+T("What signals are","A built-in publish/subscribe mechanism — senders emit signals, registered receivers are called automatically.","post_save.connect(on_user_created, sender=User)","Decoupled side-effects: creating a Profile after a User is created, sending a welcome email, invalidating a cache","Signals are synchronous and in-process — they are NOT a distributed task queue, don't behave like async events, and can complicate testing"),
+T("Built-in signals","Django fires signals at key lifecycle points: pre_save, post_save, pre_delete, post_delete, m2m_changed, request_started, request_finished.","@receiver(post_save, sender=User) def create_profile(sender, instance, created, **kwargs): if created: Profile.objects.create(user=instance)","Hooking into model save/delete events without modifying the model class itself","post_save fires even on UPDATE, not just INSERT — use the `created` bool argument to distinguish them"),
+T("@receiver decorator","A clean decorator syntax for connecting a receiver function to a signal.","@receiver(post_save, sender=Article)\\ndef notify_subscribers(sender, **kwargs): ...","The modern, readable way to connect receivers — preferred over post_save.connect()","Receivers must be imported/connected before they fire — use AppConfig.ready() in apps.py to ensure this happens early in the app startup sequence"),
+T("AppConfig.ready()","The correct place to import signal receivers so they're connected when the app starts.","class BlogConfig(AppConfig): def ready(self): import blog.signals","Ensuring signal receivers are loaded before any request arrives","Doing import blog.signals directly in the models file can cause circular import issues — the ready() hook is specifically designed to avoid that by importing after all models are loaded"),
+T("Signals vs. model methods","A judgment call about where side-effect code lives.","post_save signal vs. overriding save() on the model","Signals for truly decoupled, cross-app concerns; model methods for tightly-coupled logic that always runs with a save","Signals create hidden coupling: code that fires on a model event but lives in a completely different module can be hard to discover, trace, and test"),
+];
+
+/* =========================================================
+   GROUP 13 — CACHING
+   ========================================================= */
+const CACHE_BASICS=[
+T("Cache framework","Django's unified caching API that works with multiple cache backends — in-memory, Redis, Memcached, file system, database.","CACHES = {'default':{'BACKEND':'django.core.cache.backends.redis.RedisCache','LOCATION':'redis://localhost:6379'}}","Reducing database load and speeding up expensive repeated operations","Always configure a real cache backend (Redis/Memcached) in production — the default LocMemCache is per-process in-memory and provides no benefit across multiple workers"),
+T("Per-view cache","Cache the entire response of a view for a given time.","@cache_page(60*15)  # cache for 15 minutes","Views with output that doesn't change often and doesn't vary per user — public article pages, category listings","Caching a view that has per-user content (the user sees cached output from another user's session) is a serious security issue — use vary_on_cookie/vary_on_headers or per-user caching keys"),
+T("Template fragment cache","Cache just a portion of a template, not the whole page.","{% cache 600 'article_list' %}...{% endcache %}","When most of a page is dynamic but one expensive section (sidebar, featured widget) is stable","Fragment cache keys must be unique per varying content — add the object ID or user ID to the cache key when the cached content depends on them"),
+T("Low-level cache API","Directly get/set/delete cache entries with arbitrary keys.","cache.set('key', value, timeout=300); cache.get('key')","Caching computed values (aggregate counts, API results) at the code level rather than the response level","cache.get() returns None on a cache miss, not raising an exception — always handle the None case rather than assuming the key exists"),
+T("cache.get_or_set()","Returns cached value if it exists, otherwise computes it, caches it, and returns it.","result = cache.get_or_set('trending', compute_trending, 300)","The standard read-through cache pattern in one call","Not atomic under concurrent requests — a stampede of simultaneous cache misses can all trigger the expensive computation simultaneously before any of them sets the cache"),
+];
+
+/* =========================================================
+   GROUP 14 — SECURITY
+   ========================================================= */
+const SEC_BASICS=[
+T("CSRF protection","Django automatically validates a token in POST/PUT/PATCH/DELETE requests from browsers.","{% csrf_token %} in every state-changing HTML form","Every HTML form in a Django app — enabled by default via CsrfViewMiddleware","@csrf_exempt exists specifically for external webhooks or API endpoints consumed by non-browser clients that don't carry CSRF tokens — use deliberately and document why"),
+T("XSS protection","Django's template engine auto-escapes HTML by default; the |safe filter opts out.","{{ user_input }} is safe; {{ user_input|safe }} is your responsibility","Every place user-provided content is rendered back in HTML","The most common XSS vulnerability pattern in Django: storing a user string in the DB, then marking it |safe in a template because 'it's from our own DB' — if users can control what goes in, they can inject scripts"),
+T("SQL injection protection","Django's ORM uses parameterized queries exclusively — user input is never interpolated into SQL strings.","Article.objects.filter(title=user_input)  # parameterized, safe","Using the ORM correctly protects against SQL injection by default","Only raw() and extra() are injection surfaces — ALWAYS use the params argument list, never string formatting in raw SQL. F-strings in raw SQL = SQL injection"),
+T("Clickjacking protection","X-Frame-Options header preventing your pages from being embedded in iframes on other domains.","XFrameOptionsMiddleware in MIDDLEWARE sets X-Frame-Options: DENY or SAMEORIGIN","Enabled by default — virtually every Django app should keep this","@xframe_options_exempt to selectively allow iframes (e.g. for embedded widgets) on specific views"),
+T("HTTPS / HSTS","Forcing HTTPS and adding HTTP Strict Transport Security headers.","SECURE_SSL_REDIRECT=True; SECURE_HSTS_SECONDS=31536000","Any production deployment — HTTP-only is never acceptable for real user data","SECURE_HSTS_SECONDS is a commitment — browsers cache it for the stated duration; setting a long value means you can't easily go back to HTTP even in an emergency"),
+T("SECRET_KEY","Django's primary secret for cryptographic signing of sessions, cookies, CSRF tokens, password reset links.","SECRET_KEY = os.environ['DJANGO_SECRET_KEY']","The most important secret in a Django project — never hardcode, never commit to VCS","Rotating the SECRET_KEY invalidates ALL existing sessions, signed URLs, and CSRF tokens — plan rotations carefully in production"),
+T("ALLOWED_HOSTS","Whitelist of domain names the Django app is allowed to serve — prevents HTTP Host header injection attacks.","ALLOWED_HOSTS=['example.com', 'www.example.com']","Required in production — Django refuses to serve requests with a Host header not in this list","* (wildcard) is NOT safe in production despite occasionally being suggested as 'easy' — it defeats the entire purpose of the setting"),
+T("Security middleware checks","python manage.py check --deploy runs a suite of production-readiness checks.","python manage.py check --deploy","Before every production deployment to catch obvious security misconfigurations","A clean check output doesn't mean the app is secure — it catches CONFIGURATION issues, not code-level vulnerabilities in your own logic"),
+];
+
+/* =========================================================
+   GROUP 15 — TESTING
+   ========================================================= */
+const TEST_BASICS=[
+Md("TestCase","class ArticleTest(TestCase): def test_str(self): a=Article(title='X'); self.assertEqual(str(a),'X')","Django's primary test class — wraps each test in a transaction that's rolled back after, keeping tests isolated","Access the test database via self.client (an HTTP client) and model operations directly"),
+Md("Client","self.client.get('/articles/')  / self.client.post('/login/',{'username':'u','password':'p'})","A test HTTP client that doesn't need a real server — sends requests to your Django app in-process","Use self.client.force_login(user) to skip credential-checking and simulate an authenticated request"),
+Md("TestCase.assertContains","self.assertContains(response,'Article Title')","Asserts response.status_code==200 AND the string appears in response.content in one call","Also accepts status_code= parameter: assertContains(response,'ok',status_code=201)"),
+Md("TestCase.assertRedirects","self.assertRedirects(response,'/login/')","Asserts the response is a redirect AND the Location header matches the expected URL","By default also follows the redirect and asserts the landing page is 200 — set fetch_redirect_response=False to skip that"),
+Md("pytest-django","@pytest.mark.django_db decorator on test functions that need DB access","Run pytest instead of manage.py test, with full pytest fixture support","@pytest.fixture def user(db): return User.objects.create_user('test','test@test.com','pass')"),
+Md("Factory Boy","factory.django.DjangoModelFactory for concise test data generation","Create test objects with minimal required fields, sensible defaults for the rest","class ArticleFactory(DjangoModelFactory): class Meta: model=Article; title=factory.Sequence(lambda n: f'Article {n}')"),
+Md("mock / patch","@patch('blog.views.send_email')","Replace a dependency (external API, email, cache) with a mock during a specific test","Use @patch on the location where the function is USED, not where it's DEFINED — a classic mock gotcha"),
+];
+
+/* =========================================================
+   GROUP 16 — PRODUCTION & DEPLOYMENT
+   ========================================================= */
+const PROD_BASICS=[
+T("DEBUG=False","Disables the detailed error page (showing local variables, code, settings) that's shown to all users in debug mode.","DEBUG=False in production settings","Literally every production deployment — non-negotiable","With DEBUG=False, Django no longer serves static files itself — you must configure a static file server (nginx, CDN, WhiteNoise) separately"),
+T("collectstatic","Copies all static files from apps and STATICFILES_DIRS to STATIC_ROOT for a single deployable directory.","python manage.py collectstatic","Before every production deployment — part of your deploy script","STATIC_ROOT must be set and must be different from any app's static/ folder — Django refuses to collect into the same folder it reads from"),
+T("WhiteNoise","A middleware that serves static files directly from Django/gunicorn, without needing a separate nginx for static files.","whitenoise.middleware.WhiteNoiseMiddleware in MIDDLEWARE","Simpler deployments (PaaS, containers) where configuring nginx is overhead","Not as fast as a CDN or dedicated nginx for high-traffic static serving, but perfectly fine for most apps and far simpler to configure"),
+T("Gunicorn / uWSGI","Production WSGI servers for Django.","gunicorn mysite.wsgi:application -w 4","Serving Django to real traffic — replaces the development server","Same worker-count guidance as Flask: (2 × CPU) + 1 as a starting heuristic, tuned under real load"),
+T("Celery for background tasks","Distributed task queue for running work outside the HTTP request/response cycle.","@app.task def send_welcome_email(user_id): ...","Slow operations (email, image processing, ML inference) that shouldn't make a user wait","Celery requires a message broker (Redis, RabbitMQ) and separate worker processes — it's a meaningful operational addition, not a drop-in"),
+T("django-environ / python-decouple","Libraries for loading Django settings from environment variables and .env files cleanly.","DEBUG=env('DJANGO_DEBUG', default=False, cast=bool)","Managing different settings across dev/staging/production environments","Never commit a .env file with real credentials — use .env.example as the template and load real values from your deployment environment"),
+T("12-factor app for Django","Configuring Django following the 12-factor methodology: env-based config, stateless processes, explicit dependencies.","settings split by environment; DATABASE_URL from env; no in-process state between requests","Cloud-native Django deployments, container/PaaS deployments","Django's default project layout doesn't fully follow 12-factor out of the box — deliberately structuring for it from the start saves significant pain later"),
+];
+
+const DJANGO_GUIDE=[
+G("Starting a new project","Set AUTH_USER_MODEL to a custom user model BEFORE the first migration — this is the #1 retrospective regret in Django projects"),
+G("Need custom user fields (phone number, role, etc.)","Create AbstractUser subclass with your fields and set AUTH_USER_MODEL BEFORE any migration"),
+G("CRUD for a model in the admin","Register with @admin.register and customize ModelAdmin with list_display, search_fields, list_filter"),
+G("REST API on top of existing Django app","Django REST Framework — serializers + ViewSets + Router is the fastest path to a full CRUD API"),
+G("Need to fetch related objects without N+1 queries","select_related() for FK/OneToOne; prefetch_related() for ManyToMany/reverse FK — add these to every list view queryset"),
+G("Need to run slow work after responding to the user","Celery + Redis for anything needing real background processing; signal receiver for simple decoupled in-process side effects"),
+G("Caching expensive repeated queries","Low-level cache API (cache.set/get) for data; @cache_page for whole views; {% cache %} tag for template fragments"),
+G("Need pagination on a list view or API","Django's Paginator class for views; DRF PageNumberPagination for APIs — never return unbounded querysets"),
+G("Need to filter API results by query params","django-filter with DjangoFilterBackend in DRF — avoids writing manual query-param parsing in every view"),
+];
+const DJANGO_SYMPTOMS=[
+Sy("'You are trying to change the foreign key of the auth.User model' or similar after the first migration","You didn't set AUTH_USER_MODEL before the first migration — this is the hardest Django mistake to fix after the fact, often requiring a full DB reset in early development"),
+Sy("N+1 queries slowing down list views or the admin","Missing select_related() or prefetch_related() on the queryset — use django-debug-toolbar to count queries per request and identify where the N+1 is happening"),
+Sy("Form submission returns 403 Forbidden","Missing {% csrf_token %} inside the HTML form tag — every POST form must have it"),
+Sy("Template variable renders as empty or None unexpectedly","Either the context key name doesn't match the template variable name, or the queryset is lazy and was never evaluated before being passed — check the view's context dict spelling"),
+Sy("Migration conflicts after merging branches","Two developers created migrations from the same parent — run python manage.py makemigrations --merge and commit the resulting merge migration"),
+Sy("'No such table' error after pulling new code","New migrations haven't been applied yet — run python manage.py migrate"),
+Sy("Admin list view is very slow on a large table","N+1 queries from FK fields in list_display, or missing database index on filter/search fields — add select_related to ModelAdmin.get_queryset() and ensure DB indexes exist"),
+Sy("Signal receiver fires on update too, not just create","post_save fires for every save — check the `created` boolean argument in the receiver function to distinguish INSERT from UPDATE"),
+Sy("Static files return 404 in production","Forgot to run collectstatic, or STATIC_ROOT isn't configured, or a static file server (nginx/WhiteNoise) isn't serving STATIC_ROOT",""),
+Sy("SECRET_KEY is different per environment and forms/sessions break","Using a different SECRET_KEY in each environment invalidates signed data (sessions, tokens) created in another environment — use a stable, consistent secret per environment, different across environments but stable within one"),
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){return(s===undefined||s===null)?"":String(s);}
+function renderConceptTable(rows){
+  let head="<tr><th>Concept</th><th>What it means</th><th>Example</th><th>When to use</th><th>Gotcha</th></tr>";
+  let body=rows.map(r=>`<tr>
+    <td class="concept">${esc(r.c)}</td>
+    <td>${esc(r.i)}</td>
+    <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+    <td>${esc(r.u)}</td>
+    <td>${esc(r.g)}</td>
+  </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderMethodTable(rows){
+  let head="<tr><th>Name</th><th>Signature</th><th>What it does</th><th>Example / note</th></tr>";
+  let body=rows.map(r=>`<tr>
+    <td class="concept">${esc(r.m)}</td>
+    <td><span class="codeline" style="margin-top:0">${esc(r.sig)}</span></td>
+    <td>${esc(r.desc)}</td>
+    <td>${esc(r.ex)}</td>
+  </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderGuideTable(rows){
+  let head="<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body=rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderSymptomTable(rows){
+  let head="<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body=rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const DIAG={};
+
+DIAG.mtv=`
+<svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="20" y="80" width="100" height="50" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="70" y="110" text-anchor="middle">Browser</text>
+  <rect x="200" y="60" width="130" height="90" rx="8" fill="#1a5276"/>
+  <text x="265" y="100" text-anchor="middle" fill="#fff" font-weight="700">URL Router</text>
+  <text x="265" y="118" text-anchor="middle" fill="#ddd" font-size="10">urls.py</text>
+  <rect x="400" y="20" width="130" height="55" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="465" y="47" text-anchor="middle" font-weight="700">View</text>
+  <text x="465" y="63" text-anchor="middle" font-size="10" fill="#5b6260">views.py — business logic</text>
+  <rect x="400" y="145" width="130" height="55" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="465" y="172" text-anchor="middle" font-weight="700">Template</text>
+  <text x="465" y="188" text-anchor="middle" font-size="10" fill="#5b6260">HTML + Jinja2</text>
+  <rect x="590" y="20" width="110" height="55" rx="8" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="645" y="47" text-anchor="middle" font-weight="700">Model</text>
+  <text x="645" y="63" text-anchor="middle" font-size="10" fill="#5b6260">models.py + ORM</text>
+  <line x1="120" y1="105" x2="200" y2="105" stroke="#5b6260"/>
+  <line x1="330" y1="85" x2="400" y2="48" stroke="#5b6260"/>
+  <line x1="530" y1="48" x2="590" y2="48" stroke="#9a5b3a"/>
+  <line x1="590" y1="55" x2="465" y2="145" stroke="#9a5b3a" stroke-dasharray="3 3"/>
+  <line x1="465" y1="75" x2="465" y2="145" stroke="#5b6260" stroke-dasharray="3 3"/>
+  <line x1="330" y1="125" x2="70" y2="130" stroke="#5b6260" stroke-dasharray="3 2"/>
+  <text x="370" y="210" text-anchor="middle" fill="#5b6260" font-size="10.5">What Django calls View is what most frameworks call Controller — Template is the presentation layer</text>
+</svg>`;
+
+DIAG.middleware=`
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <text x="180" y="20" text-anchor="middle" fill="#5b6260" font-size="10.5">Request flows DOWN (in) →</text>
+  <text x="520" y="20" text-anchor="middle" fill="#5b6260" font-size="10.5">← Response flows UP (out)</text>
+  <rect x="10" y="30" width="680" height="34" rx="6" fill="#e8f0f8" stroke="#1a5276"/><text x="350" y="52" text-anchor="middle">SecurityMiddleware</text>
+  <rect x="30" y="74" width="640" height="34" rx="6" fill="#e8f0f8" stroke="#1a5276"/><text x="350" y="96" text-anchor="middle">SessionMiddleware</text>
+  <rect x="50" y="118" width="600" height="34" rx="6" fill="#e8f0f8" stroke="#1a5276"/><text x="350" y="140" text-anchor="middle">AuthenticationMiddleware</text>
+  <rect x="70" y="162" width="560" height="30" rx="6" fill="#1a5276"/><text x="350" y="182" text-anchor="middle" fill="#fff">View (your code)</text>
+  <line x1="20" y1="64" x2="20" y2="168" stroke="#9a5b3a" stroke-width="2"/><path d="M16 165 L20 172 L24 165" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+  <line x1="680" y1="168" x2="680" y2="64" stroke="#9a5b3a" stroke-width="2"/><path d="M676 67 L680 60 L684 67" fill="none" stroke="#9a5b3a" stroke-width="2"/>
+</svg>`;
+
+DIAG.queryLifecycle=`
+<svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="10" y="60" width="130" height="44" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="75" y="82" text-anchor="middle">QuerySet defined</text><text x="75" y="97" text-anchor="middle" font-size="10" fill="#5b6260">.filter() .exclude()</text>
+  <rect x="170" y="60" width="130" height="44" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="235" y="82" text-anchor="middle">Still lazy</text><text x="235" y="97" text-anchor="middle" font-size="10" fill="#5b6260">chaining is free</text>
+  <rect x="330" y="60" width="150" height="44" rx="8" fill="#1a5276"/>
+  <text x="405" y="82" text-anchor="middle" fill="#fff">Evaluation triggered</text><text x="405" y="97" text-anchor="middle" fill="#ddd" font-size="10">iterate / list() / len()</text>
+  <rect x="510" y="60" width="120" height="44" rx="8" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="570" y="82" text-anchor="middle">SQL sent to DB</text><text x="570" y="97" text-anchor="middle" font-size="10" fill="#9a5b3a">real I/O happens here</text>
+  <rect x="650" y="60" width="60" height="44" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="680" y="86" text-anchor="middle">Cache</text><text x="680" y="100" text-anchor="middle" font-size="10" fill="#5b6260">_result_cache</text>
+  <line x1="140" y1="82" x2="170" y2="82" stroke="#5b6260"/><line x1="300" y1="82" x2="330" y2="82" stroke="#5b6260"/>
+  <line x1="480" y1="82" x2="510" y2="82" stroke="#5b6260"/><line x1="630" y1="82" x2="650" y2="82" stroke="#5b6260"/>
+  <text x="360" y="160" text-anchor="middle" fill="#5b6260">After evaluation, results are cached — iterating the same queryset object again does NOT re-query the database</text>
+</svg>`;
+
+DIAG.ormRelations=`
+<svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="20" y="60" width="130" height="80" rx="8" fill="#e8f0f8" stroke="#1a5276"/>
+  <text x="85" y="88" text-anchor="middle" font-weight="700">Author</text>
+  <text x="85" y="108" text-anchor="middle" font-size="10" fill="#5b6260">id, name</text>
+  <rect x="240" y="60" width="130" height="80" rx="8" fill="#1a5276"/>
+  <text x="305" y="88" text-anchor="middle" fill="#fff" font-weight="700">Article</text>
+  <text x="305" y="108" text-anchor="middle" fill="#ddd" font-size="10">id, title, author_id</text>
+  <text x="305" y="124" text-anchor="middle" fill="#ddd" font-size="10">ForeignKey(Author)</text>
+  <rect x="460" y="20" width="130" height="60" rx="8" fill="#e8f0f8" stroke="#9a5b3a"/>
+  <text x="525" y="48" text-anchor="middle" font-weight="700">Tag</text>
+  <text x="525" y="64" text-anchor="middle" font-size="10" fill="#5b6260">id, name</text>
+  <rect x="460" y="120" width="130" height="60" rx="8" fill="#f3e7df" stroke="#9a5b3a"/>
+  <text x="525" y="148" text-anchor="middle" font-weight="700">Article_Tag</text>
+  <text x="525" y="164" text-anchor="middle" font-size="10" fill="#9a5b3a">junction table (auto)</text>
+  <line x1="150" y1="100" x2="240" y2="100" stroke="#1a5276" stroke-width="1.5"/>
+  <text x="195" y="94" text-anchor="middle" font-size="10">FK (many-to-one)</text>
+  <line x1="370" y1="85" x2="460" y2="50" stroke="#9a5b3a" stroke-width="1.5"/>
+  <line x1="370" y1="115" x2="460" y2="148" stroke="#9a5b3a" stroke-width="1.5"/>
+  <text x="420" y="100" text-anchor="middle" font-size="10" fill="#9a5b3a">M2M</text>
+  <line x1="525" y1="80" x2="525" y2="120" stroke="#9a5b3a" stroke-dasharray="3 2"/>
+  <text x="360" y="195" text-anchor="middle" fill="#5b6260">select_related for FK (JOIN); prefetch_related for M2M and reverse FK (separate query)</text>
+</svg>`;
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS=[
+{
+  id:"fund", title:"1 · Fundamentals & Project Structure", lede:"Django's batteries-included philosophy, the project/app distinction, MTV pattern, settings, manage.py, and WSGI vs ASGI.",
+  subs:[
+    {id:"f-core", title:"Core concepts", table:F_CORE},
+    {id:"f-commands", title:"Essential management commands", table2:F_COMMANDS},
+  ],
+  callout:"<b>Set AUTH_USER_MODEL before your first migration — no exceptions.</b> This is the single most-cited retrospective mistake in Django projects. Adding it after migrations have run requires dropping and recreating the database or an extremely painful migration chain."
+},
+{
+  id:"models", title:"2 · Models & Relationships", lede:"Model fields, the Meta class, relationships (FK/M2M/OneToOne), and the eager-loading tools (select_related, prefetch_related) that prevent N+1 queries.",
+  subs:[
+    {id:"m-basics", title:"Model basics", table:M_BASICS},
+    {id:"m-relations", title:"Relationships & eager loading", note:"Relationships define your data graph; eager loading determines whether you traverse it in 1 query or N+1.", diagram:"ormRelations", cap:"A ForeignKey creates a many-to-one relationship. ManyToManyField creates a junction table automatically. select_related JOINs FK/OneToOne in one query; prefetch_related runs a separate query for M2M and reverse FK.", table:M_RELATIONS},
+  ],
+  callout:"<b>N+1 queries are Django's most common performance bug.</b> Any list view that accesses a FK/M2M attribute inside a loop is likely triggering N+1 queries — one per item in the list. Use django-debug-toolbar to count queries per request during development, and add select_related/prefetch_related where needed."
+},
+{
+  id:"migrations", title:"3 · Migrations", lede:"Django's migration system — generating, applying, squashing, writing data migrations, and handling conflicts.",
+  subs:[
+    {id:"mig-basics", title:"Migration fundamentals", table:MIG_BASICS},
+  ],
+  callout:"<b>Always read autogenerated migration files before committing them.</b> makemigrations does a good job but occasionally generates incorrect destructive operations (especially for renames) or misses things it can't detect. A migration that deletes a column instead of renaming it is easy to spot in review and catastrophic to miss."
+},
+{
+  id:"orm", title:"4 · ORM & QuerySets", lede:"The full QuerySet API — filtering, aggregation, F/Q expressions, raw SQL, and the lazy evaluation model that controls when database queries actually run.",
+  subs:[
+    {id:"orm-basics", title:"QuerySet API", note:"A QuerySet is lazy — no database query runs until you actually consume it.", diagram:"queryLifecycle", cap:"filter() and annotate() build a query description; the database isn't touched until you iterate, call list(), or explicitly evaluate the QuerySet. After evaluation, results are cached on the object.", table:ORM_BASICS},
+  ],
+  callout:"<b>exists() not bool(queryset) for membership checks; count() not len(queryset) for counts.</b> Evaluating a full queryset just to check if it has any items or how many is a very common, avoidable performance waste — the ORM-specific alternatives each run a far cheaper targeted SQL query."
+},
+{
+  id:"views", title:"5 · Views & Templates", lede:"Function-based and class-based views, generic views, response helpers, and Django's Jinja2-based template engine.",
+  subs:[
+    {id:"v-basics", title:"Views", table:V_BASICS},
+    {id:"v-template", title:"Templates", table:V_TEMPLATE},
+  ],
+  callout:"<b>Generic CBVs are great for standard patterns; fight them for unusual ones.</b> ListView, DetailView, CreateView etc. eliminate boilerplate for straight-line CRUD. When your logic deviates significantly from what they expect (custom querysets, multiple models, complex permissions), a plain function-based view is often cleaner than subclassing and overriding half a CBV's methods."
+},
+{
+  id:"urls", title:"6 · URL Routing", lede:"path(), re_path(), include(), namespaces, and converters — Django's URL dispatcher.",
+  subs:[
+    {id:"url-basics", title:"URL patterns", table:URL_BASICS},
+  ],
+  callout:"<b>Always namespace your app URLs with app_name.</b> Without namespacing, two apps with a 'list' or 'detail' URL name silently conflict and url_for-equivalent calls resolve to whichever was registered last — a bug that only appears as apps are added."
+},
+{
+  id:"forms", title:"7 · Forms", lede:"Django Forms and ModelForms — validation, CSRF, the save() lifecycle, formsets, and rendering.",
+  subs:[
+    {id:"form-basics", title:"Forms & ModelForms", table:FORM_BASICS},
+  ],
+  callout:"<b>Never use fields='__all__' on a ModelForm in production.</b> It exposes every current AND future model field to form-based mass assignment. An explicit fields=[] whitelist is the correct, safe default — you choose what's editable, not 'everything unless I remember to exclude it'."
+},
+{
+  id:"auth", title:"8 · Authentication & Authorization", lede:"The built-in User model vs. custom User model, login/logout, permissions, groups, and password management.",
+  subs:[
+    {id:"auth-basics", title:"Auth fundamentals", table:AUTH_BASICS},
+  ],
+  callout:"<b>Use a custom User model from day one, even if you add no fields initially.</b> Subclass AbstractUser immediately in a fresh project so that future field additions are simple migrations rather than the extremely painful process of changing AUTH_USER_MODEL after data exists."
+},
+{
+  id:"admin", title:"9 · Django Admin", lede:"Registering models, customizing ModelAdmin (list_display, search_fields, inlines, actions), and the admin's role in a real production project.",
+  subs:[
+    {id:"admin-basics", title:"Admin customization", table:ADMIN_BASICS},
+  ],
+  callout:"<b>The admin is for staff, not end users.</b> It's a powerful, fast internal tool — but it's intentionally generic and not designed to be polished into a user-facing product. Build a proper user-facing interface for anything your actual customers will touch."
+},
+{
+  id:"middleware", title:"10 · Middleware", lede:"The middleware stack — what the built-in middleware does, how to write custom middleware, and why order matters.",
+  subs:[
+    {id:"mw-basics", title:"Middleware", note:"Request flows down the list; response flows back up — middleware wraps the view like nested layers.", diagram:"middleware", cap:"SecurityMiddleware is first (outermost) — its response processing runs last, adding security headers to every outgoing response after all other processing completes. SessionMiddleware must precede AuthenticationMiddleware because auth reads the session.", table:MW_BASICS},
+  ],
+  callout:"<b>The most common custom middleware bug:</b> forgetting to call and return self.get_response(request). Without that call, every request silently dead-ends inside your middleware and never reaches a view — exactly the same bug as Flask's forgotten call_next(request)."
+},
+{
+  id:"drf", title:"11 · Django REST Framework (DRF)", lede:"Serializers, APIView, ViewSets, Routers, authentication, permissions, throttling, pagination, and filtering — building REST APIs on top of Django.",
+  subs:[
+    {id:"drf-basics", title:"DRF fundamentals", table:DRF_BASICS},
+  ],
+  callout:"<b>Separate input and output serializers for anything non-trivial.</b> Using a single ModelSerializer for both reading and writing a resource puts all validation, business logic, and presentation concerns into one class — splitting them gives you a cleaner contract and lets each serializer be optimized independently."
+},
+{
+  id:"signals", title:"12 · Signals", lede:"Django's publish/subscribe mechanism — when to use them, when to avoid them, and how to connect receivers correctly.",
+  subs:[
+    {id:"sig-basics", title:"Signals", table:SIG_BASICS},
+  ],
+  callout:"<b>Signals create hidden coupling.</b> A signal receiver is code that runs as a side effect of saving a model, but lives in a completely different module — it can be impossible to find by reading the model code alone. For logic that ALWAYS runs with a save, override save() on the model instead. Use signals only for genuinely decoupled cross-app concerns."
+},
+{
+  id:"caching", title:"13 · Caching", lede:"Django's cache framework, per-view caching, template fragment caching, and the low-level cache API.",
+  subs:[
+    {id:"cache-basics", title:"Caching strategies", table:CACHE_BASICS},
+  ],
+  callout:"<b>Never cache per-user content with per-view caching without varying the cache key by user.</b> Caching a view that includes 'Welcome, [username]' or any user-specific data means one user can see another user's cached response — a real, easy-to-make data-exposure bug."
+},
+{
+  id:"security", title:"14 · Security", lede:"CSRF, XSS, SQL injection, clickjacking, HTTPS/HSTS, SECRET_KEY, ALLOWED_HOSTS — Django's built-in protections and what disabling them costs.",
+  subs:[
+    {id:"sec-basics", title:"Security fundamentals", table:SEC_BASICS},
+  ],
+  callout:"<b>Run python manage.py check --deploy before every production deployment.</b> It catches obvious security misconfigurations in seconds. A clean result doesn't certify your code is secure, but failing checks are always worth fixing before going live."
+},
+{
+  id:"testing", title:"15 · Testing", lede:"TestCase, the test client, pytest-django, factory_boy, and mocking — tools and patterns for a practical Django test suite.",
+  subs:[
+    {id:"test-basics", title:"Testing tools", table2:TEST_BASICS},
+  ],
+  callout:"<b>Factory Boy is strongly worth adding from the start.</b> Tests that create model instances via Model.objects.create(field=...) with every required field spelled out become brittle as models evolve. FactoryBoy factories define sensible defaults in one place so tests only specify what actually varies for that test."
+},
+{
+  id:"prod", title:"16 · Production & Deployment", lede:"DEBUG=False, collectstatic, gunicorn, Celery for background tasks, environment-based settings, and the full deployment checklist.",
+  subs:[
+    {id:"prod-basics", title:"Production essentials", table:PROD_BASICS},
+    {id:"django-guide", title:"Quick decision guide", table2:DJANGO_GUIDE},
+    {id:"django-symptoms", title:"Symptom → likely cause", table3:DJANGO_SYMPTOMS},
+  ],
+  callout:"<b>The Django deployment checklist in three sentences:</b> DEBUG=False, SECRET_KEY from environment, ALLOWED_HOSTS fully configured. Run collectstatic and serve STATIC_ROOT from nginx/WhiteNoise/CDN. Run gunicorn (or uWSGI) behind nginx, and run python manage.py check --deploy before every release."
+},
+];
+
+const DIAG_MAP={mtv:'mtv',middleware:'middleware',queryLifecycle:'queryLifecycle',ormRelations:'ormRelations'};
+
+function buildDiagram(key,cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+function buildSub(sub){
+  let html=`<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html+=`<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html+=buildDiagram(sub.diagram,sub.cap);
+  if(sub.table) html+=renderConceptTable(sub.table);
+  if(sub.table2) html+=renderMethodTable(sub.table2);
+  if(sub.table3) html+=renderSymptomTable(sub.table3);
+  html+=`</div>`;
+  return html;
+}
+function buildGroup(g){
+  let html=`<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=>html+=buildSub(s));
+  if(g.callout) html+=`<div class="callout">${g.callout}</div>`;
+  html+=`</section>`;
+  return html;
+}
+
+document.getElementById("content").innerHTML=SECTIONS.map(buildGroup).join("");
+
+let navHtml="";
+SECTIONS.forEach(g=>{
+  navHtml+=`<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=>navHtml+=`<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML=navHtml;
+
+document.getElementById("globalFilter").addEventListener("input",function(e){
+  const q=e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){tr.classList.remove("row-hidden");return;}
+    tr.classList.toggle("row-hidden",!tr.textContent.toLowerCase().includes(q));
+  });
+});
+</script>
+</body>
+</html>
