@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FastAPI — Complete Reference</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#ffffff; --ink:#1f2424; --ink-soft:#5b6260; --line:#e3e0d8;
+    --accent:#2f6f5e; --accent-soft:#e3f0ec; --warn:#9a5b3a;
+    --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{display:flex; min-height:100vh;}
+  a{color:var(--accent);}
+  code{font-family:var(--mono); font-size:11.6px; background:#f1efe9; padding:1px 5px; border-radius:4px; color:#2b3b35;}
+
+  #sidebar{ width:250px; flex:0 0 250px; border-right:1px solid var(--line); background:var(--panel);
+    position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 14px; }
+  #sidebar h1{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 4px;}
+  #sidebar nav a.toplink{ display:block; padding:7px 8px; border-radius:6px; font-size:13.2px; color:var(--ink); text-decoration:none; font-weight:600; margin-top:6px; }
+  #sidebar nav a.toplink:hover{background:var(--accent-soft);}
+  #sidebar nav a.sublink{ display:block; padding:4px 8px 4px 18px; border-radius:6px; font-size:12.2px; color:var(--ink-soft); text-decoration:none; }
+  #sidebar nav a.sublink:hover{background:var(--accent-soft); color:var(--ink);}
+  #sidebar input{ width:100%; padding:7px 9px; margin-bottom:14px; border:1px solid var(--line); border-radius:6px; font-size:12.5px; font-family:var(--sans); background:#fff; }
+
+  #main{flex:1; min-width:0; padding:38px 44px 80px; max-width:1220px;}
+  .pagehead{margin-bottom:34px;}
+  .pagehead h1{font-size:26px; margin:0 0 6px;}
+  .pagehead p{color:var(--ink-soft); font-size:14px; margin:0; max-width:700px; line-height:1.5;}
+
+  section.group{margin-bottom:56px;}
+  section.group > h2{font-size:21px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px;}
+  section.group > .lede{color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; max-width:800px; line-height:1.5;}
+
+  .subsection{margin:30px 0 38px;}
+  .subsection h3{font-size:15px; margin:0 0 4px; color:var(--accent); letter-spacing:.01em;}
+  .subsection .note{color:var(--ink-soft); font-size:12.5px; margin:0 0 12px;}
+
+  .twrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.6px; min-width:760px;}
+  thead th{ text-align:left; background:#f1efe9; color:var(--ink-soft); font-size:11px; text-transform:uppercase;
+    letter-spacing:.04em; padding:9px 12px; border-bottom:1px solid var(--line); position:sticky; top:0; }
+  tbody td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f7f6f1;}
+  td.concept{font-weight:700; white-space:nowrap;}
+  td .codeline{display:block; font-family:var(--mono); font-size:11.5px; color:var(--warn); margin-top:3px;}
+  td ul{margin:0; padding-left:16px;}
+  td ul li{margin:2px 0;}
+  .tag{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:10px; background:var(--accent-soft); color:var(--accent); margin-right:4px; white-space:nowrap;}
+
+  .callout{ background:var(--accent-soft); border-left:3px solid var(--accent); padding:12px 16px; font-size:13px;
+    border-radius:0 6px 6px 0; margin:18px 0 8px; line-height:1.55; }
+  .callout b{color:var(--accent);}
+
+  .diagram{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:18px; margin:18px 0 28px; text-align:center; }
+  .diagram .cap{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:left;}
+  .diagram svg{max-width:100%; height:auto;}
+
+  mark.row-hidden{display:none;}
+
+  @media (max-width: 880px){
+    #sidebar{display:none;}
+    #main{padding:24px 16px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <h1>FastAPI Reference</h1>
+  <input id="globalFilter" type="text" placeholder="Filter rows... (e.g. dependency)">
+  <nav id="navTree"></nav>
+</aside>
+
+<main id="main">
+  <div class="pagehead">
+    <h1>FastAPI — Complete Reference</h1>
+    <p>Basics through production internals — routing, Pydantic validation, dependency injection, async, security, databases, testing, and deployment. Diagrams cover the genuinely spatial parts (the request lifecycle, dependency resolution, the ASGI stack); everything else is a scannable table.</p>
+  </div>
+  <div id="content"></div>
+</main>
+
+<script>
+function T(c,i,ex,u,g){ return {c,i,ex,u,g}; }
+function Md(m,sig,desc,ex){ return {m,sig,desc,ex}; }
+function G(scenario,pick){ return {scenario,pick}; }
+function Sy(s,cause){ return {s,cause}; }
+
+/* =========================================================
+   GROUP 1 — FUNDAMENTALS
+   ========================================================= */
+const F_CORE = [
+T("FastAPI app instance", "The central object that ties together all routes, middleware, and configuration.", "app = FastAPI(title='My API', version='1.0')", "Every FastAPI project starts with this single line", "One app instance per project is typical — use APIRouter (covered later) to split routes across files, not multiple FastAPI() instances"),
+T("ASGI", "Asynchronous Server Gateway Interface — the async successor to WSGI, letting a single worker handle many concurrent requests.", "FastAPI is built on Starlette, which is ASGI-native", "Understanding why FastAPI can use `async def` endpoints efficiently", "An ASGI app still needs an ASGI server (uvicorn, hypercorn) to actually run — FastAPI itself is just the application, not the server"),
+T("Uvicorn", "The most common ASGI server used to run FastAPI applications.", "uvicorn main:app --reload", "Local development (--reload) and as the underlying worker in production", "--reload is for development only — it watches files and restarts, which adds overhead you don't want in production"),
+T("Automatic interactive docs", "FastAPI auto-generates OpenAPI schema and serves interactive Swagger UI / ReDoc from it.", "Visit /docs (Swagger) or /redoc automatically, no extra code", "Exploring and manually testing an API during development, sharing a live contract with frontend/consumers", "Docs are derived directly from your type hints and Pydantic models — sloppy or missing type hints produce a sloppy, less useful generated schema"),
+T("Type hints as the API contract", "FastAPI uses Python's standard type hints to do validation, serialization, and docs generation, all from the same source of truth.", "def get_item(item_id: int): ...", "The core design idea behind the whole framework", "This is what most distinguishes FastAPI from Flask — Flask requires separate libraries/boilerplate to get the same validation+docs FastAPI gives for free from type hints"),
+];
+const F_RUN = [
+Md("uvicorn.run()", "uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)", "Run the server programmatically instead of via CLI", "Useful inside if __name__=='__main__': blocks for simple scripts"),
+Md("CLI invocation", "uvicorn main:app --reload --port 8000", "The standard way to start a dev server", "main:app means 'the variable app inside main.py'"),
+Md("Multiple workers", "uvicorn main:app --workers 4", "Run several worker processes to use multiple CPU cores", "Each worker is a separate process with its own memory — don't rely on in-memory state being shared across workers"),
+Md("Production ASGI servers", "gunicorn -k uvicorn.workers.UvicornWorker main:app", "Gunicorn managing multiple uvicorn worker processes for production robustness", "Common production pattern: gunicorn for process management + uvicorn workers for the actual ASGI serving"),
+];
+
+/* =========================================================
+   GROUP 2 — ROUTING & PATH OPERATIONS
+   ========================================================= */
+const R_BASICS = [
+T("Path operation decorator", "Registers a function to handle a specific HTTP method + path combination.", "@app.get('/items/{item_id}')", "Defining every single endpoint in the API", "The decorator order matters for matching — more specific paths should generally be declared before more general/overlapping ones"),
+T("HTTP method decorators", "@app.get, @app.post, @app.put, @app.patch, @app.delete — one per HTTP verb.", "@app.post('/items') async def create_item(): ...", "Mapping each endpoint to the correct semantic HTTP verb", "Using the wrong verb (e.g. GET for something that mutates data) breaks HTTP semantics and can cause caching/proxy issues"),
+T("Path parameters", "Variables embedded directly in the URL path, declared with {curly braces}.", "@app.get('/users/{user_id}')\\nasync def get_user(user_id: int): ...", "Identifying a specific resource by ID/slug in the URL itself", "The type hint (int here) automatically validates and converts the path segment — a non-numeric user_id returns a 422 before your function even runs"),
+T("Query parameters", "Function parameters NOT in the path are automatically treated as query string parameters.", "async def list_items(skip: int = 0, limit: int = 10): ...", "Optional filters, pagination, sorting — anything not part of the resource's identity", "A parameter with a default value is optional in the query string; one without a default is required — FastAPI infers this automatically from the signature"),
+T("Path parameter ordering & matching", "FastAPI matches routes in the order they're declared — the first matching route wins.", "Declare /users/me before /users/{user_id}, or 'me' gets swallowed as a user_id", "Avoiding a specific literal path being shadowed by a more general dynamic one", "This is one of the most common early FastAPI routing bugs — always put fixed/literal paths before parameterized ones that could match the same prefix"),
+T("Path converters", "Special path parameter types for matching more than a single URL segment.", "@app.get('/files/{file_path:path}')", "Capturing a path that itself contains slashes (e.g. a nested file path)", "Without :path, FastAPI's default path-segment matching stops at the first slash"),
+];
+const R_RESPONSE = [
+T("Default JSON serialization", "Return values are automatically converted to JSON — dicts, Pydantic models, lists all just work.", "return {'name': item.name}", "The default behavior for almost every endpoint", "Returning a non-JSON-serializable object (like a raw datetime in some edge cases, or a custom class) without proper encoding raises a server error — convert explicitly if needed"),
+T("response_model", "Declares the shape of the response independently of what your function actually returns, filtering/validating output.", "@app.get('/users/{id}', response_model=UserPublic)", "Hiding internal fields (like a password hash) from the API response automatically", "If your function returns extra fields not in response_model, they're silently stripped — a useful safety net, but can also hide a bug if unexpected"),
+T("status_code", "Sets the default HTTP status code for a successful response.", "@app.post('/items', status_code=201)", "Returning the semantically correct status code (201 Created, 204 No Content, etc.)", "FastAPI defaults to 200 for everything unless told otherwise — POST endpoints that create a resource should usually be 201, not 200"),
+T("Multiple response models / status codes", "Document different possible response shapes/codes for the same endpoint (success vs error cases) in the OpenAPI schema.", "responses={404: {'model': ErrorMessage}}", "Accurately documenting an endpoint that can return different shapes depending on outcome", "This only affects documentation/schema — you still must actually return the right status/shape yourself in the function body"),
+];
+const R_ROUTER = [
+T("APIRouter", "A mini FastAPI-like object for grouping related routes, then including them into the main app.", "router = APIRouter(prefix='/users', tags=['users'])", "Splitting a large API into separate files/modules by resource or domain", "Forgetting app.include_router(router) means the routes simply never get registered — a common 'why is my endpoint 404ing' mistake"),
+T("include_router", "Registers an APIRouter's routes onto the main app (or another router).", "app.include_router(users_router, prefix='/api/v1')", "Composing the final URL structure from modular pieces", "Prefixes stack — a router with prefix='/users' included with prefix='/api/v1' produces /api/v1/users/..."),
+T("Tags", "Labels used to group endpoints together in the auto-generated docs.", "@app.get('/items', tags=['items'])", "Organizing a large API's documentation into logical sections", "Purely cosmetic for the docs UI — has no effect on routing or behavior"),
+];
+
+/* =========================================================
+   GROUP 3 — REQUEST BODY & PYDANTIC MODELS
+   ========================================================= */
+const P_BASICS = [
+T("BaseModel", "Pydantic's base class for defining a data schema with typed fields.", "class Item(BaseModel): name: str; price: float", "Defining the shape of request bodies, response bodies, and any structured data", "A field with no default is REQUIRED — Optional[str] alone doesn't make it optional, you still need = None as a default too"),
+T("Automatic request body parsing", "A BaseModel type-hinted parameter is automatically read from the JSON request body, parsed, and validated.", "async def create_item(item: Item): ...", "Accepting structured JSON payloads on POST/PUT/PATCH endpoints", "If validation fails, FastAPI automatically returns a 422 with a detailed error body — you don't write that error-handling yourself"),
+T("Nested models", "A BaseModel field can itself be another BaseModel (or a list of them), validated recursively.", "class Order(BaseModel): items: list[Item]", "Modeling structured, hierarchical request/response data", "Validation errors in nested models report the full path to the bad field (e.g. items.0.price) — read these carefully, they're precise"),
+T("Optional fields", "Fields that may be omitted from the input, requiring an explicit default.", "description: str | None = None", "Fields that aren't always present in the request", "str | None = None is the modern (3.10+) syntax; Optional[str] = None is the older equivalent — both work identically"),
+T("Field()", "Adds extra validation constraints and metadata to a Pydantic field beyond just its type.", "price: float = Field(gt=0, description='Price in USD')", "Numeric ranges, string length limits, regex patterns, documentation per-field", "Field() goes on the right-hand side as the default value expression, not as a type annotation — easy to misplace at first"),
+T("Model config (model_config)", "Pydantic v2 configuration for a model's overall behavior.", "model_config = ConfigDict(str_strip_whitespace=True)", "Project-wide or model-wide behavior tweaks: extra field handling, alias generation, ORM mode", "Pydantic v1 used a nested `class Config:` — v2 uses `model_config = ConfigDict(...)` instead; mixing syntaxes from old tutorials causes confusion"),
+];
+const P_VALIDATION = [
+T("Built-in validation from type hints", "int, float, str, bool, list, dict, datetime, UUID, EmailStr (with extra) etc. are validated automatically from the type alone.", "email: EmailStr  (requires the email-validator package)", "Free, declarative validation for common data shapes", "EmailStr and a few other special types require an extra pip install (pydantic[email]) — they're not in base Pydantic"),
+T("Custom validators (@field_validator)", "Run custom validation/transformation logic on a specific field.", "@field_validator('username')\\ndef no_spaces(cls, v): ...", "Business-rule validation beyond what type hints alone can express", "Pydantic v2 renamed this from @validator (v1) to @field_validator — old tutorials/StackOverflow answers often show the deprecated v1 syntax"),
+T("Model validators (@model_validator)", "Validation logic that needs to see multiple fields together, not just one in isolation.", "@model_validator(mode='after')\\ndef check_dates(self): if self.start > self.end: raise ValueError(...)", "Cross-field validation: date ranges, password confirmation matching, conditional requirements", "mode='before' runs on raw input data; mode='after' runs on the already-constructed model instance — pick based on whether you need raw or parsed data"),
+T("Validation error format", "A 422 Unprocessable Entity response with a structured list of every validation failure.", "{'detail': [{'loc': ['body','price'], 'msg': 'must be greater than 0', ...}]}", "Giving API consumers precise, actionable feedback on what was wrong with their request", "422, not 400 — FastAPI distinguishes 'malformed JSON' (400, rare) from 'valid JSON, but fails schema validation' (422, the common case)"),
+T("Pydantic v1 vs v2", "Pydantic 2 is a near-total rewrite (Rust-backed core) with a different (though similar-looking) API surface from v1.", "v1: @validator, class Config — v2: @field_validator, model_config = ConfigDict(...)", "Knowing which version a given tutorial/codebase is using before copying syntax", "Mixing v1 and v2 syntax in the same project is a very common source of confusing errors — check your installed pydantic version first"),
+];
+const P_SCHEMAS = [
+T("Separate input/output models", "Using different Pydantic models for what comes IN (request) vs what goes OUT (response) of the same resource.", "UserCreate (has password) vs UserPublic (no password)", "Preventing sensitive fields from ever being included in a response, even by accident", "This is the standard, recommended pattern for anything involving secrets/passwords — relying on response_model filtering alone is good, but explicit separate models are clearer and safer"),
+T("ORM mode / from_attributes", "Lets a Pydantic model be built directly from an ORM object's attributes, not just a dict.", "model_config = ConfigDict(from_attributes=True)", "Returning a database ORM object directly as an API response, validated/shaped through a Pydantic model", "Without this setting, Pydantic expects dict-like input and won't automatically read attributes off an arbitrary object (like a SQLAlchemy model instance)"),
+T("model_dump() / model_dump_json()", "Convert a Pydantic model instance back into a plain dict or JSON string.", "item.model_dump(exclude={'internal_field'})", "Serializing a model for storage, logging, or passing to another system", "Renamed from .dict()/.json() in Pydantic v1 to .model_dump()/.model_dump_json() in v2 — both terms appear across documentation depending on version"),
+];
+
+/* =========================================================
+   GROUP 4 — DEPENDENCY INJECTION
+   ========================================================= */
+const DI_BASICS = [
+T("Depends()", "Declares that a path operation (or another dependency) needs the result of calling some function first.", "async def get_items(db: Session = Depends(get_db)): ...", "Sharing logic across endpoints: DB sessions, auth checks, pagination params, shared config", "The dependency function itself is called by FastAPI automatically — you never call get_db() yourself, you just declare the dependency"),
+T("Dependency functions", "A plain function (sync or async) whose return value gets injected into whatever depends on it.", "def get_db(): db = SessionLocal(); try: yield db; finally: db.close()", "Reusable setup/teardown logic, exactly like the building block decorators/context managers are for elsewhere in Python", "A dependency with `yield` is exactly a generator-based context manager — code after yield runs as cleanup, even if the request handler raises"),
+T("Sub-dependencies", "A dependency can itself depend on other dependencies — FastAPI resolves the whole chain automatically.", "def get_current_user(token: str = Depends(oauth2_scheme)): ...", "Layering: 'get the DB session' → 'get the current user from a token, using that DB session'", "FastAPI caches a dependency's result within a single request by default — calling the same dependency twice in one request doesn't re-run it"),
+T("Class-based dependencies", "Using a class (with __call__ or just __init__) as a reusable, configurable dependency.", "class Paginator: def __init__(self, limit: int=10): self.limit=limit", "Dependencies that need their own configuration/parameters at declaration time", "Instantiate it once with config, then pass the instance (not the class) to Depends(): Depends(Paginator(limit=20))"),
+T("Dependencies with yield", "A dependency using `yield` instead of `return` gets guaranteed cleanup code, run after the response is sent.", "yield db  # then cleanup code after this line runs post-response", "Resource management: closing DB sessions, releasing connections/locks", "If multiple yield-dependencies are used, their cleanup runs in reverse order of acquisition — like nested context managers"),
+T("Dependency overrides (testing)", "Swap a real dependency for a fake/mock one, scoped to tests.", "app.dependency_overrides[get_db] = get_test_db", "Testing endpoints without hitting a real database/external service", "Remember to clear dependency_overrides after each test (or scope it properly with a fixture) — leftover overrides leak between tests otherwise"),
+T("Global dependencies", "Apply a dependency to every route in the app (or every route in a router), not just one endpoint.", "app = FastAPI(dependencies=[Depends(verify_api_key)])", "App-wide or router-wide cross-cutting concerns: auth checks, rate limiting", "A global dependency's return value isn't directly accessible in your endpoint function unless you also explicitly declare it as a parameter there"),
+];
+
+/* =========================================================
+   GROUP 5 — PARAMETER VALIDATION & SPECIAL TYPES
+   ========================================================= */
+const PARAM_VALID = [
+T("Path()", "Adds validation/metadata to a path parameter beyond its basic type.", "item_id: int = Path(gt=0, description='must be positive')", "Constraining/documenting path parameters specifically", "Path() is for path params; the equivalent for query params is Query() — easy to mix them up by habit"),
+T("Query()", "Adds validation/metadata to a query parameter: defaults, length limits, regex, deprecation.", "q: str | None = Query(default=None, max_length=50)", "Constraining/documenting query parameters specifically", "Query(...) (Ellipsis) as the default makes a query param required, even though it's a query param — a slightly surprising but valid pattern"),
+T("Body()", "Explicitly marks a parameter as coming from the request body, useful when mixing multiple body params or primitives.", "async def f(item: Item, importance: int = Body()): ...", "Accepting multiple separate body fields (not just one BaseModel) in a single endpoint", "Without Body(), a plain int parameter is assumed to be a query parameter, not body — Body() is what redirects it into the JSON body instead"),
+T("Numeric constraints", "gt, ge, lt, le on Path/Query/Field for numeric range validation.", "age: int = Query(ge=0, le=120)", "Enforcing sane numeric ranges declaratively, without manual if-checks", "gt/lt are strict (exclusive); ge/le are inclusive — easy to pick the wrong one off by one"),
+T("String constraints", "min_length, max_length, pattern (regex) on Path/Query/Field.", "username: str = Query(min_length=3, max_length=20, pattern='^[a-zA-Z0-9_]+$')", "Enforcing string format/length rules declaratively", "pattern uses standard regex syntax — remember the raw-string r'...' caveat from general Python regex usage"),
+T("Multiple values for one query param", "A query parameter that can appear multiple times in the URL, collected into a list.", "tags: list[str] = Query(default=[])  → ?tags=a&tags=b&tags=c", "Multi-select filters in a query string", "The same parameter name repeated in the URL — not a single comma-separated value — is what populates the list by default"),
+];
+const PARAM_SPECIAL = [
+T("Header()", "Reads a value from an HTTP request header.", "user_agent: str | None = Header(default=None)", "Reading custom or standard headers (User-Agent, X-Request-ID, Authorization manually, etc.)", "Header names are automatically converted: user_agent (Python) reads the User-Agent header — underscores become hyphens by convention"),
+T("Cookie()", "Reads a value from a cookie sent with the request.", "session_id: str | None = Cookie(default=None)", "Session-based or cookie-based auth/state, reading values set by a previous response", "Just reading — to SET a cookie on the response, you use response.set_cookie() on a Response object, a different mechanism entirely"),
+T("Form()", "Reads a value from form-encoded (not JSON) request data.", "username: str = Form()", "Traditional HTML form submissions (application/x-www-form-urlencoded or multipart)", "Requires python-multipart installed — and you generally can't mix Form() fields with a JSON Body() model in the same endpoint"),
+T("File() / UploadFile", "Accepts an uploaded file from a multipart form.", "file: UploadFile = File()", "File upload endpoints — images, documents, CSVs", "UploadFile is preferred over the plain `bytes` type for large files — it streams to a temp file on disk instead of loading the entire upload into memory at once"),
+T("Multiple files", "Accept several uploaded files in one request.", "files: list[UploadFile] = File()", "Bulk upload endpoints", "Each UploadFile object needs to be read/closed appropriately — they behave like async file-like objects, use await file.read()"),
+];
+
+/* =========================================================
+   GROUP 6 — ERROR HANDLING
+   ========================================================= */
+const ERR_BASICS = [
+T("HTTPException", "FastAPI's standard way to return an error response with a specific status code and detail message.", "raise HTTPException(status_code=404, detail='Item not found')", "Any expected error condition: not found, forbidden, bad request, conflict", "Raising it anywhere in the call stack (not just directly in the endpoint) still correctly produces the HTTP error response — it propagates like any exception until FastAPI's handler catches it"),
+T("Custom exception classes", "Define your own exception types for domain-specific errors, then handle them centrally.", "class ItemNotFoundError(Exception): pass", "Decoupling business logic from HTTP-specific concerns (your service layer shouldn't need to know about status codes)", "Without a registered exception handler (next row), a custom exception just becomes an unhandled 500 error — you need both pieces together"),
+T("Exception handlers (@app.exception_handler)", "Centrally catch a specific exception type anywhere in the app and convert it to a proper HTTP response.", "@app.exception_handler(ItemNotFoundError)\\nasync def handler(request, exc): return JSONResponse(status_code=404, content={...})", "Keeping error-to-HTTP-status mapping in one place instead of scattered HTTPException raises everywhere", "Exception handlers must be registered before routes that might raise the exception, conceptually — though in practice it's the app composition, not literal line order, that matters"),
+T("Validation error handler override", "Customize the default 422 response format for Pydantic validation errors.", "@app.exception_handler(RequestValidationError)\\nasync def handler(request, exc): ...", "Matching a specific error response format your API consumers expect, different from FastAPI's default", "Overriding this means you're responsible for producing an equally useful error body — don't lose the detailed per-field error info in the process"),
+T("Status code constants", "Named constants for HTTP status codes instead of magic numbers.", "from fastapi import status\\nstatus_code=status.HTTP_404_NOT_FOUND", "Readability — status.HTTP_404_NOT_FOUND is clearer than a bare 404", "Purely a readability convenience — functionally identical to using the raw integer"),
+];
+
+/* =========================================================
+   GROUP 7 — MIDDLEWARE & CORS
+   ========================================================= */
+const MW_BASICS = [
+T("Middleware", "Code that runs on every request before it reaches your route handler, and on every response before it's sent back.", "@app.middleware('http')\\nasync def add_header(request, call_next): ...", "Cross-cutting concerns applied uniformly: logging, timing, adding headers, auth pre-checks", "You MUST call and return `await call_next(request)` inside custom middleware, or the request never actually reaches your route handlers"),
+T("CORSMiddleware", "Built-in middleware handling Cross-Origin Resource Sharing headers automatically.", "app.add_middleware(CORSMiddleware, allow_origins=['https://example.com'])", "Any API consumed by a browser-based frontend hosted on a different domain", "allow_origins=['*'] (allow everything) is convenient in development but a real security consideration in production — scope it to known frontend domains"),
+T("GZipMiddleware", "Automatically compresses responses above a certain size.", "app.add_middleware(GZipMiddleware, minimum_size=1000)", "Reducing bandwidth for large JSON responses", "Adds CPU overhead per request to compress — usually a good trade-off, but worth benchmarking for very high-throughput, low-payload-size APIs"),
+T("Middleware execution order", "Middleware added later wraps OUTSIDE middleware added earlier — execution order can be counterintuitive.", "Multiple add_middleware() calls stack like nested layers", "Predicting which middleware sees a request/response first when you have several", "If ordering matters for your use case (e.g. logging should see the final response after compression, or before), test it explicitly rather than assuming"),
+];
+
+/* =========================================================
+   GROUP 8 — AUTHENTICATION & SECURITY
+   ========================================================= */
+const SEC_BASICS = [
+T("OAuth2PasswordBearer", "A dependency that extracts a Bearer token from the Authorization header, following the OAuth2 password flow shape.", "oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')", "The standard pattern for token-based (JWT) authentication in FastAPI", "tokenUrl is mainly for the auto-generated docs' 'Authorize' button — it doesn't itself validate tokens, it just extracts and documents the scheme"),
+T("JWT (JSON Web Tokens)", "A signed token encoding claims (like user ID, expiry) that the server can verify without a database lookup.", "jwt.encode({'sub': user.id, 'exp': expiry}, SECRET_KEY, algorithm='HS256')", "Stateless authentication — the server doesn't need to store session data", "A JWT's payload is base64-encoded, not encrypted — anyone can read its contents (though not forge a valid signature); never put secrets directly inside the payload"),
+T("Password hashing", "Storing a one-way hash of a password, never the plaintext.", "passlib's CryptContext(schemes=['bcrypt'])", "Any system storing user passwords, full stop, no exceptions", "Never roll your own hashing scheme or use a fast general-purpose hash (like plain SHA-256) for passwords — use a purpose-built slow hash like bcrypt/argon2"),
+T("Security dependency pattern", "A 'get_current_user' dependency chains token extraction → decoding → DB lookup, reusable across every protected endpoint.", "async def get_current_user(token: str = Depends(oauth2_scheme)): ...", "Protecting many endpoints with consistent, DRY authentication logic", "This dependency typically raises HTTPException(401) on any failure — invalid token, expired token, user not found — keep those error messages generic enough not to leak which check failed"),
+T("API key authentication", "A simpler alternative to OAuth2 — a static secret key sent in a header or query param.", "APIKeyHeader(name='X-API-Key')", "Service-to-service authentication, simpler internal/partner APIs", "API keys don't expire or carry claims the way JWTs do — rotation and revocation need to be handled manually in your own system"),
+T("Scopes / role-based access", "Restricting what an authenticated user/token is allowed to do, not just whether they're authenticated at all.", "Security(get_current_user, scopes=['items:write'])", "Fine-grained permissions beyond a simple logged-in/logged-out check", "Scope-checking logic needs to be enforced server-side on every relevant endpoint — a scope claimed in a token means nothing if the endpoint doesn't actually verify it"),
+T("HTTPS / TLS in production", "Encrypting traffic between client and server — typically terminated at a reverse proxy/load balancer, not in FastAPI itself.", "nginx or a cloud load balancer handles TLS termination in front of uvicorn", "Every production deployment, without exception", "FastAPI/uvicorn can serve HTTPS directly, but in most real deployments a dedicated reverse proxy (nginx, Caddy, a cloud LB) handles TLS instead — don't assume you need to configure certs inside the app itself"),
+];
+
+/* =========================================================
+   GROUP 9 — ASYNC, BACKGROUND TASKS & CONCURRENCY
+   ========================================================= */
+const ASYNC_FASTAPI = [
+T("async def vs def endpoints", "FastAPI supports both — async def runs on the event loop directly; plain def runs in a thread pool automatically.", "async def get_items(): ... vs def get_items(): ...", "Choosing the right one based on whether your endpoint does I/O-bound async work or blocking sync work", "Calling a BLOCKING (sync) library function inside an `async def` endpoint without awaiting it properly blocks the entire event loop for every other concurrent request — this is a real, common production bug"),
+T("Why this distinction matters", "A blocking call inside an async endpoint stalls the single event loop; FastAPI can't run other requests concurrently during that time.", "requests.get(url) is blocking; httpx.AsyncClient().get(url) is not", "Picking the right async-compatible libraries (httpx not requests, asyncpg not psycopg2-sync, etc.) for I/O inside async endpoints", "If you must call a blocking library inside an async endpoint, run it in a thread pool explicitly (e.g. via run_in_threadpool) rather than calling it directly"),
+T("BackgroundTasks", "Run a function after the response has already been sent to the client, without making them wait for it.", "background_tasks.add_task(send_email, user.email)", "Fire-and-forget work that shouldn't delay the response: emails, logging, cache warming", "BackgroundTasks run in-process, AFTER the response — they are not a distributed task queue. A server restart loses pending tasks, and they don't scale across multiple workers; for serious background job needs, use Celery/RQ/arq instead"),
+T("Lifespan events", "Code that runs once at app startup and once at shutdown — for setting up/tearing down shared resources.", "@asynccontextmanager\\nasync def lifespan(app): yield  # setup before, teardown after", "Initializing a DB connection pool, loading an ML model into memory, opening a message queue connection once", "The older @app.on_event('startup')/('shutdown') decorators are deprecated in favor of the lifespan context manager — new code should use lifespan"),
+];
+
+/* =========================================================
+   GROUP 10 — DATABASE INTEGRATION
+   ========================================================= */
+const DB_BASICS = [
+T("SQLAlchemy (sync)", "The most common Python ORM, used with FastAPI via a per-request session dependency.", "Session = sessionmaker(bind=engine); def get_db(): db=Session(); yield db; db.close()", "Traditional, well-documented, broad ecosystem support", "A sync SQLAlchemy call inside an async endpoint is a blocking call — see the async/sync caveat above; either use def endpoints or the async SQLAlchemy variant"),
+T("SQLAlchemy 2.0 async", "SQLAlchemy's native async support, pairing naturally with async def endpoints.", "AsyncSession, create_async_engine('postgresql+asyncpg://...')", "Fully async FastAPI apps that want to avoid any blocking DB calls", "Requires an async-compatible DB driver (asyncpg for Postgres, aiomysql for MySQL) — the regular sync driver won't work with the async engine"),
+T("SQLModel", "A library by FastAPI's creator combining SQLAlchemy and Pydantic into one model definition.", "class Hero(SQLModel, table=True): id: int | None = Field(default=None, primary_key=True)", "Reducing duplication between your ORM model and your API schema model", "A relatively newer/smaller ecosystem than plain SQLAlchemy — weigh maturity/community support against the reduced boilerplate for your specific project"),
+T("Alembic", "A database migration tool, typically paired with SQLAlchemy, for versioning schema changes.", "alembic revision --autogenerate -m 'add users table'", "Managing schema changes safely across environments (dev, staging, prod)", "Autogenerate isn't perfect — always review the generated migration script before running it, especially for renames and complex constraint changes"),
+T("Connection pooling", "Reusing a pool of open DB connections instead of opening/closing one per request.", "create_engine(url, pool_size=5, max_overflow=10)", "Avoiding the overhead of establishing a new DB connection on every single request", "Pool size needs to be tuned relative to your number of worker processes and your DB's own max-connections limit — too large a pool across many workers can exhaust the database's connection limit"),
+T("NoSQL options (Motor for MongoDB, etc.)", "Async drivers for non-relational databases also integrate cleanly with FastAPI's async model.", "from motor.motor_asyncio import AsyncIOMotorClient", "Document-oriented or other non-relational data needs", "Schema validation that an ORM/ODM would normally provide may need to be handled more explicitly via your Pydantic models when working with a flexible-schema NoSQL store"),
+];
+
+/* =========================================================
+   GROUP 11 — TESTING
+   ========================================================= */
+const TEST_BASICS = [
+Md("TestClient", "from fastapi.testclient import TestClient", "A requests-like client for testing FastAPI endpoints synchronously without running a real server", "client = TestClient(app); response = client.get('/items/1')"),
+Md("httpx.AsyncClient (async tests)", "async with AsyncClient(app=app, base_url='http://test') as ac: ...", "Testing async endpoints with full async/await test functions", "Needed when your tests themselves need to be async, e.g. to also await other async setup code"),
+Md("pytest fixtures for FastAPI", "@pytest.fixture\\ndef client(): return TestClient(app)", "Reusable test setup: test client, test DB session, test data", "Combine with dependency_overrides inside a fixture to swap in a test database cleanly"),
+Md("Testing with dependency overrides", "app.dependency_overrides[get_db] = override_get_db", "Replacing a real DB/external-service dependency with a test double for the duration of tests", "Always reset dependency_overrides after the test (e.g. in fixture teardown) to avoid leaking overrides into unrelated tests"),
+Md("response assertions", "assert response.status_code == 200; assert response.json() == {...}", "Verifying both the status code and the actual response body shape", "Testing response_model filtering specifically (that sensitive fields are actually excluded) is worth a dedicated test, not just a happy-path check"),
+];
+
+/* =========================================================
+   GROUP 12 — WEBSOCKETS
+   ========================================================= */
+const WS_BASICS = [
+T("WebSocket endpoint", "A persistent, bidirectional connection, declared with @app.websocket instead of a regular HTTP method decorator.", "@app.websocket('/ws')\\nasync def endpoint(websocket: WebSocket): await websocket.accept()", "Real-time features: chat, live notifications, live dashboards", "You must explicitly call await websocket.accept() before sending/receiving — forgetting it is a common 'connection just hangs' bug"),
+T("send/receive", "Methods for sending and receiving messages over an open WebSocket connection.", "await websocket.send_text(msg); data = await websocket.receive_text()", "The core bidirectional communication loop of a WebSocket handler", "receive_text() (or receive_json()) blocks until a message arrives or the connection closes — structure your handler's loop around that"),
+T("WebSocketDisconnect", "The exception raised when the client disconnects, used to detect and clean up after a closed connection.", "try: ... except WebSocketDisconnect: cleanup()", "Gracefully handling clients closing their browser tab/connection", "Forgetting to catch this means a disconnected client can leave your server-side loop hanging or erroring noisily"),
+T("Connection manager pattern", "A custom class tracking all currently-active WebSocket connections, for broadcasting to multiple clients.", "class ConnectionManager: active_connections: list[WebSocket] = []", "Chat rooms, live multi-user features needing to broadcast to everyone connected", "This in-memory list only works within a single worker process — broadcasting across multiple workers/server instances needs a shared backend like Redis pub/sub"),
+];
+
+/* =========================================================
+   GROUP 13 — ADVANCED & PRODUCTION
+   ========================================================= */
+const ADV_CONFIG = [
+T("Settings via Pydantic (BaseSettings)", "Load and validate configuration from environment variables using a typed Pydantic model.", "class Settings(BaseSettings): database_url: str; debug: bool=False", "Type-safe, validated app configuration instead of scattered os.environ.get() calls", "BaseSettings moved to the separate pydantic-settings package in Pydantic v2 — an extra install, not bundled in core pydantic anymore"),
+T("Environment-specific config", "Different settings for dev/staging/production, typically via different .env files or environment variables.", ".env.development, .env.production loaded conditionally", "Avoiding hardcoded URLs/keys, and avoiding accidentally using prod config in dev or vice versa", "Never commit a .env file containing real secrets to version control — use .env.example as a template instead"),
+T("Dependency injection for settings", "Inject the Settings object via Depends() so it's testable/overridable like any other dependency.", "def get_settings(): return Settings()\\n... settings: Settings = Depends(get_settings)", "Keeping settings access consistent with FastAPI's general dependency pattern, and easily mockable in tests", "Using @lru_cache on get_settings() avoids re-parsing environment variables on every single request"),
+];
+const ADV_OPENAPI = [
+T("Custom OpenAPI schema", "Override or extend the auto-generated OpenAPI schema directly.", "def custom_openapi(): ...; app.openapi = custom_openapi", "Adding custom metadata, examples, or security schemes the auto-generation doesn't cover", "Once you override app.openapi, you're responsible for keeping it in sync — it's no longer automatically regenerated from route changes unless you call the original generator inside your override"),
+T("Examples in schema", "Provide example request/response values shown directly in the interactive docs.", "Field(examples=['example value'])  or  Config.json_schema_extra", "Making the auto-generated docs genuinely useful for API consumers, not just structurally correct", "Examples are documentation only — they have zero effect on actual validation behavior"),
+T("API versioning", "Strategies for evolving an API without breaking existing consumers.", "URL-based (/v1/, /v2/) is the most common and explicit FastAPI pattern, often via separate APIRouters", "Any API with external consumers who can't be forced to update instantly", "FastAPI has no single built-in 'versioning' feature — it's a structural pattern you implement yourself, usually via routers and/or separate app mounts"),
+T("Sub-applications (app.mount)", "Mount an entirely separate ASGI application (even another FastAPI app) at a sub-path.", "app.mount('/admin', admin_app)", "Combining genuinely separate applications (e.g. a public API and an internal admin tool) under one server", "A mounted sub-application gets its own independent OpenAPI docs at its own /docs path — it doesn't merge into the parent app's schema"),
+];
+const ADV_PERF = [
+T("Pydantic performance (v2)", "Pydantic v2's validation core is implemented in Rust, making it significantly faster than v1 for the same models.", "Upgrading from Pydantic v1 to v2 is often a meaningful performance win with no code changes for simple models", "High-throughput APIs where request validation overhead is a measurable part of latency", "Custom validators and some advanced v1 patterns need actual code changes to migrate, not just a version bump — it's not always a drop-in upgrade"),
+T("Caching responses", "Avoiding recomputation for identical/expensive requests.", "fastapi-cache2 or manual Redis-backed caching of specific endpoints", "Expensive computations or slow upstream calls that don't need to be redone on every identical request", "Cache invalidation is the hard part, as always — a stale cached response can be worse than a slightly slower fresh one depending on the use case"),
+T("Rate limiting", "Restricting how many requests a client can make in a given time window.", "slowapi (a FastAPI-friendly wrapper around limits) is a common choice", "Protecting against abuse and ensuring fair usage across clients", "Rate limiting per-worker-process (the default for many simple implementations) doesn't add up correctly across multiple workers — needs a shared backend (Redis) for accurate limits at scale"),
+T("Profiling & monitoring", "Understanding where time is actually spent in a deployed FastAPI app.", "OpenTelemetry instrumentation, or simple custom timing middleware", "Diagnosing real production latency, not guessing based on local dev experience", "Local --reload dev server performance characteristics can be meaningfully different from a production multi-worker deployment — always profile against something resembling the real deployment"),
+];
+const FASTAPI_GUIDE = [
+G("Building a typical CRUD JSON API", "FastAPI default sync or async endpoints + Pydantic models + response_model + an ORM (SQLAlchemy/SQLModel)"),
+G("Need authentication shared across many endpoints", "A get_current_user dependency chain using OAuth2PasswordBearer + JWT, applied via Depends()"),
+G("Endpoint does slow I/O (external API call, DB query)", "async def endpoint using an async-compatible client/driver (httpx, asyncpg) — not a blocking sync library"),
+G("Need fire-and-forget side work after responding", "BackgroundTasks for simple cases; Celery/RQ/arq for anything needing durability or multi-worker scale"),
+G("Need real-time bidirectional communication", "A WebSocket endpoint, with a connection manager if multiple clients need to be broadcast to"),
+G("API has external consumers who can't break on changes", "URL-based versioning (/v1/, /v2/) via separate APIRouters"),
+G("Testing endpoints that hit a database", "TestClient + dependency_overrides swapping the real DB session for a test database session"),
+];
+const FASTAPI_SYMPTOMS = [
+Sy("A literal route like /users/me always returns 'me' as a user_id instead of matching", "Route declaration order — the parameterized /users/{user_id} was declared before the literal /users/me; move the literal route earlier"),
+Sy("The whole API feels slow/blocked under concurrent load despite using async def", "A blocking (sync) library call inside an async endpoint is stalling the entire event loop for every other request — swap to an async-compatible client or use a thread pool explicitly"),
+Sy("A new route returns 404 even though the function and decorator look correct", "Forgot to call app.include_router(router) after defining the routes on an APIRouter"),
+Sy("response_model seems to silently drop fields you expected to see", "This is the intended behavior — response_model filters output to exactly its declared shape; add the field to the response model if it should actually be included"),
+Sy("Tests pass individually but fail when run together", "A dependency_overrides entry from one test wasn't cleared and leaked into a later test — reset overrides in fixture teardown"),
+Sy("Validation errors come back as 422 when you expected 400", "This is correct FastAPI behavior — 422 specifically means 'well-formed request, but fails schema validation', distinct from a malformed request"),
+Sy("Custom middleware seems to do nothing / requests never reach route handlers", "Forgot to `await call_next(request)` and return its result inside the middleware function"),
+Sy("CORS errors in the browser despite CORSMiddleware being added", "allow_origins doesn't include the exact frontend origin (protocol+domain+port must match exactly), or the middleware was added after routes that need it covered"),
+];
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function esc(s){ return (s===undefined||s===null) ? "" : String(s); }
+function renderConceptTable(rows){
+  let head = "<tr><th>Concept</th><th>What it means</th><th>Example</th><th>When to use</th><th>Gotcha</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.c)}</td>
+      <td>${esc(r.i)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.ex)}</span></td>
+      <td>${esc(r.u)}</td>
+      <td>${esc(r.g)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderMethodTable(rows){
+  let head = "<tr><th>Name</th><th>Signature</th><th>What it does</th><th>Example / note</th></tr>";
+  let body = rows.map(r=>`<tr>
+      <td class="concept">${esc(r.m)}</td>
+      <td><span class="codeline" style="margin-top:0">${esc(r.sig)}</span></td>
+      <td>${esc(r.desc)}</td>
+      <td>${esc(r.ex)}</td>
+    </tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderGuideTable(rows){
+  let head = "<tr><th>Scenario</th><th>Reach for</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.scenario)}</td><td><b>${esc(r.pick)}</b></td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+function renderSymptomTable(rows){
+  let head = "<tr><th>Symptom</th><th>Likely cause</th></tr>";
+  let body = rows.map(r=>`<tr><td>${esc(r.s)}</td><td>${esc(r.cause)}</td></tr>`).join("");
+  return `<div class="twrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const DIAG = {};
+
+DIAG.requestLifecycle = `
+<svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+  <rect x="10" y="80" width="90" height="44" rx="8" fill="#e3f0ec" stroke="#2f6f5e"/><text x="55" y="106" text-anchor="middle">Client</text>
+  <rect x="130" y="80" width="100" height="44" rx="8" fill="#2f6f5e"/><text x="180" y="106" text-anchor="middle" fill="#fff">Uvicorn (ASGI)</text>
+  <rect x="260" y="80" width="100" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="310" y="106" text-anchor="middle">Middleware</text>
+  <rect x="390" y="80" width="100" height="44" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="440" y="106" text-anchor="middle">Dependencies</text>
+  <rect x="520" y="80" width="110" height="44" rx="8" fill="#f3e7df" stroke="#9a5b3a"/><text x="575" y="100" text-anchor="middle">Path operation</text><text x="575" y="115" text-anchor="middle" font-size="9.5">(your function)</text>
+  <rect x="660" y="80" width="120" height="44" rx="8" fill="#e3f0ec" stroke="#2f6f5e"/><text x="720" y="106" text-anchor="middle">response_model</text>
+  <line x1="100" y1="102" x2="130" y2="102" stroke="#5b6260"/><line x1="230" y1="102" x2="260" y2="102" stroke="#5b6260"/>
+  <line x1="360" y1="102" x2="390" y2="102" stroke="#5b6260"/><line x1="490" y1="102" x2="520" y2="102" stroke="#5b6260"/>
+  <line x1="630" y1="102" x2="660" y2="102" stroke="#5b6260"/>
+  <path d="M780 124 C 780 170, 55 170, 55 124" fill="none" stroke="#9a5b3a" stroke-dasharray="3 3"/>
+  <path d="M60 130 L 55 124 L 50 130" fill="none" stroke="#9a5b3a"/>
+  <text x="400" y="190" text-anchor="middle" fill="#5b6260">Pydantic validates the body BEFORE your function runs; response_model filters the output AFTER it returns</text>
+</svg>`;
+
+DIAG.depResolve = `
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <rect x="20" y="90" width="120" height="40" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="80" y="114" text-anchor="middle">get_db()</text>
+  <rect x="180" y="90" width="160" height="40" rx="8" fill="#e7eee9" stroke="#3d5a4f"/><text x="260" y="114" text-anchor="middle">get_current_user(db)</text>
+  <rect x="380" y="90" width="180" height="40" rx="8" fill="#f3e7df" stroke="#9a5b3a"/><text x="470" y="114" text-anchor="middle">your endpoint(user)</text>
+  <line x1="140" y1="110" x2="180" y2="110" stroke="#5b6260"/><line x1="340" y1="110" x2="380" y2="110" stroke="#5b6260"/>
+  <text x="80" y="80" text-anchor="middle" fill="#5b6260" font-size="10.5">resolved first</text>
+  <text x="470" y="80" text-anchor="middle" fill="#5b6260" font-size="10.5">resolved last, runs your code</text>
+  <path d="M80 130 C 80 160, 80 175, 80 175" fill="none" stroke="#9a5b3a" stroke-dasharray="3 3"/>
+  <text x="200" y="190" text-anchor="middle" fill="#5b6260">If get_db uses yield, its cleanup code runs AFTER the endpoint finishes — even on an error</text>
+</svg>`;
+
+/* =========================================================
+   PAGE ASSEMBLY
+   ========================================================= */
+const SECTIONS = [
+{
+  id:"fund", title:"1 · Fundamentals", lede:"The app instance, ASGI/uvicorn, automatic docs, and the core idea that type hints ARE the API contract.",
+  subs:[
+    {id:"f-core", title:"Core concepts", table:F_CORE},
+    {id:"f-run", title:"Running the app", table2:F_RUN},
+  ],
+  callout:"<b>The single idea underneath everything in FastAPI:</b> a type hint isn't just documentation — it's simultaneously the validation rule, the serialization format, and the source for the auto-generated docs. Get comfortable with type hints and most of FastAPI follows naturally."
+},
+{
+  id:"routing", title:"2 · Routing & Path Operations", lede:"Path/query parameters, response shaping, and organizing routes with APIRouter.",
+  subs:[
+    {id:"r-basics", title:"Path operations & parameters", table:R_BASICS},
+    {id:"r-response", title:"Response handling", note:"Every request flows through the same pipeline before reaching your function and after leaving it.", diagram:"requestLifecycle", cap:"Validation happens before your endpoint code runs; response_model filtering happens after it returns — your function only ever sees already-valid data and only ever needs to return data matching its own logic, not the final wire format.", table:R_RESPONSE},
+    {id:"r-router", title:"APIRouter & organizing routes", table:R_ROUTER},
+  ],
+  callout:"<b>Route order is matching order.</b> /users/me must be declared before /users/{user_id}, or the dynamic route swallows the literal one and 'me' gets treated as a user_id — one of the most common early FastAPI bugs."
+},
+{
+  id:"pydantic", title:"3 · Request Body & Pydantic Models", lede:"BaseModel, nested models, validators, and the v1-vs-v2 syntax differences that trip people up mid-migration.",
+  subs:[
+    {id:"p-basics", title:"BaseModel fundamentals", table:P_BASICS},
+    {id:"p-validation", title:"Validation", table:P_VALIDATION},
+    {id:"p-schemas", title:"Schema design patterns", table:P_SCHEMAS},
+  ],
+  callout:"<b>Separate input and output models for anything sensitive.</b> A UserCreate model with a password field and a UserPublic model without one is clearer and safer than relying solely on response_model to strip the password after the fact."
+},
+{
+  id:"di", title:"4 · Dependency Injection", lede:"FastAPI's Depends() system — how shared logic (DB sessions, auth, pagination) gets resolved and injected automatically.",
+  subs:[
+    {id:"di-basics", title:"Dependencies", note:"Dependencies resolve in order, and a yield-dependency's cleanup runs after your endpoint returns.", diagram:"depResolve", cap:"get_db() resolves first, feeding into get_current_user(db), which feeds into your endpoint — FastAPI builds and resolves this whole chain automatically from the type hints.", table:DI_BASICS},
+  ],
+  callout:"<b>Depends() is FastAPI's answer to 'how do I avoid repeating setup code in every endpoint.'</b> Anything you find yourself copy-pasting at the top of multiple route functions — a DB session, a current-user lookup, pagination defaults — is a strong candidate to become a dependency."
+},
+{
+  id:"params", title:"5 · Parameter Validation & Special Types", lede:"Path(), Query(), Body() for fine-grained constraints, plus headers, cookies, forms, and file uploads.",
+  subs:[
+    {id:"param-valid", title:"Path / Query / Body validation", table:PARAM_VALID},
+    {id:"param-special", title:"Headers, cookies, forms & files", table:PARAM_SPECIAL},
+  ],
+  callout:"<b>UploadFile, not bytes, for file uploads of any real size.</b> bytes loads the entire file into memory at once; UploadFile streams to a temporary file on disk, which is the difference between handling a 5MB upload fine and OOM-crashing on a 500MB one."
+},
+{
+  id:"errors", title:"6 · Error Handling", lede:"HTTPException, custom exception types, and centralizing error-to-HTTP-status mapping with exception handlers.",
+  subs:[
+    {id:"err-basics", title:"Exceptions & handlers", table:ERR_BASICS},
+  ],
+  callout:"<b>422 vs 400, deliberately:</b> FastAPI returns 422 specifically when the JSON is well-formed but fails Pydantic validation, reserving 400 for genuinely malformed requests. Don't 'fix' this distinction away — it's meaningful and consumers rely on it."
+},
+{
+  id:"middleware", title:"7 · Middleware & CORS", lede:"Code that wraps every request/response — logging, headers, compression, and cross-origin access for browser-based frontends.",
+  subs:[
+    {id:"mw-basics", title:"Middleware", table:MW_BASICS},
+  ],
+  callout:"<b>The most common custom-middleware bug:</b> forgetting to `await call_next(request)` and return its result — without that line, every request silently dead-ends inside the middleware and never reaches a route handler."
+},
+{
+  id:"security", title:"8 · Authentication & Security", lede:"OAuth2/JWT patterns, password hashing, API keys, and the dependency chain that protects endpoints consistently.",
+  subs:[
+    {id:"sec-basics", title:"Auth fundamentals", table:SEC_BASICS},
+  ],
+  callout:"<b>Never write your own password hashing.</b> Use a purpose-built slow hash (bcrypt, argon2) via a maintained library like passlib — a fast general-purpose hash like SHA-256 is the wrong tool and a genuine security risk for password storage specifically."
+},
+{
+  id:"async", title:"9 · Async, Background Tasks & Concurrency", lede:"When to use async def vs def, why blocking calls inside async endpoints are a real production bug, and what BackgroundTasks is (and isn't) for.",
+  subs:[
+    {id:"async-fastapi", title:"Async patterns", table:ASYNC_FASTAPI},
+  ],
+  callout:"<b>A blocking call inside an async def endpoint doesn't just slow down that one request — it stalls the entire event loop for every other concurrent request being served by that worker.</b> This is the single highest-impact FastAPI performance bug, and it's invisible in local single-request testing."
+},
+{
+  id:"db", title:"10 · Database Integration", lede:"SQLAlchemy (sync and async), SQLModel, migrations with Alembic, and connection pooling.",
+  subs:[
+    {id:"db-basics", title:"ORMs, migrations & pooling", table:DB_BASICS},
+  ],
+  callout:"<b>Match your DB driver to your endpoint style.</b> Sync SQLAlchemy in an async def endpoint is a blocking call hiding in plain sight — either use plain def endpoints with sync SQLAlchemy, or commit to async SQLAlchemy with an async driver (asyncpg, not psycopg2) throughout."
+},
+{
+  id:"testing", title:"11 · Testing", lede:"TestClient, async test clients, and swapping real dependencies for test doubles via dependency_overrides.",
+  subs:[
+    {id:"test-basics", title:"Testing tools", table2:TEST_BASICS},
+  ],
+  callout:"<b>dependency_overrides is the cleanest way to test FastAPI endpoints against a fake DB/service</b> — swap the dependency, not the underlying implementation, and remember to clear the override after each test so it doesn't leak into unrelated ones."
+},
+{
+  id:"websockets", title:"12 · WebSockets", lede:"Persistent, bidirectional connections for real-time features — chat, live notifications, dashboards.",
+  subs:[
+    {id:"ws-basics", title:"WebSocket basics", table:WS_BASICS},
+  ],
+  callout:"<b>A simple in-memory connection-manager list only works within a single worker process.</b> Run more than one uvicorn worker (which production deployments typically do), and broadcasting needs a shared backend like Redis pub/sub to reach clients connected to a different worker."
+},
+{
+  id:"advanced", title:"13 · Advanced & Production", lede:"Settings management, OpenAPI customization, versioning, performance, caching, and rate limiting.",
+  subs:[
+    {id:"adv-config", title:"Settings & configuration", table:ADV_CONFIG},
+    {id:"adv-openapi", title:"OpenAPI customization & versioning", table:ADV_OPENAPI},
+    {id:"adv-perf", title:"Performance, caching & rate limiting", table:ADV_PERF},
+    {id:"fastapi-guide", title:"Quick decision guide", table2:FASTAPI_GUIDE},
+    {id:"fastapi-symptoms", title:"Symptom → likely cause", table3:FASTAPI_SYMPTOMS},
+  ],
+  callout:"<b>Rate limiting and connection counts implemented per-worker-process silently break once you run multiple uvicorn workers</b> — anything that needs to be globally accurate across workers (rate limits, WebSocket broadcast lists, simple in-memory caches) needs a shared external backend like Redis, not just an in-process dict or counter."
+},
+];
+
+function buildDiagram(key, cap){
+  return `<div class="diagram">${DIAG[key]}<div class="cap">${cap||""}</div></div>`;
+}
+function buildSub(sub){
+  let html = `<div class="subsection" id="${sub.id}"><h3>${esc(sub.title)}</h3>`;
+  if(sub.note) html += `<p class="note">${esc(sub.note)}</p>`;
+  if(sub.diagram) html += buildDiagram(sub.diagram, sub.cap);
+  if(sub.table) html += renderConceptTable(sub.table);
+  if(sub.table2) html += renderMethodTable(sub.table2);
+  if(sub.table3) html += renderSymptomTable(sub.table3);
+  html += `</div>`;
+  return html;
+}
+function buildGroup(g){
+  let html = `<section class="group" id="${g.id}"><h2>${esc(g.title)}</h2><p class="lede">${esc(g.lede)}</p>`;
+  g.subs.forEach(s=> html += buildSub(s));
+  if(g.callout) html += `<div class="callout">${g.callout}</div>`;
+  html += `</section>`;
+  return html;
+}
+document.getElementById("content").innerHTML = SECTIONS.map(buildGroup).join("");
+
+let navHtml = "";
+SECTIONS.forEach(g=>{
+  navHtml += `<a class="toplink" href="#${g.id}">${esc(g.title)}</a>`;
+  g.subs.forEach(s=> navHtml += `<a class="sublink" href="#${s.id}">${esc(s.title)}</a>`);
+});
+document.getElementById("navTree").innerHTML = navHtml;
+
+document.getElementById("globalFilter").addEventListener("input", function(e){
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("table tbody tr").forEach(tr=>{
+    if(!q){ tr.classList.remove("row-hidden"); return; }
+    const txt = tr.textContent.toLowerCase();
+    tr.classList.toggle("row-hidden", !txt.includes(q));
+  });
+});
+</script>
+</body>
+</html>
